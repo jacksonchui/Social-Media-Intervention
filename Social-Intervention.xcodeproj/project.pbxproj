@@ -13,7 +13,18 @@
 		CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */; };
 		CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0E25EC383C008FFBC6 /* Preview Assets.xcassets */; };
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
+		CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CF8D2B2325EC38F2008FFBC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF8D2AFA25EC383B008FFBC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CF8D2B0125EC383B008FFBC6;
+			remoteInfo = "Social-Intervention";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -24,10 +35,20 @@
 		CF8D2B0E25EC383C008FFBC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CF8D2B1125EC383C008FFBC6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF8D2B1325EC383C008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF8D2B1E25EC38F2008FFBC6 /* Social-InterventionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Social-InterventionTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social_InterventionTests.swift; sourceTree = "<group>"; };
+		CF8D2B2225EC38F2008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CF8D2AFF25EC383B008FFBC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF8D2B1B25EC38F2008FFBC6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,6 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				CF8D2B0425EC383B008FFBC6 /* Social-Intervention */,
+				CF8D2B1F25EC38F2008FFBC6 /* Social-InterventionTests */,
 				CF8D2B0325EC383B008FFBC6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */,
+				CF8D2B1E25EC38F2008FFBC6 /* Social-InterventionTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -75,6 +98,15 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		CF8D2B1F25EC38F2008FFBC6 /* Social-InterventionTests */ = {
+			isa = PBXGroup;
+			children = (
+				CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */,
+				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
+			);
+			path = "Social-InterventionTests";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -95,6 +127,24 @@
 			productReference = CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CF8D2B1D25EC38F2008FFBC6 /* Social-InterventionTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF8D2B2525EC38F2008FFBC6 /* Build configuration list for PBXNativeTarget "Social-InterventionTests" */;
+			buildPhases = (
+				CF8D2B1A25EC38F2008FFBC6 /* Sources */,
+				CF8D2B1B25EC38F2008FFBC6 /* Frameworks */,
+				CF8D2B1C25EC38F2008FFBC6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF8D2B2425EC38F2008FFBC6 /* PBXTargetDependency */,
+			);
+			name = "Social-InterventionTests";
+			productName = "Social-InterventionTests";
+			productReference = CF8D2B1E25EC38F2008FFBC6 /* Social-InterventionTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,6 +156,10 @@
 				TargetAttributes = {
 					CF8D2B0125EC383B008FFBC6 = {
 						CreatedOnToolsVersion = 12.4;
+					};
+					CF8D2B1D25EC38F2008FFBC6 = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = CF8D2B0125EC383B008FFBC6;
 					};
 				};
 			};
@@ -123,6 +177,7 @@
 			projectRoot = "";
 			targets = (
 				CF8D2B0125EC383B008FFBC6 /* Social-Intervention */,
+				CF8D2B1D25EC38F2008FFBC6 /* Social-InterventionTests */,
 			);
 		};
 /* End PBXProject section */
@@ -135,6 +190,13 @@
 				CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */,
 				CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */,
 				CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF8D2B1C25EC38F2008FFBC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +213,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CF8D2B1A25EC38F2008FFBC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CF8D2B2425EC38F2008FFBC6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CF8D2B0125EC383B008FFBC6 /* Social-Intervention */;
+			targetProxy = CF8D2B2325EC38F2008FFBC6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */ = {
@@ -323,6 +401,46 @@
 			};
 			name = Release;
 		};
+		CF8D2B2625EC38F2008FFBC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M653Z67VV8;
+				INFOPLIST_FILE = "Social-InterventionTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jacksonchui.Social-InterventionTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Social-Intervention.app/Social-Intervention";
+			};
+			name = Debug;
+		};
+		CF8D2B2725EC38F2008FFBC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = M653Z67VV8;
+				INFOPLIST_FILE = "Social-InterventionTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jacksonchui.Social-InterventionTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Social-Intervention.app/Social-Intervention";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -340,6 +458,15 @@
 			buildConfigurations = (
 				CF8D2B1725EC383C008FFBC6 /* Debug */,
 				CF8D2B1825EC383C008FFBC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF8D2B2525EC38F2008FFBC6 /* Build configuration list for PBXNativeTarget "Social-InterventionTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF8D2B2625EC38F2008FFBC6 /* Debug */,
+				CF8D2B2725EC38F2008FFBC6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
