@@ -50,27 +50,34 @@ class BrowserViewControllerTests: XCTestCase {
     }
     
     func test_init_socialMediumPropertyIsSet() {
-        let socials: [SocialMedium] = [.facebook, .twitter, .instagram]
-        
-        socials.forEach{ medium in
-            XCTAssertEqual(makeSUT(use: medium).getSocialMedium(), medium)
+        forEachSocialMedium { [weak self] medium in
+            guard let self = self else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(self.makeSUT(use: medium).getSocialMedium(), medium)
         }
     }
     
-    func test_loadView_createBrowserView() {
-        let sut = makeSUT()
-        sut.expectDidLoadView()
-    }
-    
-    func test_onLoad_loadsSocialMediumIntoBrowserView() {
-        let sut = makeSUT(use: .instagram)
-        sut.expectAfterViewDidLoad(url: SocialMedium.instagram.url)
+    func test_loadView_then_viewDidLoad_loadsSocialMediumIntoBrowserView() {
+        forEachSocialMedium { [weak self] medium in
+            guard let self = self else {
+                XCTFail()
+                return
+            }
+            self.makeSUT(use: medium).expectAfterViewDidLoad(url: medium.url)
+        }
     }
     
     // MARK: Helpers
     
     func makeSUT(use socialMedium: SocialMedium = .twitter) -> BrowserViewController {
         return BrowserViewController(use: socialMedium)
+    }
+    
+    func forEachSocialMedium(completion: @escaping (SocialMedium) -> Void) {
+        let socials: [SocialMedium] = [.facebook, .twitter, .instagram]
+        socials.forEach{ completion($0) }
     }
 }
 
