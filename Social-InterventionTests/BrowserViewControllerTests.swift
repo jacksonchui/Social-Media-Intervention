@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import WebKit
 
 enum SocialMedium: String {
     case facebook = "https://facebook.com"
@@ -15,9 +16,16 @@ enum SocialMedium: String {
     var url: URL { URL(string: self.rawValue)! }
 }
 
-class BrowserViewController: UIViewController {
+class BrowserViewController: UIViewController, WKUIDelegate {
     
     public var socialMedium: SocialMedium?
+    private var browserView: WKWebView!
+    
+    override func loadView() {
+        super.loadView()
+        browserView = WKWebView(frame: .zero)
+        browserView.uiDelegate = self
+    }
     
     init(use socialMedium: SocialMedium = .twitter) {
         super.init(nibName: nil, bundle: nil)
@@ -44,5 +52,18 @@ class BrowserViewControllerTests: XCTestCase {
             let sut = BrowserViewController(use: medium)
             XCTAssertEqual(sut.socialMedium, medium)
         }
+    }
+    
+    func test_loadView_createBrowserView() {
+        let sut = BrowserViewController()
+        sut.loadView()
+        sut.expectOnLoadView()
+    }
+}
+
+private extension BrowserViewController {
+    func expectOnLoadView(filePath: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertNoThrow(browserView)
+        XCTAssertNotNil(browserView.uiDelegate)
     }
 }
