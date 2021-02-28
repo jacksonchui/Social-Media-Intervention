@@ -59,14 +59,11 @@ class BrowserViewControllerTests: XCTestCase {
     
     func test_loadView_createBrowserView() {
         let sut = makeSUT()
-        sut.loadView()
-        sut.expectOnLoadView()
+        sut.expectDidLoadView()
     }
     
     func test_onLoad_loadsSocialMediumIntoBrowserView() {
         let sut = makeSUT(use: .instagram)
-        sut.loadView()
-        sut.viewDidLoad()
         sut.expectAfterViewDidLoad(url: SocialMedium.instagram.url)
     }
     
@@ -83,12 +80,15 @@ private extension BrowserViewController {
         return socialMedium
     }
     
-    func expectOnLoadView(filePath: StaticString = #filePath, line: UInt = #line) {
+    func expectDidLoadView(filePath: StaticString = #filePath, line: UInt = #line) {
+        loadView()
         XCTAssertNoThrow(browserView)
         XCTAssertNotNil(browserView.uiDelegate)
     }
     
     func expectAfterViewDidLoad(url: URL, filePath: StaticString = #filePath, line: UInt = #line) {
+        expectDidLoadView()
+        viewDidLoad()
         XCTAssertEqual(browserView.url!, url)
     }
 }
