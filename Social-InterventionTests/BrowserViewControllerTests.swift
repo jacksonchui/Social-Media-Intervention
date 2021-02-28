@@ -21,6 +21,7 @@ class BrowserViewController: UIViewController, WKUIDelegate {
     
     private var socialMedium: SocialMedium!
     private var browserView: WKWebView!
+    private var timer: Timer?
     
     override func loadView() {
         super.loadView()
@@ -40,6 +41,18 @@ class BrowserViewController: UIViewController, WKUIDelegate {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public func startTimer() {
+        guard timer == nil else { return }
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            print(timer.timeInterval)
+        }
+    }
+    
+    public func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 
@@ -69,6 +82,17 @@ class BrowserViewControllerTests: XCTestCase {
         }
     }
     
+    func test_viewDidLoad_startsAPeriodicTimerForUpdates() {
+        let sut = self.makeSUT(use: .twitter)
+        sut.expectAfterViewDidLoad(url: SocialMedium.twitter.url)
+        
+        sut.startTimer()
+        
+        XCTAssertNotNil(sut.getTimer())
+        
+        sut.stopTimer()
+    }
+    
     // MARK: Helpers
     
     func makeSUT(use socialMedium: SocialMedium = .twitter) -> BrowserViewController {
@@ -85,6 +109,10 @@ private extension BrowserViewController {
     
     func getSocialMedium() -> SocialMedium {
         return socialMedium
+    }
+    
+    func getTimer() -> Timer? {
+        return timer
     }
     
     func expectDidLoadView(filePath: StaticString = #filePath, line: UInt = #line) {
