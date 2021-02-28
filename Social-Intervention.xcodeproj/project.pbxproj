@@ -15,6 +15,10 @@
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
 		CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */; };
 		CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */; };
+		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
+		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
+		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
+		CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +44,8 @@
 		CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social_InterventionTests.swift; sourceTree = "<group>"; };
 		CF8D2B2225EC38F2008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerTests.swift; sourceTree = "<group>"; };
+		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
+		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +87,7 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
 				CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */,
 				CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */,
 				CF8D2B0925EC383B008FFBC6 /* ContentView.swift */,
@@ -108,6 +115,15 @@
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
 			);
 			path = "Social-InterventionTests";
+			sourceTree = "<group>";
+		};
+		CF8D2B4025EC5A1C008FFBC6 /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */,
+				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
+			);
+			path = Browser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,6 +227,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
+				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
+				CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */,
 				CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */,
 				CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */,
 			);
@@ -221,6 +239,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
+				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
+				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
 				CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
