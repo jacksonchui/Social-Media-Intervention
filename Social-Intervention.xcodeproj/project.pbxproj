@@ -14,6 +14,7 @@
 		CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0E25EC383C008FFBC6 /* Preview Assets.xcassets */; };
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
 		CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */; };
+		CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		CF8D2B1E25EC38F2008FFBC6 /* Social-InterventionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Social-InterventionTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Social_InterventionTests.swift; sourceTree = "<group>"; };
 		CF8D2B2225EC38F2008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				CF8D2B2025EC38F2008FFBC6 /* Social_InterventionTests.swift */,
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
+				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
 			);
 			path = "Social-InterventionTests";
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
 				CF8D2B2125EC38F2008FFBC6 /* Social_InterventionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
