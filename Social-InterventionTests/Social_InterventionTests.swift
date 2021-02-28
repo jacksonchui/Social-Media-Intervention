@@ -6,7 +6,6 @@
 //
 
 import XCTest
-import Social_Intervention
 
 class Social_InterventionTests: XCTestCase {
 
