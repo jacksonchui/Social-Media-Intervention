@@ -39,4 +39,14 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func layoutUI() {
+        activateNSLayoutConstraints(
+            browserView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            browserView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            browserView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            browserView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        )
+        browserView.translatesAutoresizingMaskIntoConstraints = false
+    }
 }
