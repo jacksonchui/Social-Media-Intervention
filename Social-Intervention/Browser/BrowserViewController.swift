@@ -26,7 +26,6 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         
         browserView.load(socialMedium.urlRequest)
         layoutUI()
-        setAlpha(progress: 0.2)
         conditionService.start(completion: { _ in print("error with coremotion")})
     }
     
@@ -57,17 +56,17 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         
     }
     
-    func setAlpha(progress: Double) {
-        let newAlpha = progress > 0.5 ? 1 : CGFloat(abs(progress + 0.1))
+    func setAlpha(progress: Double, animateWithDuration: TimeInterval = 0.3) {
+        let newAlpha: CGFloat = CGFloat(abs(progress) > 0.9 ? 1 : abs(progress + 0.1))
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: animateWithDuration, animations: {
                 self.view.alpha = newAlpha
+            }) { _ in
+                print("[DEBUG] Alpha:\(self.view.alpha).")
             }
-            
-            print("[DEBUG] Alpha:\(self.browserView.alpha).")
         }
     }
 }
