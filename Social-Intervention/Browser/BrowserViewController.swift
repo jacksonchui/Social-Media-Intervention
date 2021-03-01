@@ -21,7 +21,10 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(browserView)
+        
         browserView.load(socialMedium.urlRequest)
+        layoutUI()
         updateService.start()
     }
     
@@ -48,5 +51,22 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
             browserView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         )
         browserView.translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
+import SwiftUI
+struct MainPreview: PreviewProvider {
+    static var previews: some View {
+        ContainerView()
+            .edgesIgnoringSafeArea(.all)
+        
+    }
+    
+    struct ContainerView: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> UIViewController {
+            return UINavigationController(rootViewController: BrowserViewController(withUpdateInterval: 2, repeats: true))
+        }
+        
+        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
     }
 }
