@@ -65,6 +65,7 @@ private extension BrowserViewController {
     func expectAfterViewDidLoad(url: URL, filePath: StaticString = #filePath, line: UInt = #line) {
         expectDidLoadView()
         viewDidLoad()
+        XCTAssert(view.subviews.contains(browserView))
         XCTAssertEqual(browserView.url!, url)
     }
 }

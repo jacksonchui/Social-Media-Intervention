@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIView {
+public extension UIView {
     convenience init(backgroundColor: UIColor) {
         self.init()
         self.backgroundColor = backgroundColor
@@ -21,7 +21,7 @@ extension UIView {
         NSLayoutConstraint.activate(constraints)
     }
     
-    public func pinToEdges(of parentView: UIView) {
+    func pinToEdges(of parentView: UIView) {
         activateNSLayoutConstraints(
             self.topAnchor.constraint(equalTo: parentView.topAnchor),
             self.bottomAnchor.constraint(equalTo: parentView.bottomAnchor),

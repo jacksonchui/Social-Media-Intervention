@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIViewController {
+public extension UIViewController {
     func activateNSLayoutConstraints(_ constraints: NSLayoutConstraint...) {
         NSLayoutConstraint.activate(constraints)
     }

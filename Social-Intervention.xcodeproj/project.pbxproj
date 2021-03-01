@@ -11,6 +11,7 @@
 		CF442A0325EC6929008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
+		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
 		CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */; };
 		CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0925EC383B008FFBC6 /* ContentView.swift */; };
@@ -264,6 +265,7 @@
 			files = (
 				CF442A0325EC6929008EB9DA /* TimerIntervalUpdateService.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
+				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CFCCCB0425EC5E02002F7289 /* TimerIntervalUpdateServiceTests.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
