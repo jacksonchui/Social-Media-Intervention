@@ -11,32 +11,34 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
-    private(set) var updateService: TimerIntervalUpdateService!
+    private(set) var conditionService = RotationConditionService()
     
     override func loadView() {
         super.loadView()
         browserView = WKWebView(frame: .zero)
         browserView.uiDelegate = self
+        conditionService.delegate = self
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(browserView)
+        view.addSubviews(browserView)
         
         browserView.load(socialMedium.urlRequest)
         layoutUI()
-        updateService.start()
+        setAlpha(progress: 0.2)
+        conditionService.start(completion: { _ in print("error with coremotion")})
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        updateService.stop()
+        conditionService.stop()
     }
     
-    init(use socialMedium: SocialMedium = .twitter, withUpdateInterval: TimeInterval, repeats: Bool) {
+    init(for socialMedium: SocialMedium = .twitter, use conditionService: RotationConditionService) {
         super.init(nibName: nil, bundle: nil)
         self.socialMedium = socialMedium
-        self.updateService = TimerIntervalUpdateService(withTimeInterval: 1, repeats: true)
+        self.conditionService = conditionService
     }
     
     required init?(coder: NSCoder) {
@@ -50,7 +52,29 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
             browserView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             browserView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         )
+                
         browserView.translatesAutoresizingMaskIntoConstraints = false
+        
+    }
+    
+    func setAlpha(progress: Double) {
+        let newAlpha = progress > 0.5 ? 1 : CGFloat(abs(progress + 0.1))
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            UIView.animate(withDuration: 0.3) {
+                self.view.alpha = newAlpha
+            }
+            
+            print("[DEBUG] Alpha:\(self.browserView.alpha).")
+        }
+    }
+}
+
+extension BrowserViewController: ConditionServiceDelegate {
+    func condition(progress: Double) {
+        setAlpha(progress: progress)
     }
 }
 
@@ -64,7 +88,10 @@ struct MainPreview: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> UIViewController {
-            return UINavigationController(rootViewController: BrowserViewController(withUpdateInterval: 2, repeats: true))
+            return UINavigationController(
+                    rootViewController: BrowserViewController(
+                                        for: .twitter,
+                                        use: RotationConditionService(withUpdateInterval: 1)))
         }
         
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}

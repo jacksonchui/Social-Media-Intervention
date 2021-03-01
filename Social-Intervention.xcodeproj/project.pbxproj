@@ -8,13 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		CF442A0025EC6858008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
-		CF442A0325EC6929008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
+		CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
 		CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */; };
-		CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0925EC383B008FFBC6 /* ContentView.swift */; };
 		CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */; };
 		CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0E25EC383C008FFBC6 /* Preview Assets.xcassets */; };
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
@@ -41,10 +40,10 @@
 		CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerIntervalUpdateService.swift; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationConditionService.swift; sourceTree = "<group>"; };
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CF8D2B0925EC383B008FFBC6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF8D2B0E25EC383C008FFBC6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CF8D2B1125EC383C008FFBC6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -85,6 +84,15 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		CF442A1825EC8B26008EB9DA /* Conditions */ = {
+			isa = PBXGroup;
+			children = (
+				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
+				CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */,
+			);
+			path = Conditions;
+			sourceTree = "<group>";
+		};
 		CF8D2AF925EC383B008FFBC6 = {
 			isa = PBXGroup;
 			children = (
@@ -106,11 +114,11 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
 				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
 				CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */,
 				CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */,
-				CF8D2B0925EC383B008FFBC6 /* ContentView.swift */,
 				CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */,
 				CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */,
 				CF8D2B1325EC383C008FFBC6 /* Info.plist */,
@@ -143,7 +151,6 @@
 			children = (
 				CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */,
 				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
-				CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -255,7 +262,7 @@
 				CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */,
 				CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */,
 				CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */,
-				CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */,
+				CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +270,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF442A0325EC6929008EB9DA /* TimerIntervalUpdateService.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CFCCCB0425EC5E02002F7289 /* TimerIntervalUpdateServiceTests.swift in Sources */,
@@ -346,7 +352,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -401,7 +407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

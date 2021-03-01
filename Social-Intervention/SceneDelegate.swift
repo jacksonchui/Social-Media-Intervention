@@ -28,7 +28,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func createMainNavigationController() -> UINavigationController {
-        let vc = BrowserViewController(use: .twitter, withUpdateInterval: 1, repeats: true)
+        let vc = BrowserViewController(
+                        for: .twitter,
+                        use: RotationConditionService(withUpdateInterval: 1))
         
         return UINavigationController(rootViewController: vc)
     }
