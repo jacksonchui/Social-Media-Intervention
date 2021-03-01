@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CF442A0025EC6858008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
 		CF442A0325EC6929008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
+		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
 		CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */; };
 		CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0925EC383B008FFBC6 /* ContentView.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerIntervalUpdateService.swift; sourceTree = "<group>"; };
+		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +73,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF442A0625EC6BCF008EB9DA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		CF8D2AF925EC383B008FFBC6 = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +102,7 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CF442A0625EC6BCF008EB9DA /* Extensions */,
 				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
 				CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */,
 				CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */,
@@ -237,6 +248,7 @@
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
 				CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */,
+				CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */,
 				CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */,
 				CF8D2B0A25EC383B008FFBC6 /* ContentView.swift in Sources */,
 			);
