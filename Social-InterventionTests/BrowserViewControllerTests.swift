@@ -37,17 +37,13 @@ class BrowserViewControllerTests: XCTestCase {
         let sut = self.makeSUT(use: .twitter)
         sut.expectAfterViewDidLoad(url: SocialMedium.twitter.url)
         
-        sut.startTimer()
-        
-        XCTAssertNotNil(sut.timer)
-        
-        sut.stopTimer()
+        XCTAssertNotNil(sut.updateService.timer)
     }
     
     // MARK: Helpers
     
-    func makeSUT(use socialMedium: SocialMedium = .twitter) -> BrowserViewController {
-        return BrowserViewController(use: socialMedium)
+    func makeSUT(use socialMedium: SocialMedium = .twitter, withUpdateInterval: TimeInterval = 1, repeats: Bool = true) -> BrowserViewController {
+        return BrowserViewController(use: socialMedium, withUpdateInterval: withUpdateInterval, repeats: repeats)
     }
     
     func forEachSocialMedium(completion: @escaping (SocialMedium) -> Void) {

@@ -11,7 +11,7 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
-    private(set) var timer: Timer?
+    private(set) var updateService: TimerIntervalUpdateService!
     
     override func loadView() {
         super.loadView()
@@ -22,26 +22,16 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         browserView.load(socialMedium.urlRequest)
+        updateService.start()
     }
     
-    init(use socialMedium: SocialMedium = .twitter) {
+    init(use socialMedium: SocialMedium = .twitter, withUpdateInterval: TimeInterval, repeats: Bool) {
         super.init(nibName: nil, bundle: nil)
         self.socialMedium = socialMedium
+        self.updateService = TimerIntervalUpdateService(withTimeInterval: 1, repeats: true)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func startTimer() {
-        guard timer == nil else { return }
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            print(timer.timeInterval)
-        }
-    }
-    
-    func stopTimer() {
-        timer?.invalidate()
-        timer = nil
     }
 }
