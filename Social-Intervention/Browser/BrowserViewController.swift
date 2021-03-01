@@ -25,6 +25,11 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         updateService.start()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        updateService.stop()
+    }
+    
     init(use socialMedium: SocialMedium = .twitter, withUpdateInterval: TimeInterval, repeats: Bool) {
         super.init(nibName: nil, bundle: nil)
         self.socialMedium = socialMedium

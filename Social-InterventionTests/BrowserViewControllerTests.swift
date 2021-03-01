@@ -33,11 +33,13 @@ class BrowserViewControllerTests: XCTestCase {
         }
     }
     
-    func test_viewDidLoad_startsAPeriodicTimerForUpdates() {
+    func test_afterViewDidLoad_startThenStop_togglesTheUpdateService() {
         let sut = self.makeSUT(use: .twitter)
         sut.expectAfterViewDidLoad(url: SocialMedium.twitter.url)
         
         XCTAssertNotNil(sut.updateService.timer)
+        sut.viewDidDisappear(true)
+        XCTAssertNil(sut.updateService.timer)
     }
     
     // MARK: Helpers
