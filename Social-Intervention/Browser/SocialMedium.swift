@@ -11,6 +11,10 @@ public enum SocialMedium: String {
     case facebook = "https://facebook.com/"
     case twitter = "https://twitter.com/"
     case instagram = "https://instagram.com/"
+    case tiktok = "https://www.tiktok.com/"
+    case reddit = "https://www.reddit.com/"
+    case youtube = "https://www.youtube.com/"
+    case linkedIn = "https://www.linkedin.com/"
     
     public var url: URL { URL(string: self.rawValue)! }
     public var urlRequest: URLRequest { URLRequest(url: self.url) }

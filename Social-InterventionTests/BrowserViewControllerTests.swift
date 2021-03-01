@@ -52,7 +52,7 @@ class BrowserViewControllerTests: XCTestCase {
     }
     
     func forEachSocialMedium(completion: @escaping (SocialMedium) -> Void) {
-        let socials: [SocialMedium] = [.facebook, .twitter, .instagram]
+        let socials: [SocialMedium] = [.facebook, .twitter, .instagram, .tiktok, .reddit, .youtube, .linkedIn]
         socials.forEach{ completion($0) }
     }
 }
