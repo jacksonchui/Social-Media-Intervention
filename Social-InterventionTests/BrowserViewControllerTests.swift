@@ -6,8 +6,13 @@
 //
 
 import XCTest
+import UIKit
 
 class BrowserViewControllerTests: XCTestCase {
+    
+    func test_init_coderResultsInFatalError() {
+        XCTAssertNil(BrowserViewController(coder: NSCoder()))
+    }
     
     func test_init_noSocialMediumDefaultsToTwitter() {
         XCTAssertEqual(makeSUT().socialMedium, SocialMedium.twitter)
@@ -68,7 +73,7 @@ private extension BrowserViewController {
     func expectAfterViewDidLoad(url: URL = SocialMedium.twitter.url, filePath: StaticString = #filePath, line: UInt = #line) {
         expectDidLoadView()
         viewDidLoad()
-        XCTAssert(view.subviews.contains(browserView))
+        XCTAssertTrue(view.subviews.contains(browserView))
         XCTAssertEqual(browserView.url!, url)
     }
 }
