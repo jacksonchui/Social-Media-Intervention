@@ -83,12 +83,6 @@ class RotationConditionService: ConditionService {
 //        print("Pitch (along x-axis): \(pitch)")
     }
     
-    func updateRotationRate(_ deviceMotion: CMDeviceMotion) {
-        let horizontalRotationRate = radiansToDegrees(deviceMotion.rotationRate.y)
-        print("horizontalRotationRate: \(horizontalRotationRate)")
-//         rateAlongHorizontalBuffer.addSample(horizontalRotationRate)
-    }
-    
     private func radiansToDegrees(_ x: Double) -> Double { return x * 180 / Double.pi }
     
 }
