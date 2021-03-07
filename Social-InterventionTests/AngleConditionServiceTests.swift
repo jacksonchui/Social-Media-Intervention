@@ -25,12 +25,7 @@ class AngleConditionService {
     }
     
     func start(completion: @escaping (CoreMotionError?) -> Void) {
-        motionManager.checkAvailability(of: .xArbitraryZVertical) { error in
-            if let error = error {
-                completion(error)
-                return
-            }
-        }
+        motionManager.checkAvailability(of: .xArbitraryZVertical, completion: completion)
     }
 }
 
@@ -55,15 +50,13 @@ class MotionManagerSpy {
 class AngleConditionServiceTests: XCTestCase {
 
     func test_init_setsUpMotionManagerAndQueue() {
-        let motionManager = MotionManagerSpy(updateInterval: 1.0)
-        let sut = AngleConditionService(with: motionManager)
+        let (sut, _) = makeSUT()
         
         XCTAssertNotNil(sut.motionManager)
     }
     
     func test_start_failsWhenDeviceMotionUnavailable() {
-        let motionManager = MotionManagerSpy(updateInterval: 1.0)
-        let sut = AngleConditionService(with: motionManager)
+        let (sut, motionManager) = makeSUT()
         let expectedError: CoreMotionError = .deviceMotionUnavailable
         
         let exp = expectation(description: "Wait for completion")
@@ -79,4 +72,31 @@ class AngleConditionServiceTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
     }
+    
+    func test_start_failsWhenAttitudeReferenceFrameUnavailable() {
+        let (sut, motionManager) = makeSUT()
+        let expectedError: CoreMotionError = .attitudeReferenceFrameUnavailable
+        
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.start { error in
+            if let error = error {
+                XCTAssertEqual(error, expectedError)
+            }
+            exp.fulfill()
+        }
+        
+        motionManager.complete(with: expectedError)
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    // MARK: - Helpers
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy) {
+        let motionManager = MotionManagerSpy(updateInterval: updateInterval)
+        let sut = AngleConditionService(with: motionManager)
+        
+        return (sut, motionManager)
+    }
+    
 }
