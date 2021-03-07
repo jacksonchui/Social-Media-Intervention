@@ -16,21 +16,37 @@ enum MotionError: String, Swift.Error {
 
 class AngleConditionService {
     
-    
-    
     private(set) var motionManager: MotionManagerSpy
     
-    init(with motionManager: MotionManagerSpy) {
+    private(set) var timer: Timer?
+    private(set) var timeInterval: TimeInterval
+    private(set) var onEachInterval: ((Timer) -> Void)
+    
+    init(with motionManager: MotionManagerSpy, every timeInterval: TimeInterval, onEachInterval: @escaping (Timer) -> Void) {
         self.motionManager = motionManager
+        self.onEachInterval = onEachInterval
+        self.timeInterval = timeInterval
     }
     
     func start(completion: @escaping (MotionError?) -> Void) {
-        motionManager.checkAvailability(of: .xArbitraryZVertical, completion: completion)
+        motionManager.startUpdates(of: .xArbitraryZVertical, completion: completion)
+        startTimer()
+    }
+    
+    private func startTimer() {
+        if timer != nil { stopTimer() }
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval,
+                                     repeats: true,
+                                     block: onEachInterval)
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
     }
 }
 
 class MotionManagerSpy {
-    
     
     init(updateInterval: TimeInterval) { }
     
@@ -38,7 +54,7 @@ class MotionManagerSpy {
     
     var availabilityCompletions = [AvailabilityCompletion]()
     
-    func checkAvailability(of attitude: CMAttitudeReferenceFrame, completion: @escaping (MotionError?) -> Void) {
+    func startUpdates(of attitude: CMAttitudeReferenceFrame, completion: @escaping (MotionError?) -> Void) {
         availabilityCompletions.append(completion)
     }
     
@@ -54,13 +70,13 @@ class MotionManagerSpy {
 class AngleConditionServiceTests: XCTestCase {
 
     func test_init_setsUpMotionManagerAndQueue() {
-        let (sut, _) = makeSUT()
+        let (sut, _) = makeSUT {_ in }
         
         XCTAssertNotNil(sut.motionManager)
     }
     
     func test_start_failsWhenDeviceMotionUnavailable() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager) = makeSUT {_ in }
         let expectedError: MotionError = .deviceMotionUnavailable
                 
         expect(sut, toCompleteWith: expectedError) {
@@ -69,7 +85,7 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_start_failsWhenAttitudeReferenceFrameUnavailable() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager) = makeSUT {_ in }
         let expectedError: MotionError = .attitudeReferenceFrameUnavailable
         
         expect(sut, toCompleteWith: expectedError) {
@@ -78,17 +94,27 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_start_startsUpdatesWithNoError() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager) = makeSUT {_ in }
         
         expect(sut, toCompleteWith: nil) {
             motionManager.completeWithNoStartupErrors()
         }
     }
     
+    func test_start_beginsTimer() {
+        let (sut, motionManager) = makeSUT {_ in }
+        
+        expect(sut, toCompleteWith: nil) {
+            motionManager.completeWithNoStartupErrors()
+        }
+        
+        XCTAssertNotNil(sut.timer)
+    }
+    
     // MARK: - Helpers
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy) {
+    func makeSUT(updateInterval: TimeInterval = 1.0, onEachInterval: @escaping (Timer) -> Void) -> (AngleConditionService, MotionManagerSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
-        let sut = AngleConditionService(with: motionManager)
+        let sut = AngleConditionService(with: motionManager, every: updateInterval, onEachInterval: onEachInterval)
         
         return (sut, motionManager)
     }
