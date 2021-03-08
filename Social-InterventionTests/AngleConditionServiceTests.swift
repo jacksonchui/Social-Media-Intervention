@@ -56,24 +56,24 @@ class AngleConditionServiceTests: XCTestCase {
         XCTAssertGreaterThan(sut.currentSessionTime, -1)
     }
     
-    func test_start_storesOneRecordInConditionStore() {
+    func test_start_storesOneRecordOnOneMotionUpdate() {
         let (sut, manager, store) = makeSUT()
-        let expectedAttitude = anyMotionAttitude()
+        let expectedRecord = anyMotionAttitude()
         
         expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
-            manager.completeStartMotionUpdates(using: expectedAttitude)
+            manager.completeStartMotionUpdates(using: expectedRecord)
         }
-        XCTAssertEqual(store.progressMessages, [expectedAttitude])
+        XCTAssertEqual(store.records, [expectedRecord])
     }
     
-    func test_start_storesMultipleRecordsInConditionStore() {
+    func test_start_storesMultipleRecordsOnMultipleMotionUpdates() {
         let (sut, manager, store) = makeSUT()
-        let expectedAttitudes = anyMotionAttitudes()
+        let expectedRecords = anyMotionAttitudes()
         
-        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: expectedAttitudes.count) {
-            expectedAttitudes.forEach { manager.completeStartMotionUpdates(using: $0) }
+        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: expectedRecords.count) {
+            expectedRecords.forEach { manager.completeStartMotionUpdates(using: $0) }
         }
-        XCTAssertEqual(store.progressMessages, expectedAttitudes)
+        XCTAssertEqual(store.records, expectedRecords)
     }
 
     // MARK: - Helpers
@@ -118,10 +118,10 @@ class AngleConditionServiceTests: XCTestCase {
     
     class ConditionStoreSpy: ConditionStore {
         
-        var progressMessages = [Record]()
+        var records = [Record]()
         
-        func record(_ progress: Record) {
-            progressMessages.append(progress)
+        func record(_ record: Record) {
+            records.append(record)
         }
     }
     

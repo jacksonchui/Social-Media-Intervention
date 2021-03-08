@@ -10,5 +10,5 @@ import Foundation
 public protocol ConditionStore: AnyObject {
     typealias Record = MotionAttitude
     
-    func record(_ progress: Record) -> Void
+    func record(_ record: Record) -> Void
 }
