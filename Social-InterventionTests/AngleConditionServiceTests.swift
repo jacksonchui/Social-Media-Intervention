@@ -11,13 +11,13 @@ import Social_Intervention
 class AngleConditionServiceTests: XCTestCase {
 
     func test_init_setsUpMotionManagerAndQueue() {
-        let (sut, _) = makeSUT()
+        let (sut, _, _) = makeSUT()
         
         XCTAssertNotNil(sut.motionManager)
     }
     
     func test_start_failsWhenDeviceMotionUnavailable() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager, _) = makeSUT()
         let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
         expect(sut, toCompleteWith: expectedError) {
@@ -26,7 +26,7 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_checkAvailability_failsWhenAttitudeReferenceFrameUnavailable() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager, _) = makeSUT()
         let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
         
         expect(sut, toCompleteWith: expectedError) {
@@ -35,7 +35,7 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_checkAvailability_nilIfNoCheckErrors() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager, _) = makeSUT()
         
         expect(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
@@ -43,7 +43,7 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_start_BeginsTimer() {
-        let (sut, motionManager) = makeSUT()
+        let (sut, motionManager, _) = makeSUT()
         
         expect(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
@@ -51,17 +51,30 @@ class AngleConditionServiceTests: XCTestCase {
         
         sut.start()
         
-        motionManager.completeStartMotionUpdatesWithNoErrors()
+        motionManager.completeStartMotionUpdates(using: anyMotionAttitude())
         
         XCTAssertGreaterThan(sut.currentSessionTime, -1)
     }
+    
+    func test_start_storesMovementProgressInConditionStore() {
+        let (sut, manager, store) = makeSUT()
+        
+        expect(sut, toCompleteWith: nil) {
+            manager.completeWithNoCheckErrors()
+        }
+        
+        sut.start()
+        manager.completeStartMotionUpdates(using: anyMotionAttitude())
+        XCTAssertEqual(store.progressMessages, [anyMotionAttitude()])
+    }
 
     // MARK: - Helpers
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy) {
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy, ConditionStoreSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
-        let sut = AngleConditionService(with: motionManager, every: updateInterval)
+        let conditionStore = ConditionStoreSpy()
+        let sut = AngleConditionService(with: motionManager, savingTo: conditionStore, every: updateInterval)
         
-        return (sut, motionManager)
+        return (sut, motionManager, conditionStore)
     }
     
     func expect(_ sut: AngleConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -76,6 +89,15 @@ class AngleConditionServiceTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    class ConditionStoreSpy: ConditionStore {
+        
+        var progressMessages = [Record]()
+        
+        func record(_ progress: Record) {
+            progressMessages.append(progress)
+        }
     }
     
     class MotionManagerSpy: MotionManager {
@@ -107,8 +129,12 @@ class AngleConditionServiceTests: XCTestCase {
             availabilityCompletions[index](nil)
         }
         
-        func completeStartMotionUpdatesWithNoErrors(at index: Int = 0) {
-            startCompletions[index](initialMotionAttitude, nil)
+        func completeStartMotionUpdates(using attitude: MotionAttitude, at index: Int = 0) {
+            startCompletions[index](.success(attitude))
         }
+    }
+    
+    func anyMotionAttitude() -> MotionAttitude {
+        return MotionAttitude(roll: 3, pitch: 4, yaw: 5)
     }
 }

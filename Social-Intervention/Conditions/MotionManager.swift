@@ -7,10 +7,15 @@
 
 import CoreMotion
 
-public struct MotionAttitude {
+public struct MotionAttitude: Equatable {
     var roll: Double
     var pitch: Double
     var yaw: Double
+}
+
+public enum MotionResult {
+    case success(MotionAttitude)
+    case failure(Error)
 }
 
 public enum MotionAvailabilityError: String, Swift.Error {
@@ -20,7 +25,7 @@ public enum MotionAvailabilityError: String, Swift.Error {
 
 public protocol MotionManager {
     
-    typealias DeviceMotionHandler = (MotionAttitude?, Error?) -> Void
+    typealias DeviceMotionHandler = (MotionResult) -> Void
     
     typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = DeviceMotionHandler

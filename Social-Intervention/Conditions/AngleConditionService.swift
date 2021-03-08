@@ -10,14 +10,16 @@ import Foundation
 public class AngleConditionService {
     
     private(set) var motionManager: MotionManager
+    private(set) var conditionStore: ConditionStore
     
     private var timer: Timer?
     private(set) var currentSessionTime: TimeInterval = 0
     private var timeInterval: TimeInterval
     
-    init(with motionManager: MotionManager, every timeInterval: TimeInterval) {
+    init(with motionManager: MotionManager, savingTo store: ConditionStore, every timeInterval: TimeInterval) {
         self.motionManager = motionManager
         self.timeInterval = timeInterval
+        self.conditionStore = store
     }
     
     public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
@@ -27,9 +29,16 @@ public class AngleConditionService {
     
     public func start() {
         startTimer()
-        motionManager.startMotionUpdates { motion, error in
-            guard let motion = motion, error == nil else { return }
-            // will send data to store.
+        motionManager.startMotionUpdates { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                case let .success(attitude):
+                    self.conditionStore.record(attitude)
+                default:
+                    // todo later
+                    print("Failure")
+            }
         }
     }
     
