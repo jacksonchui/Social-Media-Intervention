@@ -41,6 +41,15 @@ class AngleConditionServiceTests: XCTestCase {
             motionManager.completeWithNoCheckErrors()
         }
     }
+    
+    func test_start_failsOnAnySessionError() {
+        let (sut, manager, _) = makeSUT()
+        let expectedError: MotionSessionError = .anyError
+        
+        expectOnStartSession(sut, toCompleteWith: expectedError, expectedUpdates: 1) {
+            manager.completeStartMotionUpdates(with: expectedError)
+        }
+    }
         
     func test_start_storeInitialRecordOnFirstMotionUpdate() {
         let (sut, manager, store) = makeSUT()
@@ -149,6 +158,10 @@ class AngleConditionServiceTests: XCTestCase {
         
         func completeStartMotionUpdates(using attitude: MotionAttitude, at index: Int = 0) {
             startCompletions[index](.success(attitude))
+        }
+        
+        func completeStartMotionUpdates(with error: MotionSessionError, at index: Int = 0) {
+            startCompletions[index](.failure(error))
         }
     }
     

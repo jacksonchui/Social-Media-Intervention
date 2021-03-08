@@ -24,7 +24,7 @@ public enum MotionAvailabilityError: String, Swift.Error {
 }
 
 public enum MotionSessionError: Swift.Error {
-    case unknownError
+    case anyError
 }
 
 public protocol MotionManager {
