@@ -35,6 +35,19 @@ public class AttitudeConditionService {
         }
     }
     
+    public func stop(completion: @escaping ConditionService.SessionErrorCompletion) {
+        motionManager.stopUpdates {[weak self] error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                completion(error)
+                return
+            }
+            self.resetConditionServiceState()
+            completion(nil)
+        }
+    }
+    
     private func record(result: MotionResult, completion: @escaping ConditionService.SessionErrorCompletion) {
         switch result {
             case let .success(attitude):
@@ -48,6 +61,12 @@ public class AttitudeConditionService {
             case let .failure(error):
                 completion(error)
         }
+    }
+    
+    private func resetConditionServiceState() {
+        currentPeriodTime = 0
+        initialAttitude = nil
+        targetAttitude = nil
     }
     
     private var randomRadian: Double {

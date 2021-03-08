@@ -24,16 +24,17 @@ public enum MotionAvailabilityError: String, Swift.Error {
 }
 
 public enum MotionSessionError: Swift.Error {
-    case anyError
+    case startError
+    case stopError
 }
 
 public protocol MotionManager {
     
-    typealias DeviceMotionHandler = (MotionResult) -> Void
-    
     typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
-    typealias StartCompletion = DeviceMotionHandler
+    typealias StartCompletion = (MotionResult) -> Void
+    typealias StopCompletion = (MotionSessionError?) -> Void
     
-    func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void)
-    func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler)
+    func checkAvailability(completion: @escaping AvailabilityCompletion)
+    func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping StartCompletion)
+    func stopUpdates(completion: @escaping StopCompletion)
 }
