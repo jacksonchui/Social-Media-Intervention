@@ -20,7 +20,7 @@ class AngleConditionServiceTests: XCTestCase {
         let (sut, motionManager, _) = makeSUT()
         let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
-        expect(sut, toCompleteWith: expectedError) {
+        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
             motionManager.complete(with: expectedError)
         }
     }
@@ -29,7 +29,7 @@ class AngleConditionServiceTests: XCTestCase {
         let (sut, motionManager, _) = makeSUT()
         let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
         
-        expect(sut, toCompleteWith: expectedError) {
+        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
             motionManager.complete(with: expectedError)
         }
     }
@@ -37,7 +37,7 @@ class AngleConditionServiceTests: XCTestCase {
     func test_checkAvailability_nilIfNoCheckErrors() {
         let (sut, motionManager, _) = makeSUT()
         
-        expect(sut, toCompleteWith: nil) {
+        expectOnAvailabilityCheck(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
         }
     }
@@ -45,27 +45,49 @@ class AngleConditionServiceTests: XCTestCase {
     func test_start_BeginsTimer() {
         let (sut, motionManager, _) = makeSUT()
         
-        expect(sut, toCompleteWith: nil) {
+        expectOnAvailabilityCheck(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
         }
         
-        sut.start()
+        sut.start { _ in }
         
         motionManager.completeStartMotionUpdates(using: anyMotionAttitude())
         
         XCTAssertGreaterThan(sut.currentSessionTime, -1)
     }
     
-    func test_start_storesMovementProgressInConditionStore() {
+    func test_start_storesOneRecordInConditionStore() {
         let (sut, manager, store) = makeSUT()
+        let expectedAttitude = anyMotionAttitude()
         
-        expect(sut, toCompleteWith: nil) {
-            manager.completeWithNoCheckErrors()
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.start { _ in exp.fulfill() }
+        
+        manager.completeStartMotionUpdates(using: expectedAttitude)
+        
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(store.progressMessages, [expectedAttitude])
+    }
+    
+    func test_start_storesMultipleRecordsInConditionStore() {
+        let (sut, manager, store) = makeSUT()
+        let expectedAttitudes = anyMotionAttitudes()
+        
+        let exp = expectation(description: "Wait for completion")
+        exp.expectedFulfillmentCount = expectedAttitudes.count
+        
+        sut.start {error in
+            if let error = error {
+                XCTFail("Unexpected Error: \(error)")
+            }
+            exp.fulfill()
         }
         
-        sut.start()
-        manager.completeStartMotionUpdates(using: anyMotionAttitude())
-        XCTAssertEqual(store.progressMessages, [anyMotionAttitude()])
+        expectedAttitudes.forEach { manager.completeStartMotionUpdates(using: $0) }
+        
+        wait(for: [exp], timeout: 1.0)
+        XCTAssertEqual(store.progressMessages, expectedAttitudes)
     }
 
     // MARK: - Helpers
@@ -77,7 +99,7 @@ class AngleConditionServiceTests: XCTestCase {
         return (sut, motionManager, conditionStore)
     }
     
-    func expect(_ sut: AngleConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnAvailabilityCheck(_ sut: AngleConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
@@ -136,5 +158,9 @@ class AngleConditionServiceTests: XCTestCase {
     
     func anyMotionAttitude() -> MotionAttitude {
         return MotionAttitude(roll: 3, pitch: 4, yaw: 5)
+    }
+    
+    func anyMotionAttitudes() -> [MotionAttitude] {
+        return [anyMotionAttitude(), anyMotionAttitude()]
     }
 }

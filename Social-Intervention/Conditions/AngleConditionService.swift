@@ -27,7 +27,7 @@ public class AngleConditionService {
         startTimer()
     }
     
-    public func start() {
+    public func start(completion: @escaping (Error?) -> Void) {
         startTimer()
         motionManager.startMotionUpdates { [weak self] result in
             guard let self = self else { return }
@@ -35,9 +35,9 @@ public class AngleConditionService {
             switch result {
                 case let .success(attitude):
                     self.conditionStore.record(attitude)
-                default:
-                    // todo later
-                    print("Failure")
+                    completion(nil)
+                case let .failure(error):
+                    completion(error)
             }
         }
     }
