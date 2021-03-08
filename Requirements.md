@@ -17,6 +17,12 @@ So that I am forced to adjust too a new scenario
 #### Scenarios (Acceptance Criteria)
 
 ```
+Given there are no condition periods
+ When the app starts
+ Then the condition service starts the timer
+  And also starts the Motion Manager
+  And stores what it finds within the condition store.
+
 Given the condition period is in-progress
  When the subject moves their iPhone
  Then the app should adjust the view alpha

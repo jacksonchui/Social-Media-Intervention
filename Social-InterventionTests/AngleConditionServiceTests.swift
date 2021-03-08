@@ -9,9 +9,15 @@ import XCTest
 
 import CoreMotion
 
-struct Motionable {}
+struct DeviceMotion {}
 
-enum MotionError: String, Swift.Error {
+struct MotionAttitude {
+    var roll: Double
+    var pitch: Double
+    var yaw: Double
+}
+
+enum MotionAvailabilityError: String, Swift.Error {
     case deviceMotionUnavailable = "Device Motion is unavailable"
     case attitudeReferenceFrameUnavailable = "Could not get the desired motion frame for device"
 }
@@ -30,7 +36,7 @@ class AngleConditionService {
         self.timeInterval = timeInterval
     }
     
-    public func check(completion: @escaping (MotionError?) -> Void) {
+    public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
         motionManager.checkAvailability(of: .xArbitraryZVertical, completion: completion)
         startTimer()
     }
@@ -51,15 +57,24 @@ class MotionManagerSpy {
     
     init(updateInterval: TimeInterval) { }
     
-    typealias AvailabilityCompletion = (MotionError?) -> Void
+    typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
+    typealias StartCompletion = DeviceMotionHandler
     
     var availabilityCompletions = [AvailabilityCompletion]()
+    var startCompletions = [StartCompletion]()
     
-    func checkAvailability(of attitude: CMAttitudeReferenceFrame, completion: @escaping (MotionError?) -> Void) {
+    var initialMotionAttitude: MotionAttitude?
+    
+    func checkAvailability(of attitude: CMAttitudeReferenceFrame, completion: @escaping (MotionAvailabilityError?) -> Void) {
         availabilityCompletions.append(completion)
     }
     
-    func complete(with error: MotionError, at index: Int = 0) {
+    func startMotionUpdates(completion: @escaping DeviceMotionHandler) {
+        initialMotionAttitude = MotionAttitude(roll: 0, pitch: 0, yaw: 0)
+        startCompletions.append(completion)
+    }
+    
+    func complete(with error: MotionAvailabilityError, at index: Int = 0) {
         availabilityCompletions[index](error)
     }
     
@@ -78,7 +93,7 @@ class AngleConditionServiceTests: XCTestCase {
     
     func test_start_failsWhenDeviceMotionUnavailable() {
         let (sut, motionManager) = makeSUT {_ in }
-        let expectedError: MotionError = .deviceMotionUnavailable
+        let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
         expect(sut, toCompleteWith: expectedError) {
             motionManager.complete(with: expectedError)
@@ -87,22 +102,20 @@ class AngleConditionServiceTests: XCTestCase {
     
     func test_checkAvailability_failsWhenAttitudeReferenceFrameUnavailable() {
         let (sut, motionManager) = makeSUT {_ in }
-        let expectedError: MotionError = .attitudeReferenceFrameUnavailable
+        let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
         
         expect(sut, toCompleteWith: expectedError) {
             motionManager.complete(with: expectedError)
         }
     }
     
-    func test_checkAvailability_nilifNoCheckErrors() {
+    func test_checkAvailability_nilIfNoCheckErrors() {
         let (sut, motionManager) = makeSUT {_ in }
         
         expect(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
         }
     }
-    
-
     
     // MARK: - Helpers
     func makeSUT(updateInterval: TimeInterval = 1.0, onEachInterval: @escaping (Timer) -> Void) -> (AngleConditionService, MotionManagerSpy) {
@@ -112,7 +125,7 @@ class AngleConditionServiceTests: XCTestCase {
         return (sut, motionManager)
     }
     
-    func expect(_ sut: AngleConditionService, toCompleteWith expectedError: MotionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: AngleConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
