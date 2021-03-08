@@ -35,5 +35,5 @@ public protocol MotionManager {
     typealias StartCompletion = DeviceMotionHandler
     
     func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void)
-    func startMotionUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler)
+    func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler)
 }

@@ -29,7 +29,7 @@ public class AttitudeConditionService {
     
     public func start(completion: @escaping ConditionService.SessionErrorCompletion) {
         currentPeriodTime = 0
-        motionManager.startMotionUpdates(updatingEvery: timeInterval) { [weak self] result in
+        motionManager.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
         }

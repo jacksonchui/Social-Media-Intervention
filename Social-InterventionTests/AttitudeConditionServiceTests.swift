@@ -47,7 +47,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let expectedError: MotionSessionError = .anyError
         
         expectStartPeriod(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
-            manager.completeStartMotionUpdates(with: expectedError)
+            manager.completeStartUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
     }
@@ -57,7 +57,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let initialRecord = anyAttitude()
         
         expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartMotionUpdates(with: initialRecord)
+            manager.completeStartUpdates(with: initialRecord)
         }
         XCTAssertEqual(store.records, [initialRecord])
         XCTAssertEqual(sut.initialAttitude, initialRecord)
@@ -69,7 +69,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let expectedRecords = anyAttitudes()
         
         expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
-            expectedRecords.forEach { manager.completeStartMotionUpdates(with: $0) }
+            expectedRecords.forEach { manager.completeStartUpdates(with: $0) }
         }
         XCTAssertEqual(store.records, expectedRecords)
         XCTAssertEqual(sut.initialAttitude, expectedRecords.first)
@@ -82,7 +82,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let maxRadian = Double.pi/2
         
         expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartMotionUpdates(with: initialAttitude)
+            manager.completeStartUpdates(with: initialAttitude)
         }
         
         XCTAssertNotNil(sut.targetAttitude)
@@ -151,14 +151,14 @@ class AttitudeConditionServiceTests: XCTestCase {
         var availabilityCompletions = [AvailabilityCompletion]()
         var startCompletions = [StartCompletion]()
         
-        var initialMotionAttitude: Attitude?
+        var initialAttitude: Attitude?
         
         func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void) {
             availabilityCompletions.append(completion)
         }
         
-        func startMotionUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler) {
-            initialMotionAttitude = Attitude(roll: 0, pitch: 0, yaw: 0)
+        func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler) {
+            initialAttitude = Attitude(roll: 0, pitch: 0, yaw: 0)
             startCompletions.append(completion)
         }
         
@@ -170,11 +170,11 @@ class AttitudeConditionServiceTests: XCTestCase {
             availabilityCompletions[index](nil)
         }
         
-        func completeStartMotionUpdates(with attitude: Attitude, at index: Int = 0) {
+        func completeStartUpdates(with attitude: Attitude, at index: Int = 0) {
             startCompletions[index](.success(attitude))
         }
         
-        func completeStartMotionUpdates(with error: MotionSessionError, at index: Int = 0) {
+        func completeStartUpdates(with error: MotionSessionError, at index: Int = 0) {
             startCompletions[index](.failure(error))
         }
     }
