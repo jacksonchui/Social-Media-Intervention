@@ -27,7 +27,7 @@ public class AngleConditionService {
         startTimer()
     }
     
-    public func start(completion: @escaping (Error?) -> Void) {
+    public func start(completion: @escaping (MotionSessionError?) -> Void) {
         startTimer()
         motionManager.startMotionUpdates { [weak self] result in
             guard let self = self else { return }

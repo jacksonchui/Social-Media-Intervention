@@ -60,13 +60,9 @@ class AngleConditionServiceTests: XCTestCase {
         let (sut, manager, store) = makeSUT()
         let expectedAttitude = anyMotionAttitude()
         
-        let exp = expectation(description: "Wait for completion")
-        
-        sut.start { _ in exp.fulfill() }
-        
-        manager.completeStartMotionUpdates(using: expectedAttitude)
-        
-        wait(for: [exp], timeout: 1.0)
+        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
+            manager.completeStartMotionUpdates(using: expectedAttitude)
+        }
         XCTAssertEqual(store.progressMessages, [expectedAttitude])
     }
     
@@ -74,23 +70,14 @@ class AngleConditionServiceTests: XCTestCase {
         let (sut, manager, store) = makeSUT()
         let expectedAttitudes = anyMotionAttitudes()
         
-        let exp = expectation(description: "Wait for completion")
-        exp.expectedFulfillmentCount = expectedAttitudes.count
-        
-        sut.start {error in
-            if let error = error {
-                XCTFail("Unexpected Error: \(error)")
-            }
-            exp.fulfill()
+        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: expectedAttitudes.count) {
+            expectedAttitudes.forEach { manager.completeStartMotionUpdates(using: $0) }
         }
-        
-        expectedAttitudes.forEach { manager.completeStartMotionUpdates(using: $0) }
-        
-        wait(for: [exp], timeout: 1.0)
         XCTAssertEqual(store.progressMessages, expectedAttitudes)
     }
 
     // MARK: - Helpers
+    
     func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy, ConditionStoreSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
         let conditionStore = ConditionStoreSpy()
@@ -103,6 +90,22 @@ class AngleConditionServiceTests: XCTestCase {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
+            if let error = error {
+                XCTAssertEqual(error, expectedError)
+            }
+            exp.fulfill()
+        }
+        
+        action()
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func expectOnStartSession(_ sut: AngleConditionService, toCompleteWith expectedError: MotionSessionError?, expectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+
+        let exp = expectation(description: "Wait for completion")
+        exp.expectedFulfillmentCount = count
+        
+        sut.start {error in
             if let error = error {
                 XCTAssertEqual(error, expectedError)
             }

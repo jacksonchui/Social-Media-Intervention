@@ -15,12 +15,16 @@ public struct MotionAttitude: Equatable {
 
 public enum MotionResult {
     case success(MotionAttitude)
-    case failure(Error)
+    case failure(MotionSessionError)
 }
 
 public enum MotionAvailabilityError: String, Swift.Error {
     case deviceMotionUnavailable = "Device Motion is unavailable"
     case attitudeReferenceFrameUnavailable = "Could not get the desired motion frame for device"
+}
+
+public enum MotionSessionError: Swift.Error {
+    case unknownError
 }
 
 public protocol MotionManager {
