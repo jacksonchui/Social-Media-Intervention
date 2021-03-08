@@ -41,21 +41,7 @@ class AngleConditionServiceTests: XCTestCase {
             motionManager.completeWithNoCheckErrors()
         }
     }
-    
-    func test_start_BeginsTimer() {
-        let (sut, motionManager, _) = makeSUT()
         
-        expectOnAvailabilityCheck(sut, toCompleteWith: nil) {
-            motionManager.completeWithNoCheckErrors()
-        }
-        
-        sut.start { _ in }
-        
-        motionManager.completeStartMotionUpdates(using: anyMotionAttitude())
-        
-        XCTAssertGreaterThan(sut.currentSessionTime, -1)
-    }
-    
     func test_start_storeInitialRecordOnFirstMotionUpdate() {
         let (sut, manager, store) = makeSUT()
         let initialRecord = anyMotionAttitude()
@@ -65,6 +51,7 @@ class AngleConditionServiceTests: XCTestCase {
         }
         XCTAssertEqual(store.records, [initialRecord])
         XCTAssertEqual(sut.startAttitude, initialRecord)
+        XCTAssertEqual(sut.currentPeriodTime, 1.0)
     }
     
     func test_start_storesMultipleRecordsOnMultipleMotionUpdates() {
@@ -76,6 +63,7 @@ class AngleConditionServiceTests: XCTestCase {
         }
         XCTAssertEqual(store.records, expectedRecords)
         XCTAssertEqual(sut.startAttitude, expectedRecords.first)
+        XCTAssertEqual(sut.currentPeriodTime, 2.0)
     }
     
 //    func test_start_randomlyGeneratesNewTargetAttitude() {
@@ -86,7 +74,7 @@ class AngleConditionServiceTests: XCTestCase {
     func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy, ConditionStoreSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
         let conditionStore = ConditionStoreSpy()
-        let sut = AngleConditionService(with: motionManager, savingTo: conditionStore, every: updateInterval)
+        let sut = AngleConditionService(with: motionManager, saveTo: conditionStore, updateEvery: updateInterval)
         
         return (sut, motionManager, conditionStore)
     }
@@ -146,7 +134,7 @@ class AngleConditionServiceTests: XCTestCase {
             availabilityCompletions.append(completion)
         }
         
-        func startMotionUpdates(completion: @escaping DeviceMotionHandler) {
+        func startMotionUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler) {
             initialMotionAttitude = MotionAttitude(roll: 0, pitch: 0, yaw: 0)
             startCompletions.append(completion)
         }

@@ -12,12 +12,11 @@ public class AngleConditionService {
     private(set) var motionManager: MotionManager
     private(set) var conditionStore: ConditionStore
     
-    private var timer: Timer?
-    private(set) var currentSessionTime: TimeInterval = 0
+    private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var startAttitude: MotionAttitude?
     private var timeInterval: TimeInterval
     
-    init(with motionManager: MotionManager, savingTo store: ConditionStore, every timeInterval: TimeInterval) {
+    init(with motionManager: MotionManager, saveTo store: ConditionStore, updateEvery timeInterval: TimeInterval) {
         self.motionManager = motionManager
         self.timeInterval = timeInterval
         self.conditionStore = store
@@ -25,18 +24,18 @@ public class AngleConditionService {
     
     public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
         motionManager.checkAvailability(completion: completion)
-        startTimer()
     }
     
     public func start(completion: @escaping ConditionService.SessionErrorCompletion) {
-        startTimer()
-        motionManager.startMotionUpdates { [weak self] result in
+        currentPeriodTime = 0
+        motionManager.startMotionUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
         }
     }
     
     private func record(result: MotionResult, completion: @escaping ConditionService.SessionErrorCompletion) {
+        currentPeriodTime += timeInterval
         switch result {
             case let .success(attitude):
                 if startAttitude == nil {
@@ -49,18 +48,4 @@ public class AngleConditionService {
         }
     }
     
-    private func startTimer() {
-        if timer != nil { stopTimer() }
-        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true, block: onEachInterval)
-    }
-    
-    private func stopTimer() {
-        currentSessionTime = 0
-        timer?.invalidate()
-        timer = nil
-    }
-    
-    private func onEachInterval(timer: Timer) {
-        currentSessionTime += 1
-    }
 }
