@@ -46,7 +46,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager, _) = makeSUT()
         let expectedError: MotionSessionError = .anyError
         
-        expectOnStartSession(sut, toCompleteWith: expectedError, expectedUpdates: 1) {
+        expectStartPeriod(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartMotionUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
@@ -56,7 +56,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager, store) = makeSUT()
         let initialRecord = anyAttitude()
         
-        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
+        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
             manager.completeStartMotionUpdates(with: initialRecord)
         }
         XCTAssertEqual(store.records, [initialRecord])
@@ -68,7 +68,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager, store) = makeSUT()
         let expectedRecords = anyAttitudes()
         
-        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: expectedRecords.count) {
+        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
             expectedRecords.forEach { manager.completeStartMotionUpdates(with: $0) }
         }
         XCTAssertEqual(store.records, expectedRecords)
@@ -81,7 +81,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let initialAttitude = anyAttitude()
         let maxRadian = Double.pi/2
         
-        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
+        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
             manager.completeStartMotionUpdates(with: initialAttitude)
         }
         
@@ -116,7 +116,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStartSession(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, expectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectStartPeriod(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
