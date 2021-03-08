@@ -56,14 +56,15 @@ class AngleConditionServiceTests: XCTestCase {
         XCTAssertGreaterThan(sut.currentSessionTime, -1)
     }
     
-    func test_start_storesOneRecordOnOneMotionUpdate() {
+    func test_start_storeInitialRecordOnFirstMotionUpdate() {
         let (sut, manager, store) = makeSUT()
-        let expectedRecord = anyMotionAttitude()
+        let initialRecord = anyMotionAttitude()
         
         expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
-            manager.completeStartMotionUpdates(using: expectedRecord)
+            manager.completeStartMotionUpdates(using: initialRecord)
         }
-        XCTAssertEqual(store.records, [expectedRecord])
+        XCTAssertEqual(store.records, [initialRecord])
+        XCTAssertEqual(sut.startAttitude, initialRecord)
     }
     
     func test_start_storesMultipleRecordsOnMultipleMotionUpdates() {
@@ -74,7 +75,11 @@ class AngleConditionServiceTests: XCTestCase {
             expectedRecords.forEach { manager.completeStartMotionUpdates(using: $0) }
         }
         XCTAssertEqual(store.records, expectedRecords)
+        XCTAssertEqual(sut.startAttitude, expectedRecords.first)
     }
+    
+//    func test_start_randomlyGeneratesNewTargetAttitude() {
+//    }
 
     // MARK: - Helpers
     
@@ -160,10 +165,14 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func anyMotionAttitude() -> MotionAttitude {
+        return MotionAttitude(roll: 0, pitch: 0, yaw: 0)
+    }
+    
+    func anyOtherMotionAttitude() -> MotionAttitude {
         return MotionAttitude(roll: 3, pitch: 4, yaw: 5)
     }
     
     func anyMotionAttitudes() -> [MotionAttitude] {
-        return [anyMotionAttitude(), anyMotionAttitude()]
+        return [anyMotionAttitude(), anyOtherMotionAttitude()]
     }
 }

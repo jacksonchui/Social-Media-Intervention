@@ -16,6 +16,7 @@ public protocol ConditionService: AnyObject {
     associatedtype Error
     associatedtype ConditionDelegate
     typealias ProgressHandler = (Progress) -> Void
+    typealias SessionErrorCompletion = (MotionSessionError?) -> Void
         
     func start(completion: @escaping (Error?) -> Void) -> Void
     func stop() -> Void

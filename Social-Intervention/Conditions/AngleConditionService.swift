@@ -14,6 +14,7 @@ public class AngleConditionService {
     
     private var timer: Timer?
     private(set) var currentSessionTime: TimeInterval = 0
+    private(set) var startAttitude: MotionAttitude?
     private var timeInterval: TimeInterval
     
     init(with motionManager: MotionManager, savingTo store: ConditionStore, every timeInterval: TimeInterval) {
@@ -27,18 +28,24 @@ public class AngleConditionService {
         startTimer()
     }
     
-    public func start(completion: @escaping (MotionSessionError?) -> Void) {
+    public func start(completion: @escaping ConditionService.SessionErrorCompletion) {
         startTimer()
         motionManager.startMotionUpdates { [weak self] result in
             guard let self = self else { return }
-            
-            switch result {
-                case let .success(attitude):
-                    self.conditionStore.record(attitude)
-                    completion(nil)
-                case let .failure(error):
-                    completion(error)
-            }
+            self.record(result: result, completion: completion)
+        }
+    }
+    
+    private func record(result: MotionResult, completion: @escaping ConditionService.SessionErrorCompletion) {
+        switch result {
+            case let .success(attitude):
+                if startAttitude == nil {
+                    startAttitude = attitude
+                }
+                self.conditionStore.record(attitude)
+                completion(nil)
+            case let .failure(error):
+                completion(error)
         }
     }
     
