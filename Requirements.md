@@ -1,17 +1,17 @@
 #  Requirements for HCI Mobile Embodied Social Media Interventions
 
-## Angle Condition Feature Specs
+## Attitude Condition Feature Specs
 
-### Story: Online research subject browses social media with Angle Intervention
+### Story: Online research subject browses social media with Attitude Intervention
 
 ### Narrative #1
 
 ```
 As a online subject
 I want the app every x minutes 
-- give me a new target position to move to
-- adjust the brightness depending on how close I am to a new angle
-So that I am forced to adjust too a new scenario
+And give me a new target attiude to adjust to
+And adjust the brightness depending on how close I am to a new attitude
+So that I am forced to adjust to a new scenario
 ```
 
 #### Scenarios (Acceptance Criteria)
@@ -19,27 +19,28 @@ So that I am forced to adjust too a new scenario
 ```
 Given there are no condition periods
  When the app starts
- Then the condition service starts the timer
-  And also starts the Motion Manager
-  And records the start attitude.
+ Then the condition service starts the motion updates
+
+Given the first motion update on a condition period
+ When the motion update returns a result
+ Then the app records the start attitude.
   And randomly generates a new target attitude.
 
 Given the condition period is in-progress
  When the subject moves their iPhone
  Then the app should adjust the view alpha
-Based on the condition threshold and a polynomial step function
+Based on how close they are to the target attitude
 
-Given the condition period is completed
+Given the current period is completed
   And the subject has reached a threshold for at least X% of the time
- Then the app should alert the subject that the angle is changing
-  And log the result
-  And generate a new angle condition relative to the subject's current angle
-  And reset the timer
+ Then show the subject a toast that the target attitude is changing
+  And log the result of the period in the current session
+  And the app should restart the condition service
 ```
 
 ## Use Cases
 
-### Angle Condition Use Case
+### Attitude Condition Use Case
 
 #### Data:
 - CMDeviceMotion

@@ -8,7 +8,7 @@
 import XCTest
 import Social_Intervention
 
-class AngleConditionServiceTests: XCTestCase {
+class AttitudeConditionServiceTests: XCTestCase {
 
     func test_init_setsUpMotionManagerAndQueue() {
         let (sut, _, _) = makeSUT()
@@ -94,15 +94,15 @@ class AngleConditionServiceTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy, ConditionStoreSpy) {
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, MotionManagerSpy, ConditionStoreSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
         let conditionStore = ConditionStoreSpy()
-        let sut = AngleConditionService(with: motionManager, saveTo: conditionStore, updateEvery: updateInterval)
+        let sut = AttitudeConditionService(with: motionManager, saveTo: conditionStore, updateEvery: updateInterval)
         
         return (sut, motionManager, conditionStore)
     }
     
-    func expectOnAvailabilityCheck(_ sut: AngleConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnAvailabilityCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
@@ -116,7 +116,7 @@ class AngleConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStartSession(_ sut: AngleConditionService, toCompleteWith expectedError: MotionSessionError?, expectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStartSession(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, expectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count

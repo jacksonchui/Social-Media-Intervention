@@ -1,5 +1,5 @@
 //
-//  AngleConditionService.swift
+//  AttitudeConditionService.swift
 //  Social-Intervention
 //
 //  Created by Jackson Chui on 3/7/21.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class AngleConditionService {
+public class AttitudeConditionService {
     
     private(set) var motionManager: MotionManager
     private(set) var conditionStore: ConditionStore
