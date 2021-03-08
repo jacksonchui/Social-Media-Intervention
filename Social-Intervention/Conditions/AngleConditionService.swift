@@ -36,14 +36,14 @@ public class AngleConditionService {
     }
     
     private func record(result: MotionResult, completion: @escaping ConditionService.SessionErrorCompletion) {
-        currentPeriodTime += timeInterval
         switch result {
             case let .success(attitude):
                 if initialAttitude == nil {
                     initialAttitude = attitude
                     targetAttitude = randomAttitude
                 }
-                self.conditionStore.record(attitude)
+                currentPeriodTime += timeInterval
+                conditionStore.record(attitude)
                 completion(nil)
             case let .failure(error):
                 completion(error)

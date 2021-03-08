@@ -66,7 +66,7 @@ class RotationConditionService {
     func updatePitch(_ motion: CMDeviceMotion) {
         let pitch = radiansToDegrees(motion.attitude.pitch)
         delegate?.condition(progress: pitch / 100)
-//        print("Pitch (along x-axis): \(pitch)")
+        print("Pitch (along x-axis): \(motion.attitude.pitch)")
     }
     
     private func radiansToDegrees(_ x: Double) -> Double { return x * 180 / Double.pi }

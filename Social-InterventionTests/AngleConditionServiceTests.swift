@@ -42,13 +42,14 @@ class AngleConditionServiceTests: XCTestCase {
         }
     }
     
-    func test_start_failsOnAnySessionError() {
+    func test_start_failsOnAnySessionErrorWithNoTimeRecorded() {
         let (sut, manager, _) = makeSUT()
         let expectedError: MotionSessionError = .anyError
         
         expectOnStartSession(sut, toCompleteWith: expectedError, expectedUpdates: 1) {
             manager.completeStartMotionUpdates(with: expectedError)
         }
+        XCTAssertEqual(sut.currentPeriodTime, 0.0)
     }
         
     func test_start_storeInitialRecordOnFirstMotionUpdate() {
