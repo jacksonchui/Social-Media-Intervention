@@ -6,93 +6,18 @@
 //
 
 import XCTest
-
-import CoreMotion
-
-struct DeviceMotion {}
-
-struct MotionAttitude {
-    var roll: Double
-    var pitch: Double
-    var yaw: Double
-}
-
-enum MotionAvailabilityError: String, Swift.Error {
-    case deviceMotionUnavailable = "Device Motion is unavailable"
-    case attitudeReferenceFrameUnavailable = "Could not get the desired motion frame for device"
-}
-
-class AngleConditionService {
-    
-    private(set) var motionManager: MotionManagerSpy
-    
-    private(set) var timer: Timer?
-    private var timeInterval: TimeInterval
-    private var onEachInterval: ((Timer) -> Void)
-    
-    init(with motionManager: MotionManagerSpy, every timeInterval: TimeInterval, onEachInterval: @escaping (Timer) -> Void) {
-        self.motionManager = motionManager
-        self.onEachInterval = onEachInterval
-        self.timeInterval = timeInterval
-    }
-    
-    public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
-        motionManager.checkAvailability(of: .xArbitraryZVertical, completion: completion)
-        startTimer()
-    }
-    
-    private func startTimer() {
-        if timer != nil { stopTimer() }
-        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true) { timer in
-        }
-    }
-    
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-}
-
-class MotionManagerSpy {
-    
-    init(updateInterval: TimeInterval) { }
-    
-    typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
-    typealias StartCompletion = DeviceMotionHandler
-    
-    var availabilityCompletions = [AvailabilityCompletion]()
-    var startCompletions = [StartCompletion]()
-    
-    var initialMotionAttitude: MotionAttitude?
-    
-    func checkAvailability(of attitude: CMAttitudeReferenceFrame, completion: @escaping (MotionAvailabilityError?) -> Void) {
-        availabilityCompletions.append(completion)
-    }
-    
-    func startMotionUpdates(completion: @escaping DeviceMotionHandler) {
-        initialMotionAttitude = MotionAttitude(roll: 0, pitch: 0, yaw: 0)
-        startCompletions.append(completion)
-    }
-    
-    func complete(with error: MotionAvailabilityError, at index: Int = 0) {
-        availabilityCompletions[index](error)
-    }
-    
-    func completeWithNoCheckErrors(at index: Int = 0) {
-        availabilityCompletions[index](nil)
-    }
-}
+import Social_Intervention
 
 class AngleConditionServiceTests: XCTestCase {
 
     func test_init_setsUpMotionManagerAndQueue() {
-        let (sut, _) = makeSUT {_ in }
+        let (sut, _) = makeSUT()
         
         XCTAssertNotNil(sut.motionManager)
     }
     
     func test_start_failsWhenDeviceMotionUnavailable() {
-        let (sut, motionManager) = makeSUT {_ in }
+        let (sut, motionManager) = makeSUT()
         let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
         expect(sut, toCompleteWith: expectedError) {
@@ -101,7 +26,7 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_checkAvailability_failsWhenAttitudeReferenceFrameUnavailable() {
-        let (sut, motionManager) = makeSUT {_ in }
+        let (sut, motionManager) = makeSUT()
         let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
         
         expect(sut, toCompleteWith: expectedError) {
@@ -110,17 +35,31 @@ class AngleConditionServiceTests: XCTestCase {
     }
     
     func test_checkAvailability_nilIfNoCheckErrors() {
-        let (sut, motionManager) = makeSUT {_ in }
+        let (sut, motionManager) = makeSUT()
         
         expect(sut, toCompleteWith: nil) {
             motionManager.completeWithNoCheckErrors()
         }
     }
     
+    func test_start_BeginsTimer() {
+        let (sut, motionManager) = makeSUT()
+        
+        expect(sut, toCompleteWith: nil) {
+            motionManager.completeWithNoCheckErrors()
+        }
+        
+        sut.start()
+        
+        motionManager.completeStartMotionUpdatesWithNoErrors()
+        
+        XCTAssertGreaterThan(sut.currentSessionTime, -1)
+    }
+
     // MARK: - Helpers
-    func makeSUT(updateInterval: TimeInterval = 1.0, onEachInterval: @escaping (Timer) -> Void) -> (AngleConditionService, MotionManagerSpy) {
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AngleConditionService, MotionManagerSpy) {
         let motionManager = MotionManagerSpy(updateInterval: updateInterval)
-        let sut = AngleConditionService(with: motionManager, every: updateInterval, onEachInterval: onEachInterval)
+        let sut = AngleConditionService(with: motionManager, every: updateInterval)
         
         return (sut, motionManager)
     }
@@ -137,5 +76,39 @@ class AngleConditionServiceTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    class MotionManagerSpy: MotionManager {
+        
+        init(updateInterval: TimeInterval) { }
+        
+        typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
+        typealias StartCompletion = DeviceMotionHandler
+        
+        var availabilityCompletions = [AvailabilityCompletion]()
+        var startCompletions = [StartCompletion]()
+        
+        var initialMotionAttitude: MotionAttitude?
+        
+        func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void) {
+            availabilityCompletions.append(completion)
+        }
+        
+        func startMotionUpdates(completion: @escaping DeviceMotionHandler) {
+            initialMotionAttitude = MotionAttitude(roll: 0, pitch: 0, yaw: 0)
+            startCompletions.append(completion)
+        }
+        
+        func complete(with error: MotionAvailabilityError, at index: Int = 0) {
+            availabilityCompletions[index](error)
+        }
+        
+        func completeWithNoCheckErrors(at index: Int = 0) {
+            availabilityCompletions[index](nil)
+        }
+        
+        func completeStartMotionUpdatesWithNoErrors(at index: Int = 0) {
+            startCompletions[index](initialMotionAttitude, nil)
+        }
     }
 }

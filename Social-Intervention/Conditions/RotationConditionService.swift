@@ -7,21 +7,7 @@
 
 import CoreMotion
 
-protocol ConditionServiceDelegate: AnyObject {
-    func condition(progress: Double)
-}
-
-protocol ConditionService: AnyObject {
-    associatedtype Error
-    associatedtype ConditionDelegate
-    
-    var delegate: ConditionDelegate? { get }
-    
-    func start(completion: @escaping (Error?) -> Void) -> Void
-    func stop() -> Void
-}
-
-class RotationConditionService: ConditionService {
+class RotationConditionService {
     
     enum Error: String, Swift.Error {
         case deviceMotionUnavailable = "Device Motion is unavailable"
