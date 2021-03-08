@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol ConditionStore: AnyObject {
-    typealias Record = MotionAttitude
+    typealias Record = Attitude
     
     func record(_ record: Record) -> Void
 }

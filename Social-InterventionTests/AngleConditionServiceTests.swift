@@ -53,30 +53,43 @@ class AngleConditionServiceTests: XCTestCase {
         
     func test_start_storeInitialRecordOnFirstMotionUpdate() {
         let (sut, manager, store) = makeSUT()
-        let initialRecord = anyMotionAttitude()
+        let initialRecord = anyAttitude()
         
         expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
-            manager.completeStartMotionUpdates(using: initialRecord)
+            manager.completeStartMotionUpdates(with: initialRecord)
         }
         XCTAssertEqual(store.records, [initialRecord])
-        XCTAssertEqual(sut.startAttitude, initialRecord)
+        XCTAssertEqual(sut.initialAttitude, initialRecord)
         XCTAssertEqual(sut.currentPeriodTime, 1.0)
     }
     
     func test_start_storesMultipleRecordsOnMultipleMotionUpdates() {
         let (sut, manager, store) = makeSUT()
-        let expectedRecords = anyMotionAttitudes()
+        let expectedRecords = anyAttitudes()
         
         expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: expectedRecords.count) {
-            expectedRecords.forEach { manager.completeStartMotionUpdates(using: $0) }
+            expectedRecords.forEach { manager.completeStartMotionUpdates(with: $0) }
         }
         XCTAssertEqual(store.records, expectedRecords)
-        XCTAssertEqual(sut.startAttitude, expectedRecords.first)
+        XCTAssertEqual(sut.initialAttitude, expectedRecords.first)
         XCTAssertEqual(sut.currentPeriodTime, 2.0)
     }
     
-//    func test_start_randomlyGeneratesNewTargetAttitude() {
-//    }
+    func test_start_randomlyGeneratesValidTargetAttitude() {
+        let (sut, manager, _) = makeSUT()
+        let initialAttitude = anyAttitude()
+        let maxRadian = Double.pi/2
+        
+        expectOnStartSession(sut, toCompleteWith: nil, expectedUpdates: 1) {
+            manager.completeStartMotionUpdates(with: initialAttitude)
+        }
+        
+        XCTAssertNotNil(sut.targetAttitude)
+        XCTAssertNotEqual(sut.targetAttitude, initialAttitude, "TargetAttitude cannot be the same as InitialAttitude")
+        XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.pitch), maxRadian)
+        XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.yaw), maxRadian)
+        XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
+    }
 
     // MARK: - Helpers
     
@@ -137,14 +150,14 @@ class AngleConditionServiceTests: XCTestCase {
         var availabilityCompletions = [AvailabilityCompletion]()
         var startCompletions = [StartCompletion]()
         
-        var initialMotionAttitude: MotionAttitude?
+        var initialMotionAttitude: Attitude?
         
         func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void) {
             availabilityCompletions.append(completion)
         }
         
         func startMotionUpdates(updatingEvery interval: TimeInterval, completion: @escaping DeviceMotionHandler) {
-            initialMotionAttitude = MotionAttitude(roll: 0, pitch: 0, yaw: 0)
+            initialMotionAttitude = Attitude(roll: 0, pitch: 0, yaw: 0)
             startCompletions.append(completion)
         }
         
@@ -156,7 +169,7 @@ class AngleConditionServiceTests: XCTestCase {
             availabilityCompletions[index](nil)
         }
         
-        func completeStartMotionUpdates(using attitude: MotionAttitude, at index: Int = 0) {
+        func completeStartMotionUpdates(with attitude: Attitude, at index: Int = 0) {
             startCompletions[index](.success(attitude))
         }
         
@@ -165,15 +178,15 @@ class AngleConditionServiceTests: XCTestCase {
         }
     }
     
-    func anyMotionAttitude() -> MotionAttitude {
-        return MotionAttitude(roll: 0, pitch: 0, yaw: 0)
+    func anyAttitude() -> Attitude {
+        return Attitude(roll: 0, pitch: 0, yaw: 0)
     }
     
-    func anyOtherMotionAttitude() -> MotionAttitude {
-        return MotionAttitude(roll: 3, pitch: 4, yaw: 5)
+    func anyOtherAttitude() -> Attitude {
+        return Attitude(roll: 3, pitch: 4, yaw: 5)
     }
     
-    func anyMotionAttitudes() -> [MotionAttitude] {
-        return [anyMotionAttitude(), anyOtherMotionAttitude()]
+    func anyAttitudes() -> [Attitude] {
+        return [anyAttitude(), anyOtherAttitude()]
     }
 }

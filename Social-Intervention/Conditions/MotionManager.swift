@@ -7,14 +7,14 @@
 
 import CoreMotion
 
-public struct MotionAttitude: Equatable {
+public struct Attitude: Equatable {
     var roll: Double
     var pitch: Double
     var yaw: Double
 }
 
 public enum MotionResult {
-    case success(MotionAttitude)
+    case success(Attitude)
     case failure(MotionSessionError)
 }
 

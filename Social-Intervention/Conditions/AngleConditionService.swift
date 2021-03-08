@@ -13,7 +13,8 @@ public class AngleConditionService {
     private(set) var conditionStore: ConditionStore
     
     private(set) var currentPeriodTime: TimeInterval = 0
-    private(set) var startAttitude: MotionAttitude?
+    private(set) var initialAttitude: Attitude?
+    private(set) var targetAttitude: Attitude?
     private var timeInterval: TimeInterval
     
     init(with motionManager: MotionManager, saveTo store: ConditionStore, updateEvery timeInterval: TimeInterval) {
@@ -38,8 +39,9 @@ public class AngleConditionService {
         currentPeriodTime += timeInterval
         switch result {
             case let .success(attitude):
-                if startAttitude == nil {
-                    startAttitude = attitude
+                if initialAttitude == nil {
+                    initialAttitude = attitude
+                    targetAttitude = randomAttitude
                 }
                 self.conditionStore.record(attitude)
                 completion(nil)
@@ -48,4 +50,19 @@ public class AngleConditionService {
         }
     }
     
+    private var randomRadian: Double {
+        let sigFigures = 2
+        return Double.random(in: -Double.pi/2...Double.pi/2).truncate(places: sigFigures)
+    }
+    
+    private var randomAttitude: Attitude {
+        let newAttitude = Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
+        return newAttitude != initialAttitude ? newAttitude : self.randomAttitude
+    }
+}
+
+private extension Double {
+    func truncate(places : Int)-> Double {
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
+    }
 }
