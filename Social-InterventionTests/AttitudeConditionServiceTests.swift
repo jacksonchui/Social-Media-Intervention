@@ -10,149 +10,127 @@ import Social_Intervention
 
 class AttitudeConditionServiceTests: XCTestCase {
 
-    func test_init_setsUpMotionManagerAndQueue() {
-        let (sut, _, _) = makeSUT()
-        
-        XCTAssertNotNil(sut.motionManager)
+    func test_init_setsUpAttitudeService() {
+        let (sut, _) = makeSUT()
+        XCTAssertNotNil(sut.attitudeService)
     }
     
-    func test_start_failsWhenDeviceMotionUnavailable() {
-        let (sut, motionManager, _) = makeSUT()
+    func test_check_failsWhenDeviceMotionUnavailable() {
+        let (sut, manager) = makeSUT()
         let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
-        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
-            motionManager.complete(with: expectedError)
+        expectOnCheck(sut, toCompleteWith: expectedError) {
+            manager.complete(with: expectedError)
         }
     }
     
-    func test_checkAvailability_failsWhenAttitudeReferenceFrameUnavailable() {
-        let (sut, motionManager, _) = makeSUT()
+    func test_check_failsWhenAttitudeReferenceFrameUnavailable() {
+        let (sut, manager) = makeSUT()
         let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
         
-        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
-            motionManager.complete(with: expectedError)
+        expectOnCheck(sut, toCompleteWith: expectedError) {
+            manager.complete(with: expectedError)
         }
     }
     
-    func test_checkAvailability_nilIfNoCheckErrors() {
-        let (sut, motionManager, _) = makeSUT()
+    func test_check_succeedsWhenNoErrors() {
+        let (sut, manager) = makeSUT()
         
-        expectOnAvailabilityCheck(sut, toCompleteWith: nil) {
-            motionManager.completeWithNoCheckErrors()
+        expectOnCheck(sut, toCompleteWith: nil) {
+            manager.completeWithNoCheckErrors()
         }
     }
     
-    func test_start_failsOnAnySessionErrorWithNoTimeRecorded() {
-        let (sut, manager, _) = makeSUT()
+    func test_start_failsOnAnySessionErrorAndDoesNotRecordTime() {
+        let (sut, manager) = makeSUT()
         let expectedError: MotionSessionError = .startError
         
-        expectStartPeriod(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
+        expectOnStart(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
     }
         
-    func test_start_storeInitialRecordOnFirstMotionUpdateSuccessfully() {
-        let (sut, manager, store) = makeSUT()
+    func test_start_storesFirstUpdateAsInitialRecord() {
+        let (sut, manager) = makeSUT()
         let initialRecord = anyAttitude()
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartUpdates(with: initialRecord)
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
+            manager.completeStartUpdatesSuccessfully(with: initialRecord)
         }
-        XCTAssertEqual(store.records, [initialRecord])
-        XCTAssertEqual(sut.initialAttitude, initialRecord)
+        XCTAssertEqual(sut.records.first, initialRecord)
         XCTAssertEqual(sut.currentPeriodTime, 1.0)
     }
     
-    func test_start_storesMultipleRecordsOnMultipleMotionUpdatesSuccessfully() {
-        let (sut, manager, store) = makeSUT()
+    func test_start_storesMultipleRecordsOnMultipleUpdates() {
+        let (sut, manager) = makeSUT()
         let expectedRecords = anyAttitudes()
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
-            expectedRecords.forEach { manager.completeStartUpdates(with: $0) }
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
+            expectedRecords.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
-        XCTAssertEqual(store.records, expectedRecords)
-        XCTAssertEqual(sut.initialAttitude, expectedRecords.first)
+        XCTAssertEqual(sut.records, expectedRecords)
         XCTAssertEqual(sut.currentPeriodTime, 10.0)
     }
     
-    func test_start_randomlyGeneratesValidTargetAttitudeSuccessfully() {
-        let (sut, manager, _) = makeSUT()
+    func test_start_generatesValidTargetAttitude() {
+        let (sut, manager) = makeSUT()
         let initialAttitude = anyAttitude()
         let maxRadian = Double.pi/2
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartUpdates(with: initialAttitude)
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
+            manager.completeStartUpdatesSuccessfully(with: initialAttitude)
         }
         
-        XCTAssertNotNil(sut.targetAttitude)
         XCTAssertNotEqual(sut.targetAttitude, initialAttitude, "TargetAttitude cannot be the same as InitialAttitude")
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.pitch), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.yaw), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
     }
     
-    func test_start_thenUpdates_thenStopWithError_doesNotResetState(){
-        let (sut, manager, _) = makeSUT()
+    func test_stop_failsWithErrorThenDoesNotResetState(){
+        let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
         let expectedError: MotionSessionError? = .stopError
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
+            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         
-        expectStopPeriod(sut, toCompleteWith: expectedError) {
+        expectOnStop(sut, toCompleteWith: expectedError) {
             manager.completeStopUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 1.0 * Double(attitudeUpdates.count))
-        XCTAssertNotNil(sut.initialAttitude, "State should not be reset since Manager might still be running.")
+        XCTAssertNotNil(sut.records.first, "State should not be reset since Manager might still be running.")
         XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
-    func test_start_thenUpdates_thenStop_endsCurrentPeriodSuccessfully() {
-        let (sut, manager, _) = makeSUT()
+    func test_stop_succeedsThenEndsCurrentPeriodAndReturnsAThreshold() {
+        let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
-        let noError: MotionSessionError? = nil
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
+            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         
-        expectStopPeriod(sut, toCompleteWith: noError) {
-            manager.completeStopUpdates(with: noError)
+        expectOnStop(sut, toCompleteWith: nil) {
+            manager.completeStopUpdatesSuccessfully()
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
-        XCTAssertNil(sut.initialAttitude, "Reset the initial attitude to nil at the end of period.")
+        XCTAssertTrue(sut.records.isEmpty, "Reset records at the end of period.")
         XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period.")
-    }
-    
-    func test_startUpdates_succesfullyCalculatesValidProgressInAPeriod() {
-        let (sut, manager, store) = makeSUT()
-        let attitudeUpdates = anyAttitudes()
-        let noError: MotionSessionError? = nil
-
-        expectStartPeriod(sut, toCompleteWith: noError, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach {
-                manager.completeStartUpdates(with: $0)
-                XCTAssertLessThanOrEqual(store.progress(to: sut.targetAttitude), 1.0)
-            }
-        }
-        expectStopPeriod(sut, toCompleteWith: noError) {
-            manager.completeStopUpdates(with: noError)
-        }
     }
 
     // MARK: - Helpers
     
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, MotionManagerSpy, ConditionStoreSpy) {
-        let motionManager = MotionManagerSpy(updateInterval: updateInterval)
-        let conditionStore = ConditionStoreSpy()
-        let sut = AttitudeConditionService(with: motionManager, saveTo: conditionStore, updateEvery: updateInterval)
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, AttitudeMotionServiceSpy) {
+        let attitudeSpy = AttitudeMotionServiceSpy(updateInterval: updateInterval)
+        let sut = AttitudeConditionService(with: attitudeSpy, updateEvery: updateInterval)
         
-        return (sut, motionManager, conditionStore)
+        return (sut, attitudeSpy)
     }
     
-    func expectOnAvailabilityCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
@@ -166,17 +144,18 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectStartPeriod(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
         
         sut.start {result in
             switch result {
+                case let .success(progress: progress):
+                    XCTAssertGreaterThanOrEqual(progress, 0.0)
+                    XCTAssertLessThanOrEqual(progress, 1.0)
                 case let .failure(error):
                     XCTAssertEqual(error, expectedError)
-                default:
-                    break
             }
             exp.fulfill()
         }
@@ -185,16 +164,17 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectStopPeriod(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStop(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         
         sut.stop {result in
             switch result {
+                case let .success(progressAboveThreshold: progress):
+                    XCTAssertGreaterThanOrEqual(progress, 0.0)
+                    XCTAssertLessThanOrEqual(progress, 1.0)
                 case let .failure(error):
                     XCTAssertEqual(error, expectedError)
-                default:
-                    break
             }
             exp.fulfill()
         }
@@ -203,26 +183,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    class ConditionStoreSpy: ConditionStore {
-        
-        var records = [Record]()
-        
-        func record(_ record: Record) {
-            records.append(record)
-        }
-        
-        func progress(to target: Record?) -> Double {
-            guard let target = target, !records.isEmpty else {
-                return 1.0
-            }
-            let maxDiff = Double.pi/2
-            let diff = abs(records.last!.pitch-target.pitch) + abs(records.last!.yaw-target.yaw) + abs(records.last!.roll-target.roll)
-            let progress = 3.0 - (diff/maxDiff)
-            return progress / 3.0
-        }
-    }
-    
-    class MotionManagerSpy: MotionManager {
+    class AttitudeMotionServiceSpy: AttitudeMotionService {
         
         init(updateInterval: TimeInterval) { }
                 
@@ -253,7 +214,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             availabilityCompletions[index](nil)
         }
         
-        func completeStartUpdates(with attitude: Attitude, at index: Int = 0) {
+        func completeStartUpdatesSuccessfully(with attitude: Attitude, at index: Int = 0) {
             startCompletions[index](.success(attitude))
         }
         
@@ -263,6 +224,10 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         func completeStopUpdates(with error: MotionSessionError?, at index: Int = 0) {
             stopCompletions[index](error)
+        }
+        
+        func completeStopUpdatesSuccessfully(at index: Int = 0) {
+            stopCompletions[index](nil)
         }
     }
     

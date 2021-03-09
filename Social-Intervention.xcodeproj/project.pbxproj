@@ -10,8 +10,6 @@
 		CF25B47325ED6F4600571C0D /* AttitudeConditionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */; };
 		CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
-		CF25B48025ED836F00571C0D /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
-		CF442A0025EC6858008EB9DA /* TimerIntervalUpdateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
@@ -23,18 +21,15 @@
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
 		CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */; };
 		CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */; };
-		CF92AF1025F5B73B0044E588 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* MotionManager.swift */; };
+		CF92AF1025F5B73B0044E588 /* AttitudeMotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */; };
 		CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF1325F5B7C80044E588 /* ConditionService.swift */; };
-		CF92AF1D25F5B9FE0044E588 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* MotionManager.swift */; };
+		CF92AF1D25F5B9FE0044E588 /* AttitudeMotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */; };
 		CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF1325F5B7C80044E588 /* ConditionService.swift */; };
 		CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */; };
-		CF92AF2525F5BE8A0044E588 /* ConditionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF2425F5BE8A0044E588 /* ConditionStore.swift */; };
-		CF92AF2A25F5C68F0044E588 /* ConditionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF2425F5BE8A0044E588 /* ConditionStore.swift */; };
 		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
-		CFCCCB0425EC5E02002F7289 /* TimerIntervalUpdateServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCB0325EC5E01002F7289 /* TimerIntervalUpdateServiceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +45,6 @@
 /* Begin PBXFileReference section */
 		CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionServiceTests.swift; sourceTree = "<group>"; };
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
-		CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerIntervalUpdateService.swift; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationConditionService.swift; sourceTree = "<group>"; };
@@ -65,12 +59,10 @@
 		CF8D2B2225EC38F2008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerTests.swift; sourceTree = "<group>"; };
 		CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionService.swift; sourceTree = "<group>"; };
-		CF92AF0F25F5B73B0044E588 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
+		CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionService.swift; sourceTree = "<group>"; };
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
-		CF92AF2425F5BE8A0044E588 /* ConditionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionStore.swift; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
-		CFCCCB0325EC5E01002F7289 /* TimerIntervalUpdateServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerIntervalUpdateServiceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,12 +95,9 @@
 		CF442A1825EC8B26008EB9DA /* Conditions */ = {
 			isa = PBXGroup;
 			children = (
-				CF92AF1325F5B7C80044E588 /* ConditionService.swift */,
-				CF92AF0F25F5B73B0044E588 /* MotionManager.swift */,
-				CF92AF2425F5BE8A0044E588 /* ConditionStore.swift */,
-				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
-				CF4429FF25EC6858008EB9DA /* TimerIntervalUpdateService.swift */,
+				CFD371C725F74A840097B97F /* Protocols */,
 				CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */,
+				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
 			);
 			path = Conditions;
 			sourceTree = "<group>";
@@ -161,7 +150,6 @@
 			children = (
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
-				CFCCCB0325EC5E01002F7289 /* TimerIntervalUpdateServiceTests.swift */,
 				CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */,
 			);
 			path = "Social-InterventionTests";
@@ -174,6 +162,15 @@
 				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
 			);
 			path = Browser;
+			sourceTree = "<group>";
+		};
+		CFD371C725F74A840097B97F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				CF92AF1325F5B7C80044E588 /* ConditionService.swift */,
+				CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -277,9 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
-				CF442A0025EC6858008EB9DA /* TimerIntervalUpdateService.swift in Sources */,
-				CF92AF2525F5BE8A0044E588 /* ConditionStore.swift in Sources */,
-				CF92AF1025F5B73B0044E588 /* MotionManager.swift in Sources */,
+				CF92AF1025F5B73B0044E588 /* AttitudeMotionService.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
 				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
@@ -296,15 +291,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
-				CF25B48025ED836F00571C0D /* TimerIntervalUpdateService.swift in Sources */,
-				CF92AF1D25F5B9FE0044E588 /* MotionManager.swift in Sources */,
+				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionService.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
 				CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */,
 				CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */,
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
-				CFCCCB0425EC5E02002F7289 /* TimerIntervalUpdateServiceTests.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
-				CF92AF2A25F5C68F0044E588 /* ConditionStore.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionServiceTests.swift in Sources */,
