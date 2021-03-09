@@ -7,29 +7,39 @@
 
 import Foundation
 
+public class ConditionSession {
+    
+    private(set) var conditionService: AttitudeConditionService
+    private(set) var currentProgress: Double = 0
+    
+    init(for conditionService: AttitudeConditionService) {
+        self.conditionService = conditionService
+    }
+}
+
 public class AttitudeConditionService {
     
     private(set) var motionManager: MotionManager
-    private(set) var conditionStore: ConditionStore
     
     private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var initialAttitude: Attitude?
     private(set) var targetAttitude: Attitude?
     private var timeInterval: TimeInterval
+    private(set) var records = [Attitude]()
     
-    static let resetProgressLevel = 1.0
+    static let progressThreshold = 0.7
     
-    init(with motionManager: MotionManager, saveTo store: ConditionStore, updateEvery timeInterval: TimeInterval) {
+    init(with motionManager: MotionManager, updateEvery timeInterval: TimeInterval) {
         self.motionManager = motionManager
         self.timeInterval = timeInterval
-        self.conditionStore = store
+        
     }
     
     public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
         motionManager.checkAvailability(completion: completion)
     }
     
-    public func start(completion: @escaping ConditionService.PeriodCompletion) {
+    public func start(completion: @escaping ConditionService.StartCompletion) {
         currentPeriodTime = 0
         motionManager.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
@@ -37,7 +47,7 @@ public class AttitudeConditionService {
         }
     }
     
-    public func stop(completion: @escaping ConditionService.PeriodCompletion) {
+    public func stop(completion: @escaping ConditionService.StopCompletion) {
         motionManager.stopUpdates {[weak self] error in
             guard let self = self else { return }
             
@@ -45,24 +55,41 @@ public class AttitudeConditionService {
                 completion(.failure(error))
                 return
             }
+            completion(.success(progressAboveThreshold: self.progressAboveThreshold))
             self.resetConditionServiceState()
-            completion(.success(progress: AttitudeConditionService.resetProgressLevel))
         }
     }
     
-    private func record(result: MotionResult, completion: ConditionService.PeriodCompletion) {
+    private func record(result: MotionResult, completion: ConditionService.StartCompletion) {
         switch result {
             case let .success(attitude):
-                if initialAttitude == nil {
+                if initialAttitude == nil || targetAttitude == nil {
                     initialAttitude = attitude
                     targetAttitude = randomAttitude
                 }
                 currentPeriodTime += timeInterval
-                conditionStore.record(attitude)
+                records.append(attitude)
                 completion(.success(progress: progress))
             case let .failure(error):
                 completion(.failure(error))
         }
+    }
+    
+    public var progress: Double {
+        guard let record = records.last,
+              let targetAttitude = targetAttitude else {
+            return 1.0
+        }
+        return record.progress(till: targetAttitude)
+    }
+    
+    public var progressAboveThreshold: Double {
+        guard let targetAttitude = targetAttitude else { return 0.0 }
+        let progresses = records.map { $0.progress(till: targetAttitude) }
+        let recordsAboveThreshold = progresses.reduce(0) { sum, progress in sum + (progress >= AttitudeConditionService.progressThreshold ? 1 : 0) }
+        print("Records above threshold (\(AttitudeConditionService.progressThreshold)): \(recordsAboveThreshold) of \(progresses.count)")
+        print("Average progress: \(progresses.reduce(0.0) { $0 + $1 } / Double(progresses.count))")
+        return Double(recordsAboveThreshold) / Double(progresses.count)
     }
     
     private func resetConditionServiceState() {
@@ -80,12 +107,19 @@ public class AttitudeConditionService {
         let newAttitude = Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
         return newAttitude != initialAttitude ? newAttitude : self.randomAttitude
     }
-    
-    private var progress: Double { conditionStore.progress(to: targetAttitude) }
 }
 
 internal extension Double {
     func truncate(places : Int)-> Double {
         return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
+    }
+}
+
+internal extension Attitude {
+    func progress(till target: Attitude) -> Double {
+        let maxDiff = Double.pi
+        let diff = abs(self.pitch-target.pitch) + abs(self.yaw-target.yaw) + abs(self.roll-target.roll)
+        let progress = 1.0 - (diff/maxDiff/3.0)
+        return progress.truncate(places: 2)
     }
 }
