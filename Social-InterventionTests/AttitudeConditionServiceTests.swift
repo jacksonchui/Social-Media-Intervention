@@ -10,34 +10,33 @@ import Social_Intervention
 
 class AttitudeConditionServiceTests: XCTestCase {
 
-    func test_init_setsUpMotionManagerAndQueue() {
+    func test_init_setsUpMotionManager() {
         let (sut, _) = makeSUT()
-        
         XCTAssertNotNil(sut.motionManager)
     }
     
-    func test_start_failsWhenDeviceMotionUnavailable() {
-        let (sut, motionManager) = makeSUT()
+    func test_check_failsWhenDeviceMotionUnavailable() {
+        let (sut, manager) = makeSUT()
         let expectedError: MotionAvailabilityError = .deviceMotionUnavailable
                 
-        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
-            motionManager.complete(with: expectedError)
-        }
-    }
-    
-    func test_checkAvailability_failsWhenAttitudeReferenceFrameUnavailable() {
-        let (sut, manager) = makeSUT()
-        let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
-        
-        expectOnAvailabilityCheck(sut, toCompleteWith: expectedError) {
+        expectOnCheck(sut, toCompleteWith: expectedError) {
             manager.complete(with: expectedError)
         }
     }
     
-    func test_checkAvailability_nilIfNoCheckErrors() {
+    func test_check_failsWhenAttitudeReferenceFrameUnavailable() {
+        let (sut, manager) = makeSUT()
+        let expectedError: MotionAvailabilityError = .attitudeReferenceFrameUnavailable
+        
+        expectOnCheck(sut, toCompleteWith: expectedError) {
+            manager.complete(with: expectedError)
+        }
+    }
+    
+    func test_check_succeedsWhenNoErrors() {
         let (sut, manager) = makeSUT()
         
-        expectOnAvailabilityCheck(sut, toCompleteWith: nil) {
+        expectOnCheck(sut, toCompleteWith: nil) {
             manager.completeWithNoCheckErrors()
         }
     }
@@ -148,7 +147,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         return (sut, motionManager)
     }
     
-    func expectOnAvailabilityCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for start completion")
         
         sut.check { error in
