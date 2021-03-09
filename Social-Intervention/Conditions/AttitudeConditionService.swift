@@ -22,7 +22,6 @@ public class AttitudeConditionService {
     private(set) var motionManager: MotionManager
     
     private(set) var currentPeriodTime: TimeInterval = 0
-    private(set) var initialAttitude: Attitude?
     private(set) var targetAttitude: Attitude?
     private var timeInterval: TimeInterval
     private(set) var records = [Attitude]()
@@ -63,8 +62,7 @@ public class AttitudeConditionService {
     private func record(result: MotionResult, completion: ConditionService.StartCompletion) {
         switch result {
             case let .success(attitude):
-                if initialAttitude == nil || targetAttitude == nil {
-                    initialAttitude = attitude
+                if targetAttitude == nil {
                     targetAttitude = randomAttitude
                 }
                 currentPeriodTime += timeInterval
@@ -94,7 +92,7 @@ public class AttitudeConditionService {
     
     private func resetConditionServiceState() {
         currentPeriodTime = 0
-        initialAttitude = nil
+        records = []
         targetAttitude = nil
     }
     
@@ -105,7 +103,7 @@ public class AttitudeConditionService {
     
     private var randomAttitude: Attitude {
         let newAttitude = Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
-        return newAttitude != initialAttitude ? newAttitude : self.randomAttitude
+        return newAttitude != records.first ? newAttitude : self.randomAttitude
     }
 }
 

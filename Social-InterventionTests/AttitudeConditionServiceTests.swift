@@ -41,7 +41,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         }
     }
     
-    func test_start_failsOnAnySessionErrorWithNoTimeRecorded() {
+    func test_start_failsOnAnySessionErrorAndDoesNotRecordTime() {
         let (sut, manager) = makeSUT()
         let expectedError: MotionSessionError = .startError
         
@@ -51,19 +51,18 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
     }
         
-    func test_start_storeInitialRecordOnFirstMotionUpdateSuccessfully() {
+    func test_start_storesFirstUpdateAsInitialRecord() {
         let (sut, manager) = makeSUT()
         let initialRecord = anyAttitude()
         
         expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: initialRecord)
         }
-        XCTAssertEqual(sut.records, [initialRecord])
-        XCTAssertEqual(sut.initialAttitude, initialRecord)
+        XCTAssertEqual(sut.records.first, initialRecord)
         XCTAssertEqual(sut.currentPeriodTime, 1.0)
     }
     
-    func test_start_storesMultipleRecordsOnMultipleMotionUpdatesSuccessfully() {
+    func test_start_storesMultipleRecordsOnMultipleUpdates() {
         let (sut, manager) = makeSUT()
         let expectedRecords = anyAttitudes()
         
@@ -71,7 +70,6 @@ class AttitudeConditionServiceTests: XCTestCase {
             expectedRecords.forEach { manager.completeStartUpdates(with: $0) }
         }
         XCTAssertEqual(sut.records, expectedRecords)
-        XCTAssertEqual(sut.initialAttitude, expectedRecords.first)
         XCTAssertEqual(sut.currentPeriodTime, 10.0)
     }
     
@@ -104,7 +102,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             manager.completeStopUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 1.0 * Double(attitudeUpdates.count))
-        XCTAssertNotNil(sut.initialAttitude, "State should not be reset since Manager might still be running.")
+        XCTAssertNotNil(sut.records.first, "State should not be reset since Manager might still be running.")
         XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
@@ -121,7 +119,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             manager.completeStopUpdates(with: noError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
-        XCTAssertNil(sut.initialAttitude, "Reset the initial attitude to nil at the end of period.")
+        XCTAssertTrue(sut.records.isEmpty, "Reset records at the end of period.")
         XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period.")
     }
     
