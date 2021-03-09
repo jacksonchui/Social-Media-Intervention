@@ -45,7 +45,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager) = makeSUT()
         let expectedError: MotionSessionError = .startError
         
-        expectStartPeriod(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
+        expectOnStart(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
@@ -55,7 +55,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager) = makeSUT()
         let initialRecord = anyAttitude()
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: initialRecord)
         }
         XCTAssertEqual(sut.records.first, initialRecord)
@@ -66,39 +66,38 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, manager) = makeSUT()
         let expectedRecords = anyAttitudes()
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
             expectedRecords.forEach { manager.completeStartUpdates(with: $0) }
         }
         XCTAssertEqual(sut.records, expectedRecords)
         XCTAssertEqual(sut.currentPeriodTime, 10.0)
     }
     
-    func test_start_randomlyGeneratesValidTargetAttitudeSuccessfully() {
+    func test_start_generatesValidTargetAttitude() {
         let (sut, manager) = makeSUT()
         let initialAttitude = anyAttitude()
         let maxRadian = Double.pi/2
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: initialAttitude)
         }
         
-        XCTAssertNotNil(sut.targetAttitude)
         XCTAssertNotEqual(sut.targetAttitude, initialAttitude, "TargetAttitude cannot be the same as InitialAttitude")
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.pitch), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.yaw), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
     }
     
-    func test_start_thenUpdates_thenStopWithError_doesNotResetState(){
+    func test_stop_FailsWhenErrorAndDoesNotResetState(){
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
         let expectedError: MotionSessionError? = .stopError
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
         }
         
-        expectStopPeriod(sut, toCompleteWith: expectedError) {
+        expectOnStop(sut, toCompleteWith: expectedError) {
             manager.completeStopUpdates(with: expectedError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 1.0 * Double(attitudeUpdates.count))
@@ -106,16 +105,16 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
-    func test_start_thenUpdates_thenStop_endsCurrentPeriodSuccessfully() {
+    func test_stop_SucceedsWhenNoErrorsAndEndsCurrentPeriod() {
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
         let noError: MotionSessionError? = nil
         
-        expectStartPeriod(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
         }
         
-        expectStopPeriod(sut, toCompleteWith: noError) {
+        expectOnStop(sut, toCompleteWith: noError) {
             manager.completeStopUpdates(with: noError)
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
@@ -128,10 +127,10 @@ class AttitudeConditionServiceTests: XCTestCase {
         let attitudeUpdates = anyAttitudes()
         let noError: MotionSessionError? = nil
 
-        expectStartPeriod(sut, toCompleteWith: noError, forExpectedUpdates: attitudeUpdates.count) {
+        expectOnStart(sut, toCompleteWith: noError, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
         }
-        expectStopPeriod(sut, toCompleteWith: noError) {
+        expectOnStop(sut, toCompleteWith: noError) {
             manager.completeStopUpdates(with: noError)
         }
     }
@@ -159,7 +158,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectStartPeriod(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
@@ -179,7 +178,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectStopPeriod(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStop(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         
