@@ -56,7 +56,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let initialRecord = anyAttitude()
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartUpdates(with: initialRecord)
+            manager.completeStartUpdatesSuccessfully(with: initialRecord)
         }
         XCTAssertEqual(sut.records.first, initialRecord)
         XCTAssertEqual(sut.currentPeriodTime, 1.0)
@@ -67,7 +67,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let expectedRecords = anyAttitudes()
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: expectedRecords.count) {
-            expectedRecords.forEach { manager.completeStartUpdates(with: $0) }
+            expectedRecords.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         XCTAssertEqual(sut.records, expectedRecords)
         XCTAssertEqual(sut.currentPeriodTime, 10.0)
@@ -79,7 +79,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let maxRadian = Double.pi/2
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: 1) {
-            manager.completeStartUpdates(with: initialAttitude)
+            manager.completeStartUpdatesSuccessfully(with: initialAttitude)
         }
         
         XCTAssertNotEqual(sut.targetAttitude, initialAttitude, "TargetAttitude cannot be the same as InitialAttitude")
@@ -88,13 +88,13 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
     }
     
-    func test_stop_FailsWhenErrorAndDoesNotResetState(){
+    func test_stop_failsWithErrorThenDoesNotResetState(){
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
         let expectedError: MotionSessionError? = .stopError
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
+            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         
         expectOnStop(sut, toCompleteWith: expectedError) {
@@ -105,34 +105,20 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
-    func test_stop_SucceedsWhenNoErrorsAndEndsCurrentPeriod() {
+    func test_stop_succeedsThenEndsCurrentPeriodAndReturnsAThreshold() {
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
-        let noError: MotionSessionError? = nil
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
+            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         
-        expectOnStop(sut, toCompleteWith: noError) {
-            manager.completeStopUpdates(with: noError)
+        expectOnStop(sut, toCompleteWith: nil) {
+            manager.completeStopUpdatesSuccessfully()
         }
         XCTAssertEqual(sut.currentPeriodTime, 0.0)
         XCTAssertTrue(sut.records.isEmpty, "Reset records at the end of period.")
         XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period.")
-    }
-    
-    func test_startUpdates_succesfullyCalculatesValidProgressInAPeriod() {
-        let (sut, manager) = makeSUT()
-        let attitudeUpdates = anyAttitudes()
-        let noError: MotionSessionError? = nil
-
-        expectOnStart(sut, toCompleteWith: noError, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdates(with: $0) }
-        }
-        expectOnStop(sut, toCompleteWith: noError) {
-            manager.completeStopUpdates(with: noError)
-        }
     }
 
     // MARK: - Helpers
@@ -165,11 +151,11 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.start {result in
             switch result {
+                case let .success(progress: progress):
+                    XCTAssertGreaterThanOrEqual(progress, 0.0)
+                    XCTAssertLessThanOrEqual(progress, 1.0)
                 case let .failure(error):
                     XCTAssertEqual(error, expectedError)
-                case let .success(progress: progress):
-                    XCTAssertLessThanOrEqual(progress, 1.0)
-                    XCTAssertGreaterThanOrEqual(progress, 0.0)
             }
             exp.fulfill()
         }
@@ -184,11 +170,11 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.stop {result in
             switch result {
+                case let .success(progressAboveThreshold: progress):
+                    XCTAssertGreaterThanOrEqual(progress, 0.0)
+                    XCTAssertLessThanOrEqual(progress, 1.0)
                 case let .failure(error):
                     XCTAssertEqual(error, expectedError)
-                case let .success(progressAboveThreshold: progress):
-                    XCTAssertLessThanOrEqual(progress, 1.0)
-                    XCTAssertGreaterThanOrEqual(progress, 0.0)
             }
             exp.fulfill()
         }
@@ -228,7 +214,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             availabilityCompletions[index](nil)
         }
         
-        func completeStartUpdates(with attitude: Attitude, at index: Int = 0) {
+        func completeStartUpdatesSuccessfully(with attitude: Attitude, at index: Int = 0) {
             startCompletions[index](.success(attitude))
         }
         
@@ -238,6 +224,10 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         func completeStopUpdates(with error: MotionSessionError?, at index: Int = 0) {
             stopCompletions[index](error)
+        }
+        
+        func completeStopUpdatesSuccessfully(at index: Int = 0) {
+            stopCompletions[index](nil)
         }
     }
     
