@@ -17,6 +17,8 @@ public class AttitudeConditionService {
     private(set) var targetAttitude: Attitude?
     private var timeInterval: TimeInterval
     
+    static let resetProgressLevel = 1.0
+    
     init(with motionManager: MotionManager, saveTo store: ConditionStore, updateEvery timeInterval: TimeInterval) {
         self.motionManager = motionManager
         self.timeInterval = timeInterval
@@ -27,7 +29,7 @@ public class AttitudeConditionService {
         motionManager.checkAvailability(completion: completion)
     }
     
-    public func start(completion: @escaping ConditionService.SessionErrorCompletion) {
+    public func start(completion: @escaping ConditionService.PeriodCompletion) {
         currentPeriodTime = 0
         motionManager.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
@@ -35,20 +37,20 @@ public class AttitudeConditionService {
         }
     }
     
-    public func stop(completion: @escaping ConditionService.SessionErrorCompletion) {
+    public func stop(completion: @escaping ConditionService.PeriodCompletion) {
         motionManager.stopUpdates {[weak self] error in
             guard let self = self else { return }
             
             if let error = error {
-                completion(error)
+                completion(.failure(error))
                 return
             }
             self.resetConditionServiceState()
-            completion(nil)
+            completion(.success(progress: AttitudeConditionService.resetProgressLevel))
         }
     }
     
-    private func record(result: MotionResult, completion: @escaping ConditionService.SessionErrorCompletion) {
+    private func record(result: MotionResult, completion: ConditionService.PeriodCompletion) {
         switch result {
             case let .success(attitude):
                 if initialAttitude == nil {
@@ -57,9 +59,9 @@ public class AttitudeConditionService {
                 }
                 currentPeriodTime += timeInterval
                 conditionStore.record(attitude)
-                completion(nil)
+                completion(.success(progress: progress))
             case let .failure(error):
-                completion(error)
+                completion(.failure(error))
         }
     }
     
@@ -78,9 +80,11 @@ public class AttitudeConditionService {
         let newAttitude = Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
         return newAttitude != initialAttitude ? newAttitude : self.randomAttitude
     }
+    
+    private var progress: Double { conditionStore.progress(to: targetAttitude) }
 }
 
-private extension Double {
+internal extension Double {
     func truncate(places : Int)-> Double {
         return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }

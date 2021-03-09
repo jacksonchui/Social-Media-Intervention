@@ -11,4 +11,5 @@ public protocol ConditionStore: AnyObject {
     typealias Record = Attitude
     
     func record(_ record: Record) -> Void
+    func progress(to target: Record?) -> Double
 }

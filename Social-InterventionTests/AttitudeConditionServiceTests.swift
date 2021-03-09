@@ -73,7 +73,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         }
         XCTAssertEqual(store.records, expectedRecords)
         XCTAssertEqual(sut.initialAttitude, expectedRecords.first)
-        XCTAssertEqual(sut.currentPeriodTime, 2.0)
+        XCTAssertEqual(sut.currentPeriodTime, 10.0)
     }
     
     func test_start_randomlyGeneratesValidTargetAttitudeSuccessfully() {
@@ -125,6 +125,22 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertNil(sut.initialAttitude, "Reset the initial attitude to nil at the end of period.")
         XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period.")
     }
+    
+    func test_startUpdates_succesfullyCalculatesValidProgressInAPeriod() {
+        let (sut, manager, store) = makeSUT()
+        let attitudeUpdates = anyAttitudes()
+        let noError: MotionSessionError? = nil
+
+        expectStartPeriod(sut, toCompleteWith: noError, forExpectedUpdates: attitudeUpdates.count) {
+            attitudeUpdates.forEach {
+                manager.completeStartUpdates(with: $0)
+                XCTAssertLessThanOrEqual(store.progress(to: sut.targetAttitude), 1.0)
+            }
+        }
+        expectStopPeriod(sut, toCompleteWith: noError) {
+            manager.completeStopUpdates(with: noError)
+        }
+    }
 
     // MARK: - Helpers
     
@@ -155,9 +171,12 @@ class AttitudeConditionServiceTests: XCTestCase {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
         
-        sut.start {error in
-            if let error = error {
-                XCTAssertEqual(error, expectedError)
+        sut.start {result in
+            switch result {
+                case let .failure(error):
+                    XCTAssertEqual(error, expectedError)
+                default:
+                    break
             }
             exp.fulfill()
         }
@@ -170,9 +189,12 @@ class AttitudeConditionServiceTests: XCTestCase {
 
         let exp = expectation(description: "Wait for completion")
         
-        sut.stop {error in
-            if let error = error {
-                XCTAssertEqual(error, expectedError)
+        sut.stop {result in
+            switch result {
+                case let .failure(error):
+                    XCTAssertEqual(error, expectedError)
+                default:
+                    break
             }
             exp.fulfill()
         }
@@ -187,6 +209,16 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         func record(_ record: Record) {
             records.append(record)
+        }
+        
+        func progress(to target: Record?) -> Double {
+            guard let target = target, !records.isEmpty else {
+                return 1.0
+            }
+            let maxDiff = Double.pi/2
+            let diff = abs(records.last!.pitch-target.pitch) + abs(records.last!.yaw-target.yaw) + abs(records.last!.roll-target.roll)
+            let progress = 3.0 - (diff/maxDiff)
+            return progress / 3.0
         }
     }
     
@@ -238,11 +270,18 @@ class AttitudeConditionServiceTests: XCTestCase {
         return Attitude(roll: 0, pitch: 0, yaw: 0)
     }
     
-    func anyOtherAttitude() -> Attitude {
-        return Attitude(roll: 3, pitch: 4, yaw: 5)
+    func anyAttitudes(_ count: Int = 10) -> [Attitude] {
+        var attitudes = [Attitude]()
+        for _ in 0..<10 {
+            attitudes.append(randomAttitude)
+        }
+        return attitudes
     }
     
-    func anyAttitudes() -> [Attitude] {
-        return [anyAttitude(), anyOtherAttitude()]
+    private var randomRadian: Double {
+        let sigFigures = 2
+        return Double.random(in: -Double.pi/2...Double.pi/2).truncate(places: sigFigures)
     }
+    
+    private var randomAttitude: Attitude { Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian) }
 }
