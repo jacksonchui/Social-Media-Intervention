@@ -19,6 +19,8 @@ public class ConditionSession {
 
 public class AttitudeConditionService {
     
+    public typealias CheckCompletion = (MotionAvailabilityError?) -> Void
+    
     private(set) var motionManager: MotionManager
     
     private(set) var currentPeriodTime: TimeInterval = 0
@@ -34,7 +36,7 @@ public class AttitudeConditionService {
         
     }
     
-    public func check(completion: @escaping (MotionAvailabilityError?) -> Void) {
+    public func check(completion: @escaping CheckCompletion) {
         motionManager.checkAvailability(completion: completion)
     }
     
