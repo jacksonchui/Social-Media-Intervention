@@ -19,7 +19,7 @@ public class ConditionSession {
 
 public class AttitudeConditionService: ConditionService {
         
-    private(set) var motionManager: MotionManager
+    private(set) var attitudeService: AttitudeMotionService
     
     private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var targetAttitude: Attitude?
@@ -28,26 +28,26 @@ public class AttitudeConditionService: ConditionService {
     
     static let progressThreshold = 0.7
     
-    init(with motionManager: MotionManager, updateEvery timeInterval: TimeInterval) {
-        self.motionManager = motionManager
+    init(with attitudeService: AttitudeMotionService, updateEvery timeInterval: TimeInterval) {
+        self.attitudeService = attitudeService
         self.timeInterval = timeInterval
         
     }
     
     public func check(completion: @escaping CheckCompletion) {
-        motionManager.checkAvailability(completion: completion)
+        attitudeService.checkAvailability(completion: completion)
     }
     
     public func start(completion: @escaping StartCompletion) {
         currentPeriodTime = 0
-        motionManager.startUpdates(updatingEvery: timeInterval) { [weak self] result in
+        attitudeService.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
         }
     }
     
     public func stop(completion: @escaping StopCompletion) {
-        motionManager.stopUpdates {[weak self] error in
+        attitudeService.stopUpdates {[weak self] error in
             guard let self = self else { return }
             
             if let error = error {
@@ -59,7 +59,7 @@ public class AttitudeConditionService: ConditionService {
         }
     }
     
-    private func record(result: MotionResult, completion: ConditionService.StartCompletion) {
+    private func record(result: AttitudeResult, completion: StartCompletion) {
         switch result {
             case let .success(attitude):
                 if targetAttitude == nil {

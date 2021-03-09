@@ -21,9 +21,9 @@
 		CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */; };
 		CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */; };
 		CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */; };
-		CF92AF1025F5B73B0044E588 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* MotionManager.swift */; };
+		CF92AF1025F5B73B0044E588 /* AttitudeMotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */; };
 		CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF1325F5B7C80044E588 /* ConditionService.swift */; };
-		CF92AF1D25F5B9FE0044E588 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* MotionManager.swift */; };
+		CF92AF1D25F5B9FE0044E588 /* AttitudeMotionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */; };
 		CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF1325F5B7C80044E588 /* ConditionService.swift */; };
 		CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */; };
 		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
@@ -59,7 +59,7 @@
 		CF8D2B2225EC38F2008FFBC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserViewControllerTests.swift; sourceTree = "<group>"; };
 		CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionService.swift; sourceTree = "<group>"; };
-		CF92AF0F25F5B73B0044E588 /* MotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
+		CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionService.swift; sourceTree = "<group>"; };
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
@@ -95,10 +95,9 @@
 		CF442A1825EC8B26008EB9DA /* Conditions */ = {
 			isa = PBXGroup;
 			children = (
-				CF92AF1325F5B7C80044E588 /* ConditionService.swift */,
-				CF92AF0F25F5B73B0044E588 /* MotionManager.swift */,
-				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
+				CFD371C725F74A840097B97F /* Protocols */,
 				CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */,
+				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
 			);
 			path = Conditions;
 			sourceTree = "<group>";
@@ -163,6 +162,15 @@
 				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
 			);
 			path = Browser;
+			sourceTree = "<group>";
+		};
+		CFD371C725F74A840097B97F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				CF92AF1325F5B7C80044E588 /* ConditionService.swift */,
+				CF92AF0F25F5B73B0044E588 /* AttitudeMotionService.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,7 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
-				CF92AF1025F5B73B0044E588 /* MotionManager.swift in Sources */,
+				CF92AF1025F5B73B0044E588 /* AttitudeMotionService.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
 				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
@@ -283,7 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
-				CF92AF1D25F5B9FE0044E588 /* MotionManager.swift in Sources */,
+				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionService.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
 				CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */,
 				CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */,

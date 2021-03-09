@@ -10,9 +10,9 @@ import Social_Intervention
 
 class AttitudeConditionServiceTests: XCTestCase {
 
-    func test_init_setsUpMotionManager() {
+    func test_init_setsUpAttitudeService() {
         let (sut, _) = makeSUT()
-        XCTAssertNotNil(sut.motionManager)
+        XCTAssertNotNil(sut.attitudeService)
     }
     
     func test_check_failsWhenDeviceMotionUnavailable() {
@@ -123,11 +123,11 @@ class AttitudeConditionServiceTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, MotionManagerSpy) {
-        let motionManager = MotionManagerSpy(updateInterval: updateInterval)
-        let sut = AttitudeConditionService(with: motionManager, updateEvery: updateInterval)
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, AttitudeMotionServiceSpy) {
+        let attitudeSpy = AttitudeMotionServiceSpy(updateInterval: updateInterval)
+        let sut = AttitudeConditionService(with: attitudeSpy, updateEvery: updateInterval)
         
-        return (sut, motionManager)
+        return (sut, attitudeSpy)
     }
     
     func expectOnCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -183,7 +183,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    class MotionManagerSpy: MotionManager {
+    class AttitudeMotionServiceSpy: AttitudeMotionService {
         
         init(updateInterval: TimeInterval) { }
                 

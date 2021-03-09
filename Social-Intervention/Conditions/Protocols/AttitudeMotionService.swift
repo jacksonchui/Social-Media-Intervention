@@ -1,5 +1,5 @@
 //
-//  MotionManager.swift
+//  AttitudeMotionService.swift
 //  Social-Intervention
 //
 //  Created by Jackson Chui on 3/7/21.
@@ -13,7 +13,7 @@ public struct Attitude: Equatable {
     var yaw: Double
 }
 
-public enum MotionResult {
+public enum AttitudeResult {
     case success(Attitude)
     case failure(MotionSessionError)
 }
@@ -28,10 +28,9 @@ public enum MotionSessionError: Swift.Error {
     case stopError
 }
 
-public protocol MotionManager {
-    
+public protocol AttitudeMotionService {
     typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
-    typealias StartCompletion = (MotionResult) -> Void
+    typealias StartCompletion = (AttitudeResult) -> Void
     typealias StopCompletion = (MotionSessionError?) -> Void
     
     func checkAvailability(completion: @escaping AvailabilityCompletion)
