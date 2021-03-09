@@ -17,10 +17,8 @@ public class ConditionSession {
     }
 }
 
-public class AttitudeConditionService {
-    
-    public typealias CheckCompletion = (MotionAvailabilityError?) -> Void
-    
+public class AttitudeConditionService: ConditionService {
+        
     private(set) var motionManager: MotionManager
     
     private(set) var currentPeriodTime: TimeInterval = 0
@@ -40,7 +38,7 @@ public class AttitudeConditionService {
         motionManager.checkAvailability(completion: completion)
     }
     
-    public func start(completion: @escaping ConditionService.StartCompletion) {
+    public func start(completion: @escaping StartCompletion) {
         currentPeriodTime = 0
         motionManager.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
@@ -48,7 +46,7 @@ public class AttitudeConditionService {
         }
     }
     
-    public func stop(completion: @escaping ConditionService.StopCompletion) {
+    public func stop(completion: @escaping StopCompletion) {
         motionManager.stopUpdates {[weak self] error in
             guard let self = self else { return }
             

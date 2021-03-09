@@ -23,11 +23,11 @@ public enum PeriodStopResult {
 
 public protocol ConditionService: AnyObject {
     
-    associatedtype Error
-    associatedtype ConditionDelegate
+    typealias CheckCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void
-        
-    func start(completion: @escaping (Error?) -> Void) -> Void
-    func stop() -> Void
+    
+    func check(completion: @escaping CheckCompletion) -> Void
+    func start(completion: @escaping StartCompletion) -> Void
+    func stop(completion: @escaping StopCompletion) -> Void
 }
