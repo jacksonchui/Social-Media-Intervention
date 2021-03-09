@@ -67,7 +67,7 @@ public class AttitudeConditionService: ConditionService {
                 }
                 currentPeriodTime += timeInterval
                 records.append(attitude)
-                completion(.success(progress: progress))
+                completion(.success(latestMotionProgress: progress))
             case let .failure(error):
                 completion(.failure(error))
         }

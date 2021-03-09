@@ -12,7 +12,7 @@ public protocol ConditionServiceDelegate: AnyObject {
 }
 
 public enum PeriodStartResult {
-    case success(progress: Double)
+    case success(latestMotionProgress: Double)
     case failure(MotionSessionError)
 }
 
@@ -22,7 +22,6 @@ public enum PeriodStopResult {
 }
 
 public protocol ConditionService: AnyObject {
-    
     typealias CheckCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void

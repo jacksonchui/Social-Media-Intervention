@@ -107,7 +107,7 @@ class AttitudeConditionServiceTests: XCTestCase {
     
     func test_stop_succeedsThenEndsCurrentPeriodAndReturnsAThreshold() {
         let (sut, manager) = makeSUT()
-        let attitudeUpdates = anyAttitudes()
+        let attitudeUpdates = anyAttitudes(100)
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
@@ -151,7 +151,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.start {result in
             switch result {
-                case let .success(progress: progress):
+                case let .success(latestMotionProgress: progress):
                     XCTAssertGreaterThanOrEqual(progress, 0.0)
                     XCTAssertLessThanOrEqual(progress, 1.0)
                 case let .failure(error):
@@ -237,7 +237,7 @@ class AttitudeConditionServiceTests: XCTestCase {
     
     func anyAttitudes(_ count: Int = 10) -> [Attitude] {
         var attitudes = [Attitude]()
-        for _ in 0..<10 {
+        for _ in 0..<count {
             attitudes.append(randomAttitude)
         }
         return attitudes
