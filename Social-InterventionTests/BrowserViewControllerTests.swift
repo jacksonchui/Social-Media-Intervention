@@ -6,8 +6,13 @@
 //
 
 import XCTest
+import UIKit
 
 class BrowserViewControllerTests: XCTestCase {
+    
+    func test_init_coderResultsInFatalError() {
+        XCTAssertNil(BrowserViewController(coder: NSCoder()))
+    }
     
     func test_init_noSocialMediumDefaultsToTwitter() {
         XCTAssertEqual(makeSUT().socialMedium, SocialMedium.twitter)
@@ -33,23 +38,26 @@ class BrowserViewControllerTests: XCTestCase {
         }
     }
     
-    func test_afterViewDidLoad_startThenStop_togglesTheUpdateService() {
-        let sut = self.makeSUT(use: .twitter)
-        sut.expectAfterViewDidLoad(url: SocialMedium.twitter.url)
+    func test_setAlpha_greaterThan1SetsTo1() {
+        let sut = self.makeSUT()
+        sut.expectAfterViewDidLoad()
         
-        XCTAssertNotNil(sut.updateService.timer)
-        sut.viewDidDisappear(true)
-        XCTAssertNil(sut.updateService.timer)
+        let alphas = [1.5, 1.6, 2, -2, -4]
+        
+        alphas.forEach {
+            sut.setAlpha(progress: $0, animateWithDuration: 0)
+            XCTAssertEqual(sut.view.alpha, 1)
+        }
     }
-    
+        
     // MARK: Helpers
     
     func makeSUT(use socialMedium: SocialMedium = .twitter, withUpdateInterval: TimeInterval = 1, repeats: Bool = true) -> BrowserViewController {
-        return BrowserViewController(use: socialMedium, withUpdateInterval: withUpdateInterval, repeats: repeats)
+        return BrowserViewController(for: socialMedium, use: RotationConditionService(withUpdateInterval: withUpdateInterval))
     }
     
     func forEachSocialMedium(completion: @escaping (SocialMedium) -> Void) {
-        let socials: [SocialMedium] = [.facebook, .twitter, .instagram]
+        let socials: [SocialMedium] = [.facebook, .twitter, .instagram, .tiktok, .reddit, .youtube, .linkedIn]
         socials.forEach{ completion($0) }
     }
 }
@@ -62,10 +70,10 @@ private extension BrowserViewController {
         XCTAssertNotNil(browserView.uiDelegate)
     }
     
-    func expectAfterViewDidLoad(url: URL, filePath: StaticString = #filePath, line: UInt = #line) {
+    func expectAfterViewDidLoad(url: URL = SocialMedium.twitter.url, filePath: StaticString = #filePath, line: UInt = #line) {
         expectDidLoadView()
         viewDidLoad()
-        XCTAssert(view.subviews.contains(browserView))
+        XCTAssertTrue(view.subviews.contains(browserView))
         XCTAssertEqual(browserView.url!, url)
     }
 }
