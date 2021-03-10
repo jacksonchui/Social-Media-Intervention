@@ -64,14 +64,14 @@ Given the current period is completed
 
 ---
 
-### Attitude Condition Session Use Case
+### Intervention Session with Attitude Condition Use Case
 
 #### Data:
 - Current Period Progress
 - Progress Above Threshold for a Period
 
 #### Primary course (happy path)
-1. System records Session start time.
+1. System records session start time.
 2. System uses the Attitude Condition Period Use Case.
 3. During the updates after start, System takes current period progress and determines how much to change the view alpha based on intervention policy.
 4. System stops period and changes view alpha based on intervention policy end period alpha.
