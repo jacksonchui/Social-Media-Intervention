@@ -15,6 +15,7 @@
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */; };
+		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
 		CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */; };
 		CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
 		CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationConditionService.swift; sourceTree = "<group>"; };
 		CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMAttitudeMotionClient.swift; sourceTree = "<group>"; };
+		CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -105,6 +107,14 @@
 			path = Conditions;
 			sourceTree = "<group>";
 		};
+		CF83287D25F9713D00553CC4 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		CF8D2AF925EC383B008FFBC6 = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +161,7 @@
 		CF8D2B1F25EC38F2008FFBC6 /* Social-InterventionTests */ = {
 			isa = PBXGroup;
 			children = (
+				CF83287D25F9713D00553CC4 /* Helpers */,
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
 				CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */,
@@ -294,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
 				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,

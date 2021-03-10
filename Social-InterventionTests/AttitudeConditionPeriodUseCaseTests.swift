@@ -126,7 +126,8 @@ class AttitudeConditionServiceTests: XCTestCase {
     func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, AttitudeMotionServiceSpy) {
         let attitudeSpy = AttitudeMotionServiceSpy(updateInterval: updateInterval)
         let sut = AttitudeConditionService(with: attitudeSpy, updateEvery: updateInterval)
-        
+        trackForMemoryLeaks(attitudeSpy)
+        trackForMemoryLeaks(sut)
         return (sut, attitudeSpy)
     }
     
