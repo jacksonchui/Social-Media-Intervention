@@ -20,7 +20,6 @@ public class ConditionSession {
 public class AttitudeConditionService: ConditionService {
     private(set) var attitudeClient: AttitudeMotionClient
     
-    private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var targetAttitude: Attitude?
     private(set) var timeInterval: TimeInterval
     private(set) var records = [Attitude]()
@@ -30,6 +29,10 @@ public class AttitudeConditionService: ConditionService {
     init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
         self.attitudeClient = attitudeClient
         self.timeInterval = timeInterval
+    }
+    
+    public var currentPeriodTime: TimeInterval {
+        return timeInterval * Double(records.count)
     }
 }
 
@@ -41,7 +44,7 @@ extension AttitudeConditionService {
 
 extension AttitudeConditionService {
     public func start(completion: @escaping StartCompletion) {
-        currentPeriodTime = 0
+        resetConditionServiceState()
         attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
@@ -54,7 +57,6 @@ extension AttitudeConditionService {
                 if targetAttitude == nil {
                     targetAttitude = randomAttitude
                 }
-                currentPeriodTime += timeInterval
                 records.append(attitude)
                 completion(.success(latestMotionProgress: progress))
             case let .failure(error):
@@ -105,7 +107,6 @@ extension AttitudeConditionService {
     }
     
     private func resetConditionServiceState() {
-        currentPeriodTime = 0
         records = []
         targetAttitude = nil
     }
