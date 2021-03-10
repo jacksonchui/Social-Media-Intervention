@@ -43,7 +43,7 @@ class AttitudeConditionServiceTests: XCTestCase {
     
     func test_start_failsOnAnySessionErrorAndDoesNotRecordTime() {
         let (sut, manager) = makeSUT()
-        let expectedError: MotionSessionError = .startError
+        let expectedError: ConditionPeriodError = .startError
         
         expectOnStart(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: expectedError)
@@ -91,7 +91,7 @@ class AttitudeConditionServiceTests: XCTestCase {
     func test_stop_failsWithErrorThenDoesNotResetState(){
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
-        let expectedError: MotionSessionError? = .stopError
+        let expectedError: ConditionPeriodError? = .stopError
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
@@ -144,7 +144,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: ConditionPeriodError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
@@ -164,7 +164,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStop(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionSessionError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStop(_ sut: AttitudeConditionService, toCompleteWith expectedError: ConditionPeriodError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         
@@ -218,11 +218,11 @@ class AttitudeConditionServiceTests: XCTestCase {
             startCompletions[index](.success(attitude))
         }
         
-        func completeStartUpdates(with error: MotionSessionError, at index: Int = 0) {
+        func completeStartUpdates(with error: ConditionPeriodError, at index: Int = 0) {
             startCompletions[index](.failure(error))
         }
         
-        func completeStopUpdates(with error: MotionSessionError?, at index: Int = 0) {
+        func completeStopUpdates(with error: ConditionPeriodError?, at index: Int = 0) {
             stopCompletions[index](error)
         }
         

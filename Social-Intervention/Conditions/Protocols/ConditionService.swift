@@ -11,14 +11,19 @@ public protocol ConditionServiceDelegate: AnyObject {
     func condition(progress: Double)
 }
 
+public enum ConditionPeriodError: Swift.Error {
+    case startError
+    case stopError
+}
+
 public enum PeriodStartResult {
     case success(latestMotionProgress: Double)
-    case failure(MotionSessionError)
+    case failure(ConditionPeriodError)
 }
 
 public enum PeriodStopResult {
     case success(progressAboveThreshold: Double)
-    case failure(MotionSessionError)
+    case failure(ConditionPeriodError)
 }
 
 public protocol ConditionService: AnyObject {
