@@ -23,7 +23,7 @@ public enum MotionAvailabilityError: String, Swift.Error {
     case attitudeReferenceFrameUnavailable = "Could not get the desired motion frame for device"
 }
 
-public protocol AttitudeMotionService {
+public protocol AttitudeMotionClient {
     typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = (AttitudeResult) -> Void
     typealias StopCompletion = (ConditionPeriodError?) -> Void

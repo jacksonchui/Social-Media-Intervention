@@ -18,7 +18,7 @@ public class ConditionSession {
 }
 
 public class AttitudeConditionService: ConditionService {
-    private(set) var attitudeService: AttitudeMotionService
+    private(set) var attitudeClient: AttitudeMotionClient
     
     private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var targetAttitude: Attitude?
@@ -27,22 +27,22 @@ public class AttitudeConditionService: ConditionService {
     
     static let progressThreshold = 0.7
     
-    init(with attitudeService: AttitudeMotionService, updateEvery timeInterval: TimeInterval) {
-        self.attitudeService = attitudeService
+    init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
+        self.attitudeClient = attitudeClient
         self.timeInterval = timeInterval
     }
 }
 
 extension AttitudeConditionService {
     public func check(completion: @escaping CheckCompletion) {
-        attitudeService.checkAvailability(completion: completion)
+        attitudeClient.checkAvailability(completion: completion)
     }
 }
 
 extension AttitudeConditionService {
     public func start(completion: @escaping StartCompletion) {
         currentPeriodTime = 0
-        attitudeService.startUpdates(updatingEvery: timeInterval) { [weak self] result in
+        attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
         }
@@ -83,7 +83,7 @@ extension AttitudeConditionService {
 
 extension AttitudeConditionService {
     public func stop(completion: @escaping StopCompletion) {
-        attitudeService.stopUpdates {[weak self] error in
+        attitudeClient.stopUpdates {[weak self] error in
             guard let self = self else { return }
             
             if let error = error {

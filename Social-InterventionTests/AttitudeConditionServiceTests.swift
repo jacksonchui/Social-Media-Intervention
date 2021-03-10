@@ -10,9 +10,9 @@ import Social_Intervention
 
 class AttitudeConditionServiceTests: XCTestCase {
 
-    func test_init_setsUpAttitudeService() {
+    func test_init_createsAttitudeClientToGetMotionUpdatesFrom() {
         let (sut, _) = makeSUT()
-        XCTAssertNotNil(sut.attitudeService)
+        XCTAssertNotNil(sut.attitudeClient)
     }
     
     func test_check_failsWhenDeviceMotionUnavailable() {
@@ -91,7 +91,7 @@ class AttitudeConditionServiceTests: XCTestCase {
     func test_stop_failsWithErrorThenDoesNotResetState(){
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
-        let expectedError: ConditionPeriodError? = .stopError
+        let expectedError: ConditionPeriodError? = .alreadyStopped
         
         expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
             attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
@@ -183,7 +183,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    class AttitudeMotionServiceSpy: AttitudeMotionService {
+    class AttitudeMotionServiceSpy: AttitudeMotionClient {
         
         init(updateInterval: TimeInterval) { }
                 

@@ -13,7 +13,7 @@ public protocol ConditionServiceDelegate: AnyObject {
 
 public enum ConditionPeriodError: Swift.Error {
     case startError
-    case stopError
+    case alreadyStopped
 }
 
 public enum PeriodStartResult {

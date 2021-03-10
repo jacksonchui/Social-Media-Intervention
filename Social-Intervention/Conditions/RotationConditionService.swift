@@ -27,7 +27,8 @@ class RotationConditionService {
             manager.deviceMotionUpdateInterval = withUpdateInterval
             return manager
         }()
-        queue = OperationQueue("RotationConditionService", withMaxConcurrentOperations: 1)
+        queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
     }
     
     func start(completion: @escaping(Error?) -> Void) {
@@ -71,12 +72,4 @@ class RotationConditionService {
     
     private func radiansToDegrees(_ x: Double) -> Double { return x * 180 / Double.pi }
     
-}
-
-extension OperationQueue {
-    convenience init(_ name: String, withMaxConcurrentOperations count: Int) {
-        self.init()
-        self.name = name
-        self.maxConcurrentOperationCount = count
-    }
 }
