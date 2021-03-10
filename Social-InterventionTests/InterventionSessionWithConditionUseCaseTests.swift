@@ -10,25 +10,27 @@ import XCTest
 class InterventionSessionWithConditionUseCaseTests: XCTestCase {
     
     func test_init_withConditionServiceAndUpdateInterval() {
-        let (session, _) = makeSUT()
+        let (sut, _) = makeSUT()
         
-        XCTAssertNotNil(session.service)
-        XCTAssertEqual(session.interval, 1.0)
+        XCTAssertNotNil(sut.service)
+        XCTAssertEqual(sut.interval, 1.0)
     }
     
     func test_startSession_failsOnStartErrorOnFirstPeriod() {
-        let (session, service) = makeSUT()
+        let (sut, service) = makeSUT()
         let expectedError = ConditionPeriodError.startError
         
-        let exp = expectation(description: "Wait for completion")
-        
-        session.start { error in
-            XCTAssertEqual(error, expectedError)
-            exp.fulfill()
+        expectOnStart(sut, toCompleteWith: .failure(error: expectedError)) {
+            service.completeStart(with: expectedError)
         }
+    }
+    
+    func test_startSession_startsFirstPeriodWithProgressFromServiceSuccessfully() {
+        let (sut, service) = makeSUT()
         
-        service.completeStart(with: expectedError)
-        wait(for: [exp], timeout: 1.0)
+        expectOnStart(sut, toCompleteWith: .success(progress: anyProgress())) {
+            service.completeStartSuccessfully(with: anyProgress())
+        }
     }
     
     // MARK: - Helpers
@@ -38,6 +40,18 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         let session = InterventionSession(for: service, updatingEvery: updateInterval)
         
         return (session, service)
+    }
+    
+    func expectOnStart(_ sut: InterventionSession, toCompleteWith expectedResult: InterventionSession.StartResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.start { result in
+            XCTAssertEqual(expectedResult, result, file: file, line: line)
+            exp.fulfill()
+        }
+
+        action()
+        wait(for: [exp], timeout: 1.0)
     }
     
     class ConditionServiceSpy: ConditionService {
@@ -57,5 +71,13 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         func completeStart(with error: ConditionPeriodError, at index: Int = 0) {
             startCompletions[index](.failure(error))
         }
+        
+        func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
+            startCompletions[index](.success(latestMotionProgress: progress))
+        }
+    }
+    
+    private func anyProgress() -> Double {
+        return 0.5
     }
 }
