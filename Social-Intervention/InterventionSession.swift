@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import CoreGraphics
 
 public final class InterventionSession {
     
     public typealias CheckError = MotionAvailabilityError
     public enum StartResult: Equatable {
-        case success(progress: Double)
+        case success(alpha: CGFloat)
         case failure(error: ConditionPeriodError)
     }
     
@@ -34,11 +35,17 @@ public final class InterventionSession {
         service.start { result in
             switch result {
                 case let .success(latestMotionProgress: progress):
-                    completion(.success(progress: progress))
+                    completion(.success(alpha: progress.toAlphaValue()))
                 case let .failure(error):
                     completion(.failure(error: error))
             }
         }
     }
     
+}
+
+extension Double {
+    func toAlphaValue() -> CGFloat {
+        return CGFloat(self)
+    }
 }

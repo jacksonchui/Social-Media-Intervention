@@ -43,10 +43,10 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         }
     }
     
-    func test_startSession_startsFirstPeriodWithProgressFromServiceSuccessfully() {
+    func test_startSession_deliversAlphaValueBasedOnProgressSuccessfully() {
         let (sut, service) = makeSUT()
         
-        expectOnStart(sut, toCompleteWith: .success(progress: anyProgress())) {
+        expectOnStart(sut, toCompleteWith: .success(alpha: anyProgress().toAlphaValue())) {
             service.completeStartSuccessfully(with: anyProgress())
         }
     }
