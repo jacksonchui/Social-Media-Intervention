@@ -123,12 +123,12 @@ class AttitudeConditionServiceTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, AttitudeMotionServiceSpy) {
-        let attitudeSpy = AttitudeMotionServiceSpy(updateInterval: updateInterval)
-        let sut = AttitudeConditionService(with: attitudeSpy, updateEvery: updateInterval)
-        trackForMemoryLeaks(attitudeSpy)
+    func makeSUT(updateInterval: TimeInterval = 1.0) -> (AttitudeConditionService, AttitudeMotionClientSpy) {
+        let motionClient = AttitudeMotionClientSpy(updateInterval: updateInterval)
+        let sut = AttitudeConditionService(with: motionClient, updateEvery: updateInterval)
+        trackForMemoryLeaks(motionClient)
         trackForMemoryLeaks(sut)
-        return (sut, attitudeSpy)
+        return (sut, motionClient)
     }
     
     func expectOnCheck(_ sut: AttitudeConditionService, toCompleteWith expectedError: MotionAvailabilityError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -182,54 +182,6 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    class AttitudeMotionServiceSpy: AttitudeMotionClient {
-        
-        init(updateInterval: TimeInterval) { }
-                
-        var availabilityCompletions = [AvailabilityCompletion]()
-        var startCompletions = [StartCompletion]()
-        var stopCompletions = [StopCompletion]()
-        
-        var initialAttitude: Attitude?
-        
-        func checkAvailability(completion: @escaping (MotionAvailabilityError?) -> Void) {
-            availabilityCompletions.append(completion)
-        }
-        
-        func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping StartCompletion) {
-            initialAttitude = Attitude(roll: 0, pitch: 0, yaw: 0)
-            startCompletions.append(completion)
-        }
-        
-        func stopUpdates(completion: @escaping StopCompletion) {
-            stopCompletions.append(completion)
-        }
-        
-        func complete(with error: MotionAvailabilityError, at index: Int = 0) {
-            availabilityCompletions[index](error)
-        }
-        
-        func completeWithNoCheckErrors(at index: Int = 0) {
-            availabilityCompletions[index](nil)
-        }
-        
-        func completeStartUpdatesSuccessfully(with attitude: Attitude, at index: Int = 0) {
-            startCompletions[index](.success(attitude))
-        }
-        
-        func completeStartUpdates(with error: ConditionPeriodError, at index: Int = 0) {
-            startCompletions[index](.failure(error))
-        }
-        
-        func completeStopUpdates(with error: ConditionPeriodError?, at index: Int = 0) {
-            stopCompletions[index](error)
-        }
-        
-        func completeStopUpdatesSuccessfully(at index: Int = 0) {
-            stopCompletions[index](nil)
-        }
     }
     
     func anyAttitude() -> Attitude {
