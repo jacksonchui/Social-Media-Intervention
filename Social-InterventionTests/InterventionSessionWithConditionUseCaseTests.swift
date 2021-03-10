@@ -46,7 +46,7 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
     func test_startSession_deliversAlphaValueBasedOnProgressSuccessfully() {
         let (sut, service) = makeSUT()
         
-        expectOnStart(sut, toCompleteWith: .success(alpha: anyProgress().toAlphaValue())) {
+        expectOnStart(sut, toCompleteWith: .success(alpha: convertToAlpha(anyProgress()))) {
             service.completeStartSuccessfully(with: anyProgress())
         }
     }
@@ -116,5 +116,9 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
     
     private func anyProgress() -> Double {
         return 0.5
+    }
+    
+    private func convertToAlpha(_ progress: Double) -> CGFloat {
+        return CGFloat(progress)
     }
 }

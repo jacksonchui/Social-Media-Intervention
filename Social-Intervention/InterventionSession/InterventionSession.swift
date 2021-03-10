@@ -35,17 +35,12 @@ public final class InterventionSession {
         service.start { result in
             switch result {
                 case let .success(latestMotionProgress: progress):
-                    completion(.success(alpha: progress.toAlphaValue()))
+                    let alpha = InterventionPolicy.convertToAlpha(progress)
+                    completion(.success(alpha: alpha))
                 case let .failure(error):
                     completion(.failure(error: error))
             }
         }
     }
     
-}
-
-extension Double {
-    func toAlphaValue() -> CGFloat {
-        return CGFloat(self)
-    }
 }
