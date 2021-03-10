@@ -10,7 +10,7 @@ import CoreGraphics
 internal final class InterventionPolicy {
     private init() { }
     
-    internal static func convertToAlpha(_ progress: Double) -> CGFloat {
+    static func convertToAlpha(_ progress: Double) -> CGFloat {
         return CGFloat(progress)
     }
 }

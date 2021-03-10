@@ -113,12 +113,4 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
             startCompletions[index](.success(latestMotionProgress: progress))
         }
     }
-    
-    private func anyProgress() -> Double {
-        return 0.5
-    }
-    
-    private func convertToAlpha(_ progress: Double) -> CGFloat {
-        return CGFloat(progress)
-    }
 }

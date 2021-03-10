@@ -183,23 +183,4 @@ class AttitudeConditionServiceTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 1.0)
     }
-    
-    func anyAttitude() -> Attitude {
-        return Attitude(roll: 0, pitch: 0, yaw: 0)
-    }
-    
-    func anyAttitudes(_ count: Int = 10) -> [Attitude] {
-        var attitudes = [Attitude]()
-        for _ in 0..<count {
-            attitudes.append(randomAttitude)
-        }
-        return attitudes
-    }
-    
-    private var randomRadian: Double {
-        let sigFigures = 2
-        return Double.random(in: -Double.pi/2...Double.pi/2).truncate(places: sigFigures)
-    }
-    
-    private var randomAttitude: Attitude { Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian) }
 }

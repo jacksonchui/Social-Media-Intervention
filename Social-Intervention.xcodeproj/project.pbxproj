@@ -14,6 +14,7 @@
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
+		CF7407A825F98F3300FCBC5C /* InterventionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83289B25F98B4F00553CC4 /* InterventionPolicy.swift */; };
 		CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */; };
 		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
 		CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */; };
@@ -37,6 +38,8 @@
 		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
+		CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */; };
+		CFD437DF25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +79,8 @@
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
+		CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionTestHelpers.swift; sourceTree = "<group>"; };
+		CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionSessionTestHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,13 +129,14 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		CF83288425F971AB00553CC4 /* Attitude Condition */ = {
+		CF83288425F971AB00553CC4 /* ConditionService */ = {
 			isa = PBXGroup;
 			children = (
+				CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */,
 				CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */,
 				CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */,
 			);
-			path = "Attitude Condition";
+			path = ConditionService;
 			sourceTree = "<group>";
 		};
 		CF83289A25F98B1C00553CC4 /* InterventionSession */ = {
@@ -190,8 +196,8 @@
 			isa = PBXGroup;
 			children = (
 				CF83287D25F9713D00553CC4 /* Helpers */,
-				CF83288425F971AB00553CC4 /* Attitude Condition */,
-				CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */,
+				CFD437CF25F98D4100EBD905 /* InterventionSession */,
+				CF83288425F971AB00553CC4 /* ConditionService */,
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
 			);
@@ -214,6 +220,15 @@
 				CF92AF0F25F5B73B0044E588 /* AttitudeMotionClient.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		CFD437CF25F98D4100EBD905 /* InterventionSession */ = {
+			isa = PBXGroup;
+			children = (
+				CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */,
+				CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */,
+			);
+			path = InterventionSession;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,6 +352,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				CF7407A825F98F3300FCBC5C /* InterventionPolicy.swift in Sources */,
+				CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
 				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */,
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
@@ -346,6 +363,7 @@
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
 				CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */,
+				CFD437DF25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift in Sources */,
 				CF83289025F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
