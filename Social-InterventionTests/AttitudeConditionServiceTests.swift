@@ -135,7 +135,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.check { error in
             if let error = error {
-                XCTAssertEqual(error, expectedError)
+                XCTAssertEqual(error, expectedError, file: file, line: line)
             }
             exp.fulfill()
         }
@@ -152,10 +152,10 @@ class AttitudeConditionServiceTests: XCTestCase {
         sut.start {result in
             switch result {
                 case let .success(latestMotionProgress: progress):
-                    XCTAssertGreaterThanOrEqual(progress, 0.0)
-                    XCTAssertLessThanOrEqual(progress, 1.0)
+                    XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
+                    XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
                 case let .failure(error):
-                    XCTAssertEqual(error, expectedError)
+                    XCTAssertEqual(error, expectedError, file: file, line: line)
             }
             exp.fulfill()
         }
@@ -171,10 +171,10 @@ class AttitudeConditionServiceTests: XCTestCase {
         sut.stop {result in
             switch result {
                 case let .success(progressAboveThreshold: progress):
-                    XCTAssertGreaterThanOrEqual(progress, 0.0)
-                    XCTAssertLessThanOrEqual(progress, 1.0)
+                    XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
+                    XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
                 case let .failure(error):
-                    XCTAssertEqual(error, expectedError)
+                    XCTAssertEqual(error, expectedError, file: file, line: line)
             }
             exp.fulfill()
         }
