@@ -16,6 +16,24 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         XCTAssertEqual(sut.interval, 1.0)
     }
     
+    func test_checkAvailability_failsOnDeviceMotionError() {
+        let (sut, service) = makeSUT()
+        let expectedError = InterventionSession.CheckError.deviceMotionUnavailable
+        
+        expectOnCheck(sut, toCompleteWith: expectedError) {
+            service.completeCheck(with: expectedError)
+        }
+    }
+    
+    func test_checkAvailability_failsOnAttitudeReferenceFrameError() {
+        let (sut, service) = makeSUT()
+        let expectedError = InterventionSession.CheckError.attitudeReferenceFrameUnavailable
+        
+        expectOnCheck(sut, toCompleteWith: expectedError) {
+            service.completeCheck(with: expectedError)
+        }
+    }
+    
     func test_startSession_failsOnStartErrorOnFirstPeriod() {
         let (sut, service) = makeSUT()
         let expectedError = ConditionPeriodError.startError
@@ -42,6 +60,18 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         return (session, service)
     }
     
+    func expectOnCheck(_ sut: InterventionSession, toCompleteWith expectedError: InterventionSession.CheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for completion")
+        
+        sut.check { error in
+            XCTAssertEqual(expectedError, error, file: file, line: line)
+            exp.fulfill()
+        }
+
+        action()
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func expectOnStart(_ sut: InterventionSession, toCompleteWith expectedResult: InterventionSession.StartResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         
@@ -56,9 +86,12 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
     
     class ConditionServiceSpy: ConditionService {
         
+        var checkCompletions = [CheckCompletion]()
         var startCompletions = [StartCompletion]()
         
-        func check(completion: @escaping CheckCompletion) { }
+        func check(completion: @escaping CheckCompletion) {
+            checkCompletions.append(completion)
+        }
         
         func start(completion: @escaping StartCompletion) {
             startCompletions.append(completion)
@@ -67,6 +100,10 @@ class InterventionSessionWithConditionUseCaseTests: XCTestCase {
         func stop(completion: @escaping StopCompletion) { }
         
         // MARK: - Completions
+        
+        func completeCheck(with error: InterventionSession.CheckError, at index: Int = 0) {
+            checkCompletions[index](error)
+        }
         
         func completeStart(with error: ConditionPeriodError, at index: Int = 0) {
             startCompletions[index](.failure(error))
