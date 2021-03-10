@@ -40,15 +40,24 @@ Given the current period is completed
 
 ## Use Cases
 
-### Attitude Condition Use Case
+### Attitude Condition Period Use Case
 
 #### Data:
-- CMDeviceMotion
+- Attitude
     
 #### Primary course (happy path):
-1. `CMDeviceMotionUpdates` are started.
-2. System saves the initial pitch/yaw/roll.
-3. System generates a new position.
-4. System compares pitch/roll/yaw relative to desired position and delivers progress as a float.
-5. System notifies delegate of the progress.
-6. System repeats, checking for when the condition period is completed.
+1. Before the period starts, system checks for Motion Client for any errors.
+2. System starts the period.
+3. At the first time interval, system recieves the first attitude, records it, and generates valid target attitude different from the first attitude.
+3. At each time interval, system recieves, stores the record and the time, and reports the current progress to the target position.
+4. System stops the period and upon returns the percentage of attitudes that were within the threshold.
+
+#### Check Error Course (sad path)
+1. System delivers error.
+
+#### Start Updates Error Course (sad path)
+1. System stops the condition period.
+2. System delivers error.
+
+#### Stop Updates Error Course (sad path)
+1. System delivers warning that condition period was already stopped.

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF25B47325ED6F4600571C0D /* AttitudeConditionServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */; };
+		CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */; };
 		CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
@@ -44,7 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionServiceTests.swift; sourceTree = "<group>"; };
+		CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionPeriodUseCaseTests.swift; sourceTree = "<group>"; };
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
@@ -153,7 +153,7 @@
 			children = (
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
-				CF25B47225ED6F4600571C0D /* AttitudeConditionServiceTests.swift */,
+				CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */,
 			);
 			path = "Social-InterventionTests";
 			sourceTree = "<group>";
@@ -303,7 +303,7 @@
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
-				CF25B47325ED6F4600571C0D /* AttitudeConditionServiceTests.swift in Sources */,
+				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
