@@ -17,6 +17,9 @@
 		CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */; };
 		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
 		CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */; };
+		CF83288C25F9787D00553CC4 /* InterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288B25F9787D00553CC4 /* InterventionSession.swift */; };
+		CF83289025F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */; };
+		CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288B25F9787D00553CC4 /* InterventionSession.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
 		CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */; };
 		CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */; };
@@ -54,6 +57,8 @@
 		CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMAttitudeMotionClient.swift; sourceTree = "<group>"; };
 		CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionClientSpy.swift; sourceTree = "<group>"; };
+		CF83288B25F9787D00553CC4 /* InterventionSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterventionSession.swift; path = "Social-Intervention/InterventionSession.swift"; sourceTree = SOURCE_ROOT; };
+		CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionSessionWithConditionUseCaseTests.swift; sourceTree = "<group>"; };
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF8D2B0725EC383B008FFBC6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -120,8 +125,8 @@
 		CF83288425F971AB00553CC4 /* Attitude Condition */ = {
 			isa = PBXGroup;
 			children = (
-				CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */,
 				CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */,
+				CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */,
 			);
 			path = "Attitude Condition";
 			sourceTree = "<group>";
@@ -148,6 +153,7 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CF83288B25F9787D00553CC4 /* InterventionSession.swift */,
 				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
 				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
@@ -172,8 +178,9 @@
 		CF8D2B1F25EC38F2008FFBC6 /* Social-InterventionTests */ = {
 			isa = PBXGroup;
 			children = (
-				CF83288425F971AB00553CC4 /* Attitude Condition */,
 				CF83287D25F9713D00553CC4 /* Helpers */,
+				CF83288425F971AB00553CC4 /* Attitude Condition */,
+				CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */,
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
 				CF8D2B3025EC397D008FFBC6 /* BrowserViewControllerTests.swift */,
 			);
@@ -307,6 +314,7 @@
 				CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */,
 				CF8D2B0825EC383B008FFBC6 /* SceneDelegate.swift in Sources */,
 				CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */,
+				CF83288C25F9787D00553CC4 /* InterventionSession.swift in Sources */,
 				CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */,
 				CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */,
 			);
@@ -325,6 +333,8 @@
 				CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */,
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
+				CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */,
+				CF83289025F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,

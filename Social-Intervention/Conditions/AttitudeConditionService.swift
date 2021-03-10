@@ -7,16 +7,6 @@
 
 import Foundation
 
-public class ConditionSession {
-    
-    private(set) var conditionService: AttitudeConditionService
-    private(set) var currentProgress: Double = 0
-    
-    init(for conditionService: AttitudeConditionService) {
-        self.conditionService = conditionService
-    }
-}
-
 public class AttitudeConditionService: ConditionService {
     private(set) var attitudeClient: AttitudeMotionClient
     
