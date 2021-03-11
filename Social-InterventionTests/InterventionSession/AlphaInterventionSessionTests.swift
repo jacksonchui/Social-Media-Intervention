@@ -19,6 +19,7 @@ class AlphaInterventionSession {
     public typealias StartCompletion = (StartResult) -> Void
     
     private(set) var service: ConditionServiceSpy
+    private(set) var periodTimes = [TimeInterval]()
     private(set) var periodCount: Int
     
     init(using service: ConditionServiceSpy) {
@@ -31,13 +32,26 @@ class AlphaInterventionSession {
     }
     
     public func start(completion: @escaping StartCompletion) {
-        service.start { result in
+        service.start { [unowned self] result in
             switch result {
                 case let .success(latestMotionProgress: progress):
                     completion(.success(alpha: InterventionPolicy.toAlpha(progress)))
                 default:
                     break
             }
+            
+            if self.service.currentPeriodTime >= InterventionPolicy.periodDuration * Double(self.periodCount) {
+                self.decideNextPeriod()
+            }
+        }
+    }
+    
+    private func decideNextPeriod() {
+        print("service.currentPeriodTime: \(service.currentPeriodTime)")
+        if service.progressAboveThreshold >= InterventionPolicy.resetStateThreshold {
+            periodTimes.append(service.currentPeriodTime)
+            service.reset()
+            resetPeriodCount()
         }
     }
     
@@ -66,13 +80,17 @@ class ConditionServiceSpy: ConditionService {
     
     func stop(completion: @escaping StopCompletion) { }
     
-    func reset() { }
+    func reset() {
+        currentPeriodTime = 0
+        progressAboveThreshold = 0
+    }
     
     func completeCheck(with error: AlphaInterventionSession.CheckError?, at index: Int = 0) {
         checkCompletions[index](error)
     }
     
     func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
+        currentPeriodTime += 1
         startCompletions[index](.success(latestMotionProgress: progress))
     }
 }
@@ -110,6 +128,20 @@ class AlphaInterventionSessionTests: XCTestCase {
         expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count) {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
         }
+    }
+    
+    func test_start_resetsConditionServiceAndPeriodAndRecordsPeriodWhenAboveProgressThresholdOnTheLastUpdateForAPeriod() {
+        let (sut, service) = makeSUT()
+        let expectedUpdates = anyProgresses(updatesPerPeriod)
+        service.progressAboveThreshold = resetProgressThreshold
+        
+        expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count) {
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+        }
+        
+        XCTAssertEqual(sut.periodCount, 1)
+        XCTAssertEqual(service.currentPeriodTime, 0.0)
+        XCTAssertEqual(sut.periodTimes, [Double(updatesPerPeriod)])
     }
     
     // MARK: - Helpers
