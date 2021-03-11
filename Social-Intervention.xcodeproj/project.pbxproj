@@ -10,6 +10,7 @@
 		CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */; };
 		CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
+		CF347F0F25F9DA390032E0BA /* AlphaInterventionSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF347F0E25F9DA390032E0BA /* AlphaInterventionSessionTests.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionPeriodUseCaseTests.swift; sourceTree = "<group>"; };
+		CF347F0E25F9DA390032E0BA /* AlphaInterventionSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlphaInterventionSessionTests.swift; sourceTree = "<group>"; };
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 			children = (
 				CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */,
 				CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */,
+				CF347F0E25F9DA390032E0BA /* AlphaInterventionSessionTests.swift */,
 			);
 			path = InterventionSession;
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */,
 				CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */,
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
+				CF347F0F25F9DA390032E0BA /* AlphaInterventionSessionTests.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
 				CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */,
 				CFD437DF25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift in Sources */,
