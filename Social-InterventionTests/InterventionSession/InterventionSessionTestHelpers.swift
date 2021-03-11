@@ -9,6 +9,7 @@ import CoreGraphics
 
 var updatesPerPeriod: Int { return 120 }
 var resetProgressThreshold: Double { return 0.7 }
+var timeInterval: Double { return 1.0 }
 
 func anyProgress() -> Double {
     return randomProgress

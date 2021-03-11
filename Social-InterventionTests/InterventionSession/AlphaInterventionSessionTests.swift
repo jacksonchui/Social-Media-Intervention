@@ -24,7 +24,7 @@ class AlphaInterventionSession {
     
     init(using service: ConditionServiceSpy) {
         self.service = service
-        periodCount = 1
+        self.periodCount = 1
     }
     
     public func check(completion: @escaping CheckCompletion) {
@@ -52,6 +52,8 @@ class AlphaInterventionSession {
             periodTimes.append(service.currentPeriodTime)
             service.reset()
             resetPeriodCount()
+        } else {
+            periodCount += 1
         }
     }
     
@@ -144,6 +146,55 @@ class AlphaInterventionSessionTests: XCTestCase {
         XCTAssertEqual(sut.periodTimes, [Double(updatesPerPeriod)])
     }
     
+    func test_start_succeedsOnlyWhenProgressThresholdMetAcrossMultiplePeriods() {
+        let (sut, service) = makeSUT()
+        let expectedUpdates = anyProgresses(updatesPerPeriod)
+        let timePerPeriod: Double = Double(updatesPerPeriod) * timeInterval
+        
+        expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count * 5) {
+            
+            // first period
+            
+            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            
+            XCTAssertEqual(sut.periodCount, 2)
+            XCTAssertEqual(service.currentPeriodTime, 120.0)
+            XCTAssertEqual(sut.periodTimes, [])
+            
+            service.progressAboveThreshold = resetProgressThreshold
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            
+            XCTAssertEqual(sut.periodCount, 1)
+            XCTAssertEqual(service.currentPeriodTime, 0.0)
+            XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2])
+            
+            // second period
+            
+            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            
+            XCTAssertEqual(sut.periodCount, 2)
+            XCTAssertEqual(service.currentPeriodTime, 120.0)
+            XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2])
+            
+            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            
+            XCTAssertEqual(sut.periodCount, 3)
+            XCTAssertEqual(service.currentPeriodTime, 240.0)
+            XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2])
+            
+            service.progressAboveThreshold = resetProgressThreshold + 0.01
+            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            
+            XCTAssertEqual(sut.periodCount, 1)
+            XCTAssertEqual(service.currentPeriodTime, 0.0)
+            XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2, timePerPeriod * 3])
+        }
+    }
+
+
     // MARK: - Helpers
     
     func makeSUT() -> (sut: AlphaInterventionSession, service: ConditionServiceSpy) {

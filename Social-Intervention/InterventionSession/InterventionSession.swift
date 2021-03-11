@@ -19,11 +19,6 @@ public final class InterventionSession {
         case failure(error: StartError)
     }
     
-    public enum Pathway {
-        case fromStart
-        case fromViewDidDissappear
-    }
-    
     private(set) var service: ConditionService
     private(set) var periodTimes = [TimeInterval]()
     private(set) var periodCount: Double //
@@ -50,7 +45,7 @@ public final class InterventionSession {
                     completion(.failure(error: error))
             }
             if self.service.currentPeriodTime >= InterventionPolicy.periodDuration * self.periodCount {
-                self.decideNextPeriod(.fromStart)
+                self.decideNextPeriod()
             }
         }
     }
@@ -60,7 +55,7 @@ public final class InterventionSession {
         // save to analytics
     }
     
-    private func decideNextPeriod(_ pathway: Pathway) {
+    private func decideNextPeriod() {
         if service.progressAboveThreshold >= InterventionPolicy.resetStateThreshold {
             self.periodTimes.append(self.service.currentPeriodTime)
             self.service.reset()
