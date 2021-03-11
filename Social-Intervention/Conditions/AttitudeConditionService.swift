@@ -34,7 +34,6 @@ extension AttitudeConditionService {
 
 extension AttitudeConditionService {
     public func start(completion: @escaping StartCompletion) {
-        resetConditionServiceState()
         attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
@@ -44,7 +43,7 @@ extension AttitudeConditionService {
     private func record(result: AttitudeResult, completion: StartCompletion) {
         switch result {
             case let .success(attitude):
-                if targetAttitude == nil {
+                if targetAttitude == nil, records.isEmpty {
                     targetAttitude = randomAttitude
                 }
                 records.append(attitude)
@@ -83,11 +82,10 @@ extension AttitudeConditionService {
                 return
             }
             completion(.success(progressAboveThreshold: self.progressAboveThreshold))
-            self.resetConditionServiceState()
         }
     }
     
-    private var progressAboveThreshold: Double {
+    public var progressAboveThreshold: Double {
         guard let targetAttitude = targetAttitude else { return 0.0 }
         let progresses = records.map { $0.progress(till: targetAttitude) }
         let recordsAboveThreshold = progresses.reduce(0) { sum, progress in sum + (progress >= AttitudeConditionService.progressThreshold ? 1 : 0) }
@@ -95,8 +93,10 @@ extension AttitudeConditionService {
         print("Average progress: \(progresses.reduce(0.0) { $0 + $1 } / Double(progresses.count))")
         return Double(recordsAboveThreshold) / Double(progresses.count)
     }
-    
-    private func resetConditionServiceState() {
+}
+
+extension AttitudeConditionService {
+    public func reset() {
         records = []
         targetAttitude = nil
     }

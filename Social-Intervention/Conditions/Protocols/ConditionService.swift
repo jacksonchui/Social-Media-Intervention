@@ -31,7 +31,11 @@ public protocol ConditionService: AnyObject {
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void
     
+    var currentPeriodTime: TimeInterval { get }
+    var progressAboveThreshold: Double { get }
+    
     func check(completion: @escaping CheckCompletion) -> Void
     func start(completion: @escaping StartCompletion) -> Void
     func stop(completion: @escaping StopCompletion) -> Void
+    func reset() -> Void
 }

@@ -33,6 +33,14 @@ class AttitudeConditionServiceTests: XCTestCase {
         }
     }
     
+    func test_reset_setsRecordsToEmptyAndTargetAttitudeToNil() {
+        let (sut, _) = makeSUT()
+        sut.reset()
+        
+        XCTAssertEqual(sut.currentPeriodTime, 0.0)
+        XCTAssertNil(sut.targetAttitude)
+    }
+        
     func test_check_succeedsWhenNoErrors() {
         let (sut, manager) = makeSUT()
         
@@ -88,7 +96,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
     }
     
-    func test_stop_failsWithErrorThenDoesNotResetState(){
+    func test_stop_failsWithErrorWithNoSideEffects(){
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes()
         let expectedError: ConditionPeriodError? = .alreadyStopped
@@ -100,25 +108,26 @@ class AttitudeConditionServiceTests: XCTestCase {
         expectOnStop(sut, toCompleteWith: expectedError) {
             manager.completeStopUpdates(with: expectedError)
         }
-        XCTAssertEqual(sut.currentPeriodTime, 1.0 * Double(attitudeUpdates.count))
+        XCTAssertEqual(sut.currentPeriodTime, Double(attitudeUpdates.count))
         XCTAssertNotNil(sut.records.first, "State should not be reset since Manager might still be running.")
         XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
-    func test_stop_succeedsThenEndsCurrentPeriodAndReturnsAThreshold() {
+    func test_start_recordsUpdatesThenResetThenRecordsMoreUpdatesSuccessfully() {
         let (sut, manager) = makeSUT()
         let attitudeUpdates = anyAttitudes(100)
         
-        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
+        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count * 2) {
             attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
+            XCTAssertEqual(sut.records, attitudeUpdates)
+            
+            sut.reset()
+            XCTAssertTrue(sut.records.isEmpty, "Reset records at the end of period if threshold is met.")
+            XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period if threshold is met.")
+            
+            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
+            XCTAssertEqual(sut.records, attitudeUpdates)
         }
-        
-        expectOnStop(sut, toCompleteWith: nil) {
-            manager.completeStopUpdatesSuccessfully()
-        }
-        XCTAssertEqual(sut.currentPeriodTime, 0.0)
-        XCTAssertTrue(sut.records.isEmpty, "Reset records at the end of period.")
-        XCTAssertNil(sut.targetAttitude, "Reset the target attitude to nil at the end of period.")
     }
 
     // MARK: - Helpers
