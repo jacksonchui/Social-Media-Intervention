@@ -16,7 +16,8 @@ internal final class InterventionPolicy {
     }
     
     static var endPeriodAlpha: CGFloat { return 1.0 }
-    static var periodDuration: Double { return 120.0 }
-    static var resetStateThreshold: Double { return 0.7 }
+    static var periodDuration: TimeInterval { return 60.0 }
+    static var periodCompletedRatio: Double { return 0.7 }
+    static var successfulProgressThreshold: Double { return 0.7 }
     static var timeInterval: TimeInterval { return 1.0 }
 }

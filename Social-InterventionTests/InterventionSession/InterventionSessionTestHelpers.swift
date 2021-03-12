@@ -6,8 +6,10 @@
 //
 
 import CoreGraphics
+import Foundation
 
-var updatesPerPeriod: Int { return 120 }
+var updatesPerPeriod: Int { return 60 }
+var timePerPeriod: TimeInterval { return 60.0 }
 var resetProgressThreshold: Double { return 0.7 }
 var timeInterval: Double { return 1.0 }
 
