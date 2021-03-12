@@ -56,7 +56,7 @@ public final class InterventionSession {
     }
     
     private func decideNextPeriod() {
-        if service.progressAboveThreshold >= InterventionPolicy.resetStateThreshold {
+        if service.progressAboveThreshold >= InterventionPolicy.periodCompletedRatio {
             self.periodTimes.append(self.service.currentPeriodTime)
             self.service.reset()
             self.periodCount = 1

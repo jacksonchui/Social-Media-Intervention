@@ -48,8 +48,8 @@ class AlphaInterventionSession {
     
     private func decideNextPeriod() {
         print("service.currentPeriodTime: \(service.currentPeriodTime)")
-        if service.progressAboveThreshold >= InterventionPolicy.resetStateThreshold {
-            periodTimes.append(service.currentPeriodTime)
+        if service.progressAboveThreshold >= InterventionPolicy.periodCompletedRatio {
+            periodTimes.append(service.currentPeriodTime) // [progress per period duration] -> average
             service.reset()
             resetPeriodCount()
         } else {
@@ -132,7 +132,7 @@ class AlphaInterventionSessionTests: XCTestCase {
         }
     }
     
-    func test_start_resetsConditionServiceAndPeriodAndRecordsPeriodWhenAboveProgressThresholdOnTheLastUpdateForAPeriod() {
+    func test_start_succeedsWhenProgressThresholdMetForOnePeriod() {
         let (sut, service) = makeSUT()
         let expectedUpdates = anyProgresses(updatesPerPeriod)
         service.progressAboveThreshold = resetProgressThreshold
@@ -159,7 +159,7 @@ class AlphaInterventionSessionTests: XCTestCase {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 2)
-            XCTAssertEqual(service.currentPeriodTime, 120.0)
+            XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
             XCTAssertEqual(sut.periodTimes, [])
             
             service.progressAboveThreshold = resetProgressThreshold
@@ -175,14 +175,14 @@ class AlphaInterventionSessionTests: XCTestCase {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 2)
-            XCTAssertEqual(service.currentPeriodTime, 120.0)
+            XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
             XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2])
             
             service.progressAboveThreshold = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 3)
-            XCTAssertEqual(service.currentPeriodTime, 240.0)
+            XCTAssertEqual(service.currentPeriodTime, timePerPeriod * 2)
             XCTAssertEqual(sut.periodTimes, [timePerPeriod * 2])
             
             service.progressAboveThreshold = resetProgressThreshold + 0.01
