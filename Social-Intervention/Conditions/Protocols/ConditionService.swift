@@ -11,23 +11,32 @@ public protocol ConditionServiceDelegate: AnyObject {
     func condition(progress: Double)
 }
 
+public enum ConditionPeriodError: Swift.Error {
+    case startError
+    case alreadyStopped
+}
+
 public enum PeriodStartResult {
-    case success(progress: Double)
-    case failure(MotionSessionError)
+    case success(latestMotionProgress: Double)
+    case failure(ConditionPeriodError)
 }
 
 public enum PeriodStopResult {
     case success(progressAboveThreshold: Double)
-    case failure(MotionSessionError)
+    case failure(ConditionPeriodError)
 }
 
 public protocol ConditionService: AnyObject {
-    
     typealias CheckCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void
     
+    var currentPeriodTime: TimeInterval { get }
+    var progressAboveThreshold: Double { get }
+    
     func check(completion: @escaping CheckCompletion) -> Void
     func start(completion: @escaping StartCompletion) -> Void
     func stop(completion: @escaping StopCompletion) -> Void
+    func reset() -> Void
+    func continuePeriod() -> Void
 }

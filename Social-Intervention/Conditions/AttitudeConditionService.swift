@@ -7,93 +7,58 @@
 
 import Foundation
 
-public class ConditionSession {
-    
-    private(set) var conditionService: AttitudeConditionService
-    private(set) var currentProgress: Double = 0
-    
-    init(for conditionService: AttitudeConditionService) {
-        self.conditionService = conditionService
-    }
-}
-
 public class AttitudeConditionService: ConditionService {
-        
-    private(set) var attitudeService: AttitudeMotionService
+    private(set) var attitudeClient: AttitudeMotionClient
     
-    private(set) var currentPeriodTime: TimeInterval = 0
     private(set) var targetAttitude: Attitude?
-    private var timeInterval: TimeInterval
+    private(set) var timeInterval: TimeInterval
     private(set) var records = [Attitude]()
     
     static let progressThreshold = 0.7
     
-    init(with attitudeService: AttitudeMotionService, updateEvery timeInterval: TimeInterval) {
-        self.attitudeService = attitudeService
+    init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
+        self.attitudeClient = attitudeClient
         self.timeInterval = timeInterval
-        
     }
     
+    public var currentPeriodTime: TimeInterval {
+        return timeInterval * Double(records.count)
+    }
+}
+
+extension AttitudeConditionService {
     public func check(completion: @escaping CheckCompletion) {
-        attitudeService.checkAvailability(completion: completion)
+        attitudeClient.checkAvailability(completion: completion)
     }
-    
+}
+
+extension AttitudeConditionService {
     public func start(completion: @escaping StartCompletion) {
-        currentPeriodTime = 0
-        attitudeService.startUpdates(updatingEvery: timeInterval) { [weak self] result in
+        attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
-        }
-    }
-    
-    public func stop(completion: @escaping StopCompletion) {
-        attitudeService.stopUpdates {[weak self] error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            completion(.success(progressAboveThreshold: self.progressAboveThreshold))
-            self.resetConditionServiceState()
         }
     }
     
     private func record(result: AttitudeResult, completion: StartCompletion) {
         switch result {
             case let .success(attitude):
-                if targetAttitude == nil {
+                if targetAttitude == nil, records.isEmpty {
                     targetAttitude = randomAttitude
                 }
-                currentPeriodTime += timeInterval
                 records.append(attitude)
-                completion(.success(progress: progress))
+                completion(.success(latestMotionProgress: progress))
             case let .failure(error):
                 completion(.failure(error))
         }
     }
     
-    public var progress: Double {
+    private var progress: Double {
         guard let record = records.last,
               let targetAttitude = targetAttitude else {
             return 1.0
         }
         return record.progress(till: targetAttitude)
-    }
-    
-    public var progressAboveThreshold: Double {
-        guard let targetAttitude = targetAttitude else { return 0.0 }
-        let progresses = records.map { $0.progress(till: targetAttitude) }
-        let recordsAboveThreshold = progresses.reduce(0) { sum, progress in sum + (progress >= AttitudeConditionService.progressThreshold ? 1 : 0) }
-        print("Records above threshold (\(AttitudeConditionService.progressThreshold)): \(recordsAboveThreshold) of \(progresses.count)")
-        print("Average progress: \(progresses.reduce(0.0) { $0 + $1 } / Double(progresses.count))")
-        return Double(recordsAboveThreshold) / Double(progresses.count)
-    }
-    
-    private func resetConditionServiceState() {
-        currentPeriodTime = 0
-        records = []
-        targetAttitude = nil
     }
     
     private var randomRadian: Double {
@@ -104,6 +69,42 @@ public class AttitudeConditionService: ConditionService {
     private var randomAttitude: Attitude {
         let newAttitude = Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
         return newAttitude != records.first ? newAttitude : self.randomAttitude
+    }
+}
+
+extension AttitudeConditionService {
+    public func stop(completion: @escaping StopCompletion) {
+        attitudeClient.stopUpdates {[weak self] error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            completion(.success(progressAboveThreshold: self.progressAboveThreshold))
+        }
+    }
+    
+    public var progressAboveThreshold: Double {
+        guard let targetAttitude = targetAttitude else { return 0.0 }
+        let progresses = records.map { $0.progress(till: targetAttitude) }
+        let recordsAboveThreshold = progresses.reduce(0) { sum, progress in sum + (progress >= AttitudeConditionService.progressThreshold ? 1 : 0) }
+        print("Records above threshold (\(AttitudeConditionService.progressThreshold)): \(recordsAboveThreshold) of \(progresses.count)")
+        print("Average progress: \(progresses.reduce(0.0) { $0 + $1 } / Double(progresses.count))")
+        return Double(recordsAboveThreshold) / Double(progresses.count)
+    }
+}
+
+extension AttitudeConditionService {
+    public func reset() {
+        records = []
+        targetAttitude = nil
+    }
+}
+
+extension AttitudeConditionService {
+    public func continuePeriod() {
+        records = []
     }
 }
 
