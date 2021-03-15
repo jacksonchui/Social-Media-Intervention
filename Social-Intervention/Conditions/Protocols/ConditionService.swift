@@ -17,7 +17,7 @@ public enum ConditionPeriodError: Swift.Error {
 }
 
 public enum PeriodStartResult {
-    case success(latestMotionProgress: Double)
+    case success(progressUpdate: Double)
     case failure(ConditionPeriodError)
 }
 

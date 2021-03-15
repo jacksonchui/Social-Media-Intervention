@@ -47,7 +47,7 @@ extension AttitudeConditionService {
                     targetAttitude = randomAttitude
                 }
                 records.append(attitude)
-                completion(.success(latestMotionProgress: progress))
+                completion(.success(progressUpdate: progress))
             case let .failure(error):
                 completion(.failure(error))
         }

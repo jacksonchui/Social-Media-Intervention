@@ -41,13 +41,13 @@ class ConditionServiceSpy: ConditionService {
         progressAboveThreshold = 0
     }
     
-    func completeCheck(with error: ViewAlphaInterventionSession.CheckError?, at index: Int = 0) {
+    func completeCheck(with error: SessionCheckError?, at index: Int = 0) {
         checkCompletions[index](error)
     }
     
     func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
         currentPeriodTime += 1
-        startCompletions[index](.success(latestMotionProgress: progress))
+        startCompletions[index](.success(progressUpdate: progress))
     }
     
     func completeStopSuccessfully(at index: Int = 0) {

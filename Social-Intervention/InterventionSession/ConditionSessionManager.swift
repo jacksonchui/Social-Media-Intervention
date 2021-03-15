@@ -1,5 +1,5 @@
 //
-//  ViewAlphaInterventionSession.swift
+//  ConditionSessionManager.swift
 //  Social-Intervention
 //
 //  Created by Jackson Chui on 3/15/21.
@@ -8,19 +8,12 @@
 import Foundation
 import CoreGraphics
 
-class ViewAlphaInterventionSession {
-    
-    public typealias CheckError = MotionAvailabilityError
-    public typealias CheckCompletion = (CheckError?) -> Void
-    
+public final class ConditionSessionManager: SessionManager {
+        
     public enum StartResult: Equatable {
         case success(alpha: CGFloat)
         case failure(error: ConditionPeriodError)
     }
-    public typealias StartCompletion = (StartResult) -> Void
-    
-    public typealias StopError = ConditionPeriodError?
-    public typealias StopCompletion = (StopError) -> Void
     
     private(set) var service: ConditionService
     private(set) var analytics: SIAnalyticsController
@@ -41,7 +34,7 @@ class ViewAlphaInterventionSession {
     public func start(completion: @escaping StartCompletion) {
         service.start { [unowned self] result in
             switch result {
-                case let .success(latestMotionProgress: progress):
+                case let .success(progressUpdate: progress):
                     completion(.success(alpha: InterventionPolicy.toAlpha(progress)))
                 default:
                     break

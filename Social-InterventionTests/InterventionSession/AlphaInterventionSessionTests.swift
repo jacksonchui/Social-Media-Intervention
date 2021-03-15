@@ -7,7 +7,7 @@
 
 import XCTest
 
-class ViewAlphaInterventionSessionTests: XCTestCase {
+class ConditionSessionManagerTests: XCTestCase {
     func test_init_setsConditionServiceAndResetsPeriodCount() {
         let (sut, _, _ ) = makeSUT()
         
@@ -17,7 +17,7 @@ class ViewAlphaInterventionSessionTests: XCTestCase {
     
     func test_check_deliverErrorOnDeviceMotionUnavailable() {
         let (sut, service, _) = makeSUT()
-        let expectedError: ViewAlphaInterventionSession.CheckError = .deviceMotionUnavailable
+        let expectedError: SessionCheckError = .deviceMotionUnavailable
         
         expectOnCheck(sut, toCompleteWith: expectedError) {
             service.completeCheck(with: expectedError)
@@ -26,7 +26,7 @@ class ViewAlphaInterventionSessionTests: XCTestCase {
     
     func test_check_deliverErrorOnReferenceFrameUnavailable() {
         let (sut, service, _) = makeSUT()
-        let expectedError: ViewAlphaInterventionSession.CheckError = .attitudeReferenceFrameUnavailable
+        let expectedError: SessionCheckError = .attitudeReferenceFrameUnavailable
         
         expectOnCheck(sut, toCompleteWith: expectedError) {
             service.completeCheck(with: expectedError)
@@ -109,15 +109,15 @@ class ViewAlphaInterventionSessionTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func makeSUT() -> (sut: ViewAlphaInterventionSession, service: ConditionServiceSpy, analytics: SIAnalyticsController) {
+    func makeSUT() -> (sut: ConditionSessionManager, service: ConditionServiceSpy, analytics: SIAnalyticsController) {
         let service = ConditionServiceSpy()
         let analytics = SIAnalyticsController()
-        let session = ViewAlphaInterventionSession(using: service, sendsLogTo: analytics)
+        let session = ConditionSessionManager(using: service, sendsLogTo: analytics)
         
         return (session, service, analytics)
     }
     
-    func expectOnCheck(_ sut: ViewAlphaInterventionSession, toCompleteWith expectedError: ViewAlphaInterventionSession.CheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnCheck(_ sut: ConditionSessionManager, toCompleteWith expectedError: SessionCheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         
         sut.check { error in
@@ -129,7 +129,7 @@ class ViewAlphaInterventionSessionTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStart(_ sut: ViewAlphaInterventionSession, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         
