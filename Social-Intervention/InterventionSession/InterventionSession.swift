@@ -8,6 +8,10 @@
 import Foundation
 import CoreGraphics
 
+struct SessionLogEntry: Equatable {
+    var progressOverPeriod: [Double]
+    var periodDuration: TimeInterval
+}
 
 public final class InterventionSession {
     

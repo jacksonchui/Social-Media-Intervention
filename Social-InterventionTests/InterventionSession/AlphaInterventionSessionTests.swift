@@ -1,5 +1,5 @@
 //
-//  AlphaInterventionSessionTests.swift
+//  ViewAlphaInterventionSessionTests.swift
 //  Social-InterventionTests
 //
 //  Created by Jackson Chui on 3/10/21.
@@ -7,145 +7,7 @@
 
 import XCTest
 
-struct SessionLogEntry: Equatable {
-    var progressOverPeriod: [Double]
-    var periodDuration: TimeInterval
-}
-
-class AlphaInterventionSession {
-    
-    public typealias CheckError = MotionAvailabilityError
-    public typealias CheckCompletion = (CheckError?) -> Void
-    
-    public enum StartResult: Equatable {
-        case success(alpha: CGFloat)
-        case failure(error: ConditionPeriodError)
-    }
-    public typealias StartCompletion = (StartResult) -> Void
-    
-    public typealias StopError = ConditionPeriodError?
-    public typealias StopCompletion = (StopError) -> Void
-    
-    private(set) var service: ConditionServiceSpy
-    private(set) var analytics: SIAnalyticsController
-    private(set) var sessionLog = [SessionLogEntry]()
-    private(set) var progressOverPeriod = [Double]()
-    private(set) var periodCount: Int
-    
-    init(using service: ConditionServiceSpy, sendsLogTo analytics: SIAnalyticsController) {
-        self.service = service
-        self.analytics = analytics
-        self.periodCount = 1
-    }
-    
-    public func check(completion: @escaping CheckCompletion) {
-        service.check(completion: completion)
-    }
-    
-    public func start(completion: @escaping StartCompletion) {
-        service.start { [unowned self] result in
-            switch result {
-                case let .success(latestMotionProgress: progress):
-                    completion(.success(alpha: InterventionPolicy.toAlpha(progress)))
-                default:
-                    break
-            }
-            
-            if self.service.currentPeriodTime >= InterventionPolicy.periodDuration * Double(self.periodCount) {
-                self.decideNextPeriod()
-            }
-        }
-    }
-    
-    public func stop(completion: @escaping StopCompletion) {
-        service.stop { result in
-            switch result {
-                case let .failure(error):
-                    completion(error)
-                default:
-                    break
-            }
-        }
-        analytics.save(sessionLog)
-    }
-    
-    private func decideNextPeriod() {
-        progressOverPeriod.append(service.progressAboveThreshold)
-        
-        if progressOverPeriod.last! >= InterventionPolicy.periodCompletedRatio {
-            let entry = SessionLogEntry(
-                            progressOverPeriod: progressOverPeriod,
-                            periodDuration: service.currentPeriodTime)
-            sessionLog.append(entry)
-            service.reset()
-            resetPeriod()
-        } else {
-            periodCount += 1
-            service.continuePeriod()
-        }
-    }
-    
-    private func resetPeriod() {
-        periodCount = 1
-        progressOverPeriod = []
-    }
-}
-
-class ConditionServiceSpy: ConditionService {
-    var currentPeriodTime: TimeInterval
-    var progressAboveThreshold: Double
-    
-    var checkCompletions = [CheckCompletion]()
-    var startCompletions = [StartCompletion]()
-    var stopCompletions = [StopCompletion]()
-    
-    init() {
-        currentPeriodTime = 0
-        progressAboveThreshold = 0
-    }
-    
-    func check(completion: @escaping CheckCompletion) {
-        checkCompletions.append(completion)
-    }
-    
-    func start(completion: @escaping StartCompletion) {
-        startCompletions.append(completion)
-    }
-    
-    func stop(completion: @escaping StopCompletion) {
-        stopCompletions.append(completion)
-    }
-    
-    func reset() {
-        currentPeriodTime = 0
-        progressAboveThreshold = 0
-    }
-    
-    func continuePeriod() {
-        progressAboveThreshold = 0
-    }
-    
-    func completeCheck(with error: AlphaInterventionSession.CheckError?, at index: Int = 0) {
-        checkCompletions[index](error)
-    }
-    
-    func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
-        currentPeriodTime += 1
-        startCompletions[index](.success(latestMotionProgress: progress))
-    }
-    
-    func completeStopSuccessfully(at index: Int = 0) {
-        stopCompletions[index](.success(progressAboveThreshold: anyProgress()))
-    }
-}
-
-class SIAnalyticsController {
-    public func save(_ log: [SessionLogEntry]) {
-        
-    }
-}
-
-class AlphaInterventionSessionTests: XCTestCase {
+class ViewAlphaInterventionSessionTests: XCTestCase {
     func test_init_setsConditionServiceAndResetsPeriodCount() {
         let (sut, _, _ ) = makeSUT()
         
@@ -155,7 +17,7 @@ class AlphaInterventionSessionTests: XCTestCase {
     
     func test_check_deliverErrorOnDeviceMotionUnavailable() {
         let (sut, service, _) = makeSUT()
-        let expectedError: AlphaInterventionSession.CheckError = .deviceMotionUnavailable
+        let expectedError: ViewAlphaInterventionSession.CheckError = .deviceMotionUnavailable
         
         expectOnCheck(sut, toCompleteWith: expectedError) {
             service.completeCheck(with: expectedError)
@@ -164,7 +26,7 @@ class AlphaInterventionSessionTests: XCTestCase {
     
     func test_check_deliverErrorOnReferenceFrameUnavailable() {
         let (sut, service, _) = makeSUT()
-        let expectedError: AlphaInterventionSession.CheckError = .attitudeReferenceFrameUnavailable
+        let expectedError: ViewAlphaInterventionSession.CheckError = .attitudeReferenceFrameUnavailable
         
         expectOnCheck(sut, toCompleteWith: expectedError) {
             service.completeCheck(with: expectedError)
@@ -247,15 +109,15 @@ class AlphaInterventionSessionTests: XCTestCase {
 
     // MARK: - Helpers
     
-    func makeSUT() -> (sut: AlphaInterventionSession, service: ConditionServiceSpy, analytics: SIAnalyticsController) {
+    func makeSUT() -> (sut: ViewAlphaInterventionSession, service: ConditionServiceSpy, analytics: SIAnalyticsController) {
         let service = ConditionServiceSpy()
         let analytics = SIAnalyticsController()
-        let session = AlphaInterventionSession(using: service, sendsLogTo: analytics)
+        let session = ViewAlphaInterventionSession(using: service, sendsLogTo: analytics)
         
         return (session, service, analytics)
     }
     
-    func expectOnCheck(_ sut: AlphaInterventionSession, toCompleteWith expectedError: AlphaInterventionSession.CheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnCheck(_ sut: ViewAlphaInterventionSession, toCompleteWith expectedError: ViewAlphaInterventionSession.CheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         
         sut.check { error in
@@ -267,7 +129,7 @@ class AlphaInterventionSessionTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStart(_ sut: AlphaInterventionSession, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: ViewAlphaInterventionSession, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         

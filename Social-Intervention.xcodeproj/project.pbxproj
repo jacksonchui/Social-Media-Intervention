@@ -20,7 +20,6 @@
 		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
 		CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */; };
 		CF83288C25F9787D00553CC4 /* InterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288B25F9787D00553CC4 /* InterventionSession.swift */; };
-		CF83289025F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */; };
 		CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83288B25F9787D00553CC4 /* InterventionSession.swift */; };
 		CF83289C25F98B4F00553CC4 /* InterventionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83289B25F98B4F00553CC4 /* InterventionPolicy.swift */; };
 		CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */; };
@@ -35,6 +34,11 @@
 		CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0F25F5B73B0044E588 /* AttitudeMotionClient.swift */; };
 		CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF1325F5B7C80044E588 /* ConditionService.swift */; };
 		CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */; };
+		CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */; };
+		CFBF4DD425FFF82F00BE040D /* ViewAlphaInterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ViewAlphaInterventionSession.swift */; };
+		CFBF4DD725FFF86900BE040D /* ViewAlphaInterventionSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ViewAlphaInterventionSession.swift */; };
+		CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
+		CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
 		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
@@ -64,7 +68,6 @@
 		CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionClientSpy.swift; sourceTree = "<group>"; };
 		CF83288B25F9787D00553CC4 /* InterventionSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InterventionSession.swift; path = "Social-Intervention/InterventionSession/InterventionSession.swift"; sourceTree = SOURCE_ROOT; };
-		CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionSessionWithConditionUseCaseTests.swift; sourceTree = "<group>"; };
 		CF83289B25F98B4F00553CC4 /* InterventionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterventionPolicy.swift; sourceTree = "<group>"; };
 		CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Social-Intervention.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF8D2B0525EC383B008FFBC6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +82,9 @@
 		CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionService.swift; sourceTree = "<group>"; };
 		CF92AF0F25F5B73B0044E588 /* AttitudeMotionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionClient.swift; sourceTree = "<group>"; };
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
+		CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionServiceSpy.swift; sourceTree = "<group>"; };
+		CFBF4DD325FFF82F00BE040D /* ViewAlphaInterventionSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAlphaInterventionSession.swift; sourceTree = "<group>"; };
+		CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIAnalyticsController.swift; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
 		CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionTestHelpers.swift; sourceTree = "<group>"; };
@@ -146,6 +152,7 @@
 			children = (
 				CF83288B25F9787D00553CC4 /* InterventionSession.swift */,
 				CF83289B25F98B4F00553CC4 /* InterventionPolicy.swift */,
+				CFBF4DD325FFF82F00BE040D /* ViewAlphaInterventionSession.swift */,
 			);
 			path = InterventionSession;
 			sourceTree = "<group>";
@@ -172,6 +179,7 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CFBF4DDA25FFF8CA00BE040D /* Analytics */,
 				CF83289A25F98B1C00553CC4 /* InterventionSession */,
 				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
@@ -215,6 +223,23 @@
 			path = Browser;
 			sourceTree = "<group>";
 		};
+		CFBF4DD025FFF7EE00BE040D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */,
+				CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		CFBF4DDA25FFF8CA00BE040D /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 		CFD371C725F74A840097B97F /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,8 +252,7 @@
 		CFD437CF25F98D4100EBD905 /* InterventionSession */ = {
 			isa = PBXGroup;
 			children = (
-				CFD437DE25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift */,
-				CF83288F25F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift */,
+				CFBF4DD025FFF7EE00BE040D /* Helpers */,
 				CF347F0E25F9DA390032E0BA /* AlphaInterventionSessionTests.swift */,
 			);
 			path = InterventionSession;
@@ -337,6 +361,7 @@
 				CF83289C25F98B4F00553CC4 /* InterventionPolicy.swift in Sources */,
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
+				CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
 				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
@@ -347,6 +372,7 @@
 				CF83288C25F9787D00553CC4 /* InterventionSession.swift in Sources */,
 				CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */,
 				CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */,
+				CFBF4DD425FFF82F00BE040D /* ViewAlphaInterventionSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,15 +388,17 @@
 				CF8D2B3125EC397D008FFBC6 /* BrowserViewControllerTests.swift in Sources */,
 				CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */,
 				CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */,
+				CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */,
 				CF92AF1F25F5B9FE0044E588 /* AttitudeConditionService.swift in Sources */,
+				CFBF4DD725FFF86900BE040D /* ViewAlphaInterventionSession.swift in Sources */,
 				CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CF347F0F25F9DA390032E0BA /* AlphaInterventionSessionTests.swift in Sources */,
 				CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */,
 				CF83289525F97B0000553CC4 /* InterventionSession.swift in Sources */,
 				CFD437DF25F98E0A00EBD905 /* InterventionSessionTestHelpers.swift in Sources */,
-				CF83289025F978A800553CC4 /* InterventionSessionWithConditionUseCaseTests.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
+				CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
