@@ -1,5 +1,5 @@
 //
-//  RotationConditionServiceTests.swift
+//  AttitudeConditionServiceTests.swift
 //  Social-InterventionTests
 //
 //  Created by Jackson Chui on 3/1/21.
@@ -161,7 +161,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.start {result in
             switch result {
-                case let .success(latestMotionProgress: progress):
+                case let .success(progressUpdate: progress):
                     XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
                     XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
                 case let .failure(error):
@@ -180,7 +180,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         
         sut.stop {result in
             switch result {
-                case let .success(progressAboveThreshold: progress):
+                case let .success(periodCompletedRatio: progress):
                     XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
                     XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
                 case let .failure(error):

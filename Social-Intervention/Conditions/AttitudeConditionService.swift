@@ -8,15 +8,13 @@
 import Foundation
 
 public class AttitudeConditionService: ConditionService {
-    private(set) var attitudeClient: AttitudeMotionClient
-    
     private(set) var targetAttitude: Attitude?
     private(set) var timeInterval: TimeInterval
     private(set) var records = [Attitude]()
     
-    static let progressThreshold = 0.7
-    
-    init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
+    private(set) var attitudeClient: AttitudeMotionClient
+        
+    public init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
         self.attitudeClient = attitudeClient
         self.timeInterval = timeInterval
     }
@@ -24,16 +22,19 @@ public class AttitudeConditionService: ConditionService {
     public var currentPeriodTime: TimeInterval {
         return timeInterval * Double(records.count)
     }
+    
+    private func resetRecords() { records = [] }
+    private func removeTargetAttitudeToAcquireNewOneOnNextUpdate() { targetAttitude = nil }
 }
 
-extension AttitudeConditionService {
-    public func check(completion: @escaping CheckCompletion) {
+public extension AttitudeConditionService {
+    func check(completion: @escaping CheckCompletion) {
         attitudeClient.checkAvailability(completion: completion)
     }
 }
 
-extension AttitudeConditionService {
-    public func start(completion: @escaping StartCompletion) {
+public extension AttitudeConditionService {
+    func start(completion: @escaping StartCompletion) {
         attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
@@ -47,7 +48,7 @@ extension AttitudeConditionService {
                     targetAttitude = randomAttitude
                 }
                 records.append(attitude)
-                completion(.success(latestMotionProgress: progress))
+                completion(.success(progressUpdate: progress))
             case let .failure(error):
                 completion(.failure(error))
         }
@@ -58,7 +59,7 @@ extension AttitudeConditionService {
               let targetAttitude = targetAttitude else {
             return 1.0
         }
-        return record.progress(till: targetAttitude)
+        return record.progress(towards: targetAttitude)
     }
     
     private var randomRadian: Double {
@@ -81,30 +82,30 @@ extension AttitudeConditionService {
                 completion(.failure(error))
                 return
             }
-            completion(.success(progressAboveThreshold: self.progressAboveThreshold))
+            completion(.success(periodCompletedRatio: self.periodCompletedRatio))
         }
     }
     
-    public var progressAboveThreshold: Double {
+    public var periodCompletedRatio: Double {
         guard let targetAttitude = targetAttitude else { return 0.0 }
-        let progresses = records.map { $0.progress(till: targetAttitude) }
-        let recordsAboveThreshold = progresses.reduce(0) { sum, progress in sum + (progress >= AttitudeConditionService.progressThreshold ? 1 : 0) }
-        print("Records above threshold (\(AttitudeConditionService.progressThreshold)): \(recordsAboveThreshold) of \(progresses.count)")
-        print("Average progress: \(progresses.reduce(0.0) { $0 + $1 } / Double(progresses.count))")
-        return Double(recordsAboveThreshold) / Double(progresses.count)
+        let progresses = records.toProgresses(target: targetAttitude)
+        print("Records above threshold (\(SessionPolicy.successfulProgressThreshold)): \(progresses.recordsAboveThreshold) of \(progresses.count)")
+        print("Average progress: \(progresses.average)")
+        let periodCompletedRatio = Double(progresses.recordsAboveThreshold) / Double(progresses.count)
+        return periodCompletedRatio
     }
 }
 
-extension AttitudeConditionService {
-    public func reset() {
-        records = []
-        targetAttitude = nil
+public extension AttitudeConditionService {
+    func reset() {
+        resetRecords()
+        removeTargetAttitudeToAcquireNewOneOnNextUpdate()
     }
 }
 
-extension AttitudeConditionService {
-    public func continuePeriod() {
-        records = []
+public extension AttitudeConditionService {
+    func continuePeriod() {
+        resetRecords()
     }
 }
 
@@ -115,10 +116,28 @@ internal extension Double {
 }
 
 internal extension Attitude {
-    func progress(till target: Attitude) -> Double {
+    func progress(towards target: Attitude) -> Double {
         let maxDiff = Double.pi
         let diff = abs(self.pitch-target.pitch) + abs(self.yaw-target.yaw) + abs(self.roll-target.roll)
         let progress = 1.0 - (diff/maxDiff/3.0)
         return progress.truncate(places: 2)
+    }
+}
+
+internal extension Array where Element == Attitude {
+    func toProgresses(target: Attitude) -> [Double] {
+        return self.map { $0.progress(towards: target) }
+    }
+}
+
+internal extension Array where Element == Double {
+    var average: Double {
+        return self.reduce(0.0) { $0 + $1 } / Double(self.count)
+    }
+    
+    var recordsAboveThreshold: Int {
+        return self.reduce(0) { sum, progress in
+            sum + (progress >= SessionPolicy.successfulProgressThreshold ? 1 : 0)
+        }
     }
 }

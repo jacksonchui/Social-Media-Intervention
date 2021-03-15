@@ -17,12 +17,12 @@ public enum ConditionPeriodError: Swift.Error {
 }
 
 public enum PeriodStartResult {
-    case success(latestMotionProgress: Double)
+    case success(progressUpdate: Double)
     case failure(ConditionPeriodError)
 }
 
 public enum PeriodStopResult {
-    case success(progressAboveThreshold: Double)
+    case success(periodCompletedRatio: Double)
     case failure(ConditionPeriodError)
 }
 
@@ -32,7 +32,7 @@ public protocol ConditionService: AnyObject {
     typealias StopCompletion = (PeriodStopResult) -> Void
     
     var currentPeriodTime: TimeInterval { get }
-    var progressAboveThreshold: Double { get }
+    var periodCompletedRatio: Double { get }
     
     func check(completion: @escaping CheckCompletion) -> Void
     func start(completion: @escaping StartCompletion) -> Void

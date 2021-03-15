@@ -1,5 +1,5 @@
 //
-//  InterventionSessionTestHelpers.swift
+//  ConditionSessionManagerTestsHelpers.swift
 //  Social-InterventionTests
 //
 //  Created by Jackson Chui on 3/10/21.
@@ -29,8 +29,6 @@ private var randomProgress: Double {
     let sigFigures = 2
     return Double.random(in: 0...1).truncate(places: sigFigures)
 }
-
-
 
 private extension Array where Array.Element == Double {
     func withAlphas() -> [CGFloat] {
