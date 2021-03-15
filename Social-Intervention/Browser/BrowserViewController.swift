@@ -11,13 +11,12 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
-    private(set) var conditionService = RotationConditionService()
+    private(set) var sessionManager: SessionManager!
     
     override func loadView() {
         super.loadView()
         browserView = WKWebView(frame: .zero)
         browserView.uiDelegate = self
-        conditionService.delegate = self
     }
     
     override func viewDidLoad() {
@@ -26,18 +25,17 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         
         browserView.load(socialMedium.urlRequest)
         layoutUI()
-        conditionService.start(completion: { _ in print("error with coremotion")})
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        conditionService.stop()
+        // to stop
     }
     
-    init(for socialMedium: SocialMedium = .twitter, use conditionService: RotationConditionService) {
+    init(for socialMedium: SocialMedium = .twitter, managedBy sessionManager: SessionManager) {
         super.init(nibName: nil, bundle: nil)
         self.socialMedium = socialMedium
-        self.conditionService = conditionService
+        self.sessionManager = sessionManager
     }
     
     required init?(coder: NSCoder) {
@@ -88,9 +86,7 @@ struct MainPreview: PreviewProvider {
     struct ContainerView: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> UIViewController {
             return UINavigationController(
-                    rootViewController: BrowserViewController(
-                                        for: .twitter,
-                                        use: RotationConditionService(withUpdateInterval: 1)))
+                    rootViewController: UIViewController())
         }
         
         func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}

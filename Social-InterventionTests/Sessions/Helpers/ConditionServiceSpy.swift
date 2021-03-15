@@ -9,7 +9,7 @@ import Foundation
 
 class ConditionServiceSpy: ConditionService {
     var currentPeriodTime: TimeInterval
-    var progressAboveThreshold: Double
+    var periodCompletedRatio: Double
     
     var checkCompletions = [CheckCompletion]()
     var startCompletions = [StartCompletion]()
@@ -17,7 +17,7 @@ class ConditionServiceSpy: ConditionService {
     
     init() {
         currentPeriodTime = 0
-        progressAboveThreshold = 0
+        periodCompletedRatio = 0
     }
     
     func check(completion: @escaping CheckCompletion) {
@@ -34,11 +34,11 @@ class ConditionServiceSpy: ConditionService {
     
     func reset() {
         currentPeriodTime = 0
-        progressAboveThreshold = 0
+        periodCompletedRatio = 0
     }
     
     func continuePeriod() {
-        progressAboveThreshold = 0
+        periodCompletedRatio = 0
     }
     
     func completeCheck(with error: SessionCheckError?, at index: Int = 0) {
@@ -51,6 +51,6 @@ class ConditionServiceSpy: ConditionService {
     }
     
     func completeStopSuccessfully(at index: Int = 0) {
-        stopCompletions[index](.success(progressAboveThreshold: anyProgress()))
+        stopCompletions[index](.success(periodCompletedRatio: anyProgress()))
     }
 }

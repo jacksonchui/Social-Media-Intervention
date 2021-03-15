@@ -18,7 +18,7 @@ public typealias SessionStopError = ConditionPeriodError?
 
 
 public enum SessionStartResult: Equatable {
-    case success(alpha: CGFloat)
+    case success(alpha: Double)
     case failure(error: SessionStartError)
 }
 

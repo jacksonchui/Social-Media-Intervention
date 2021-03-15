@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SIAnalyticsController {
+public class SIAnalyticsController {
     public func save(_ log: [SessionLogEntry]) {
         
     }

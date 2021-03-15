@@ -45,7 +45,7 @@ class ConditionSessionManagerTests: XCTestCase {
     func test_start_succeedsWhenProgressThresholdMetForOnePeriod() {
         let (sut, service, _) = makeSUT()
         let expectedUpdates = anyProgresses(updatesPerPeriod)
-        service.progressAboveThreshold = resetProgressThreshold
+        service.periodCompletedRatio = resetProgressThreshold
         
         expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count) {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
@@ -66,14 +66,14 @@ class ConditionSessionManagerTests: XCTestCase {
             // first period
             let expectedLogEntry1 = SessionLogEntry(progressOverPeriod: [resetProgressThreshold - 0.01, resetProgressThreshold], periodDuration: timePerPeriod * 2)
             
-            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            service.periodCompletedRatio = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 2)
             XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
             XCTAssertEqual(sut.sessionLog, [])
             
-            service.progressAboveThreshold = resetProgressThreshold
+            service.periodCompletedRatio = resetProgressThreshold
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 1)
@@ -83,21 +83,21 @@ class ConditionSessionManagerTests: XCTestCase {
             // second period
             let expectedLogEntry2 = SessionLogEntry(progressOverPeriod: [resetProgressThreshold - 0.01, resetProgressThreshold - 0.01, resetProgressThreshold + 0.01], periodDuration: timePerPeriod * 3)
             
-            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            service.periodCompletedRatio = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 2)
             XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
             XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
             
-            service.progressAboveThreshold = resetProgressThreshold - 0.01
+            service.periodCompletedRatio = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 3)
             XCTAssertEqual(service.currentPeriodTime, timePerPeriod * 2)
             XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
             
-            service.progressAboveThreshold = resetProgressThreshold + 0.01
+            service.periodCompletedRatio = resetProgressThreshold + 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             
             XCTAssertEqual(sut.periodCount, 1)
