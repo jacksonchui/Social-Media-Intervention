@@ -21,7 +21,7 @@ public final class ConditionSessionManager: SessionManager {
     private(set) var progressOverPeriod = [Double]()
     private(set) var periodCount: Int
     
-    init(using service: ConditionService, sendsLogTo analytics: SIAnalyticsController) {
+    public init(using service: ConditionService, sendsLogTo analytics: SIAnalyticsController) {
         self.service = service
         self.analytics = analytics
         self.periodCount = 1
@@ -35,7 +35,8 @@ public final class ConditionSessionManager: SessionManager {
         service.start { [unowned self] result in
             switch result {
                 case let .success(progressUpdate: progress):
-                    completion(.success(alpha: ConditionSessionPolicy.toAlpha(progress)))
+                    let alpha = Double(ConditionSessionPolicy.toAlpha(progress))
+                    completion(.success(alpha: alpha))
                 default:
                     break
             }
@@ -59,7 +60,7 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     private func decideNextPeriod() {
-        progressOverPeriod.append(service.progressAboveThreshold)
+        progressOverPeriod.append(service.periodCompletedRatio)
         
         if progressOverPeriod.last! >= SessionPolicy.periodCompletedRatio {
             let entry = SessionLogEntry(
