@@ -38,4 +38,5 @@ public protocol ConditionService: AnyObject {
     func start(completion: @escaping StartCompletion) -> Void
     func stop(completion: @escaping StopCompletion) -> Void
     func reset() -> Void
+    func continuePeriod() -> Void
 }
