@@ -1,5 +1,5 @@
 //
-//  RotationConditionServiceTests.swift
+//  AttitudeConditionServiceTests.swift
 //  Social-InterventionTests
 //
 //  Created by Jackson Chui on 3/1/21.

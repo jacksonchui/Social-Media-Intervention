@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import CoreGraphics
 
-struct SessionLogEntry: Equatable {
+public struct SessionLogEntry: Equatable {
     var progressOverPeriod: [Double]
     var periodDuration: TimeInterval
 }

@@ -1,5 +1,5 @@
 //
-//  ViewAlphaInterventionSessionTests.swift
+//  ConditionSessionManagerTests.swift
 //  Social-InterventionTests
 //
 //  Created by Jackson Chui on 3/10/21.

@@ -35,12 +35,12 @@ public final class ConditionSessionManager: SessionManager {
         service.start { [unowned self] result in
             switch result {
                 case let .success(progressUpdate: progress):
-                    completion(.success(alpha: InterventionPolicy.toAlpha(progress)))
+                    completion(.success(alpha: ConditionSessionPolicy.toAlpha(progress)))
                 default:
                     break
             }
             
-            if self.service.currentPeriodTime >= InterventionPolicy.periodDuration * Double(self.periodCount) {
+            if self.service.currentPeriodTime >= SessionPolicy.periodDuration * Double(self.periodCount) {
                 self.decideNextPeriod()
             }
         }
@@ -61,7 +61,7 @@ public final class ConditionSessionManager: SessionManager {
     private func decideNextPeriod() {
         progressOverPeriod.append(service.progressAboveThreshold)
         
-        if progressOverPeriod.last! >= InterventionPolicy.periodCompletedRatio {
+        if progressOverPeriod.last! >= SessionPolicy.periodCompletedRatio {
             let entry = SessionLogEntry(
                             progressOverPeriod: progressOverPeriod,
                             periodDuration: service.currentPeriodTime)
