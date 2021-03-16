@@ -10,7 +10,7 @@ import Foundation
 internal final class ConditionSessionPolicy {
     private init() {}
     
-    static var unmetThresholdFactor: Double { return 0.42 }
+    static var unmetThresholdFactor: Double { return 0.3 }
     
     static func toAlphaLevel(_ progress: Double) -> Double {
         print("Progress: \(progress)")
