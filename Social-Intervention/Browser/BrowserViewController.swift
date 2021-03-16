@@ -6,17 +6,20 @@
 //
 
 import WebKit
+import SafariServices
 
 internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
     private(set) var sessionManager: SessionManager!
+    private var presentedSafariView: Bool = false
     
     override func loadView() {
         super.loadView()
         browserView = WKWebView(frame: .zero)
         browserView.uiDelegate = self
+        browserView.navigationDelegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +38,10 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        sessionManager.stop(completion: onSessionStop)
+        if !presentedSafariView {
+            sessionManager.stop(completion: onSessionStop)
+        }
+        presentedSafariView = false
     }
     
     init(for socialMedium: SocialMedium = .twitter, managedBy sessionManager: SessionManager) {
@@ -91,6 +97,32 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
             self.view.alpha = CGFloat(newAlphaLevel)
             print("[DEBUG] Alpha:\(self.view.alpha).")
         }
+    }
+}
+
+extension BrowserViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        let request = navigationAction.request
+        guard let url = request.url else {
+            print("invalid URL in request")
+            decisionHandler(.cancel)
+            return
+        }
+        
+        let isSocialMedium = url.absoluteString.starts(with: socialMedium.rawValue)
+        if !isSocialMedium {
+            presentSafariModalForNonSocialMediumURL(for: url)
+            decisionHandler(.cancel)
+        } else {
+            print("Still social medium: \(url)")
+            decisionHandler(.allow)
+        }
+    }
+    
+    private func presentSafariModalForNonSocialMediumURL(for url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        presentedSafariView = true
+        self.present(safariVC, animated: true)
     }
 }
 
