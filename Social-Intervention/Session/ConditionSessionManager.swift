@@ -35,8 +35,8 @@ public final class ConditionSessionManager: SessionManager {
         service.start { [unowned self] result in
             switch result {
                 case let .success(progressUpdate: progress):
-                    let alpha = Double(ConditionSessionPolicy.toAlpha(progress))
-                    completion(.success(alpha: alpha))
+                    let alphaLevel = ConditionSessionPolicy.toAlphaLevel(progress)
+                    completion(.success(alpha: alphaLevel))
                 default:
                     break
             }

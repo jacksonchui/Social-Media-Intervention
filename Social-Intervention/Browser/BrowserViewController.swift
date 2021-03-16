@@ -19,17 +19,23 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         browserView.uiDelegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        sessionManager.check(completion: onPossibleSessionCheckError)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubviews(browserView)
         
         browserView.load(socialMedium.urlRequest)
         layoutUI()
+        sessionManager.start(completion: onEachSessionUpdate)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        // to stop
+        sessionManager.stop(completion: onSessionStop)
     }
     
     init(for socialMedium: SocialMedium = .twitter, managedBy sessionManager: SessionManager) {
@@ -54,26 +60,40 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         
     }
     
-    func setAlpha(progress: Double, animateWithDuration: TimeInterval = 0.3) {
-        let newAlpha: CGFloat = CGFloat(abs(progress) > 0.9 ? 1 : abs(progress + 0.1))
-        
+    func setViewAlpha(to level: Double, animateWithDuration: TimeInterval = 0.3) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            
-            UIView.animate(withDuration: animateWithDuration, animations: {
-                self.view.alpha = newAlpha
-            }) { _ in
-                print("[DEBUG] Alpha:\(self.view.alpha).")
-            }
+            self.changeAlpha(to: level)
+        }
+    }
+    
+    private func onPossibleSessionCheckError(error: SessionCheckError?) {
+        
+    }
+    
+    private func onEachSessionUpdate(_ result: SessionStartResult) {
+        switch result {
+            case let .success(alphaLevel):
+                setViewAlpha(to: alphaLevel)
+            default:
+                print("Will deal with error as an alert")
+        }
+    }
+    
+    private func onSessionStop(_ error: SessionStopError?) {
+        if let error = error {
+            print("Received error when trying to stop session: \(error.debugDescription)")
+        }
+    }
+    
+    private func changeAlpha(to newAlphaLevel: Double, animateWithDuration: TimeInterval = 0.3) {
+        UIView.animate(withDuration: animateWithDuration) {
+            self.view.alpha = CGFloat(newAlphaLevel)
+            print("[DEBUG] Alpha:\(self.view.alpha).")
         }
     }
 }
 
-extension BrowserViewController: ConditionServiceDelegate {
-    func condition(progress: Double) {
-        setAlpha(progress: progress)
-    }
-}
 
 import SwiftUI
 struct MainPreview: PreviewProvider {

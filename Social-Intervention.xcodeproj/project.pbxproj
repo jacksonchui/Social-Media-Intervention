@@ -40,6 +40,7 @@
 		CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
 		CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
+		CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4E1E260046BF00BE040D /* Double+Ext.swift */; };
 		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
@@ -86,6 +87,7 @@
 		CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManager.swift; sourceTree = "<group>"; };
 		CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIAnalyticsController.swift; sourceTree = "<group>"; };
 		CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionPolicy.swift; sourceTree = "<group>"; };
+		CFBF4E1E260046BF00BE040D /* Double+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Ext.swift"; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
 		CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionTestHelpers.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			children = (
 				CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */,
 				CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */,
+				CFBF4E1E260046BF00BE040D /* Double+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
 				CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
+				CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
 				CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */,
 				CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */,

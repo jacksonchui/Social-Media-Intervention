@@ -118,8 +118,12 @@ internal extension Double {
 internal extension Attitude {
     func progress(towards target: Attitude) -> Double {
         let maxDiff = Double.pi
-        let diff = abs(self.pitch-target.pitch) + abs(self.yaw-target.yaw) + abs(self.roll-target.roll)
-        let progress = 1.0 - (diff/maxDiff/3.0)
+        let pitchRatio = abs(self.pitch-target.pitch)/maxDiff
+        let yawRatio = abs(self.yaw-target.yaw)/maxDiff
+        let rollRatio = abs(self.roll-target.roll)/maxDiff
+        print("Yaw, Pitch, Roll Ratios: \(yawRatio), \(rollRatio), \(pitchRatio)")
+        
+        let progress = 1.0 - [pitchRatio, yawRatio, rollRatio].average
         return progress.truncate(places: 2)
     }
 }

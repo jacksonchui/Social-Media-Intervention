@@ -24,4 +24,12 @@ var randomRadian: Double {
     return Double.random(in: -Double.pi/2...Double.pi/2).truncate(places: sigFigures)
 }
 
-var randomAttitude: Attitude { Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian) }
+var randomAttitude: Attitude {
+    Attitude(roll: randomRadian, pitch: randomRadian, yaw: randomRadian)
+}
+
+extension Double {
+    func truncate(places : Int)-> Double {
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
+    }
+}
