@@ -9,7 +9,7 @@ import Foundation
 
 public enum SocialMedium: String {
     case facebook = "https://facebook.com/"
-    case twitter = "https://twitter.com/"
+    case twitter = "https://mobile.twitter.com/"
     case instagram = "https://instagram.com/"
     case tiktok = "https://www.tiktok.com/"
     case reddit = "https://www.reddit.com/"

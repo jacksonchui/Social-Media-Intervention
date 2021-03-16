@@ -6,10 +6,20 @@
 //
 
 import Foundation
-import CoreGraphics
 
 internal final class ConditionSessionPolicy {
-    static func toAlpha(_ progress: Double) -> CGFloat {
-        return CGFloat(progress)
+    private init() {}
+    
+    static var unmetThresholdFactor: Double { return 0.3 }
+    
+    static func toAlphaLevel(_ progress: Double) -> Double {
+        print("Progress: \(progress)")
+        let alphaLevel = applyFactorIfProgressDoesntMeetThreshold(to: progress)
+        return alphaLevel
+    }
+    
+    private static func applyFactorIfProgressDoesntMeetThreshold(to progress: Double) -> Double {
+        let alphaLevel = progress < SessionPolicy.successfulProgressThreshold ? unmetThresholdFactor * progress : progress
+        return alphaLevel.truncate(places: 2)
     }
 }
