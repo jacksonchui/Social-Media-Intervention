@@ -7,9 +7,9 @@
 
 import Foundation
 
-public struct SessionLogEntry: Equatable {
-    var progressOverPeriod: [Double]
-    var periodDuration: TimeInterval
+public struct PeriodLog: Equatable {
+    var progressPerInterval: [Double]
+    var duration: TimeInterval
 }
 
 public typealias SessionCheckError = MotionAvailabilityError

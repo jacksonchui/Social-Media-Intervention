@@ -17,7 +17,7 @@ public final class ConditionSessionManager: SessionManager {
     
     private(set) var service: ConditionService
     private(set) var analytics: SIAnalyticsController
-    private(set) var sessionLog = [SessionLogEntry]()
+    private(set) var sessionLog = [PeriodLog]()
     private(set) var progressOverPeriod = [Double]()
     private(set) var periodCount: Int
     
@@ -63,9 +63,9 @@ public final class ConditionSessionManager: SessionManager {
         progressOverPeriod.append(service.periodCompletedRatio)
         
         if progressOverPeriod.last! >= SessionPolicy.periodCompletedRatio {
-            let entry = SessionLogEntry(
-                            progressOverPeriod: progressOverPeriod,
-                            periodDuration: service.currentPeriodTime)
+            let entry = PeriodLog(
+                            progressPerInterval: progressOverPeriod,
+                            duration: service.currentPeriodTime)
             sessionLog.append(entry)
             service.reset()
             resetPeriod()

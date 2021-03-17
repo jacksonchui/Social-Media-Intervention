@@ -9,7 +9,7 @@
 ```
 As a online subject
 I want the app every x minutes 
-And give me a new target attiude to adjust to
+And give me a new target attitude to adjust to
 And adjust the brightness depending on how close I am to a new attitude
 So that I am forced to adjust to a new scenario
 ```
@@ -87,3 +87,42 @@ Given the current period is completed
 
 #### Attitude Condition Period Stop Error (Sad Path)
 1. System delivers error as a warning toast/notification.
+
+## Firestore Analytics Feature Specs
+
+### Data:
+- Session Logs
+  - lastUpdated
+  - Device ID or UUID
+  - Session Log (Array)
+    - Start Time
+    - End Time
+    - Period Log
+      - ProgressPerInterval
+      - Period Duration
+
+### Scenarios
+```
+Given session data that is recorded
+   And the user is in a session
+When the session ends (e.g. `viewDidDissappear` or phone sent to background (not Modal))
+ Then the session data is sent to the analytics feature
+
+ Given the session data is sent to the analytics repository
+   And the data is a duplicate entry
+ Then there are no side effects
+
+ Given the session data is sent to the analytics repository
+   And the session data is a valid entry (i.e. not already saved, conforms to data structure)
+  Then a session log stores the session data 
+   And pushes it to firestore
+
+Given the session data is sent to the analytics repository
+  And the session data is an invalid entry (e.g. malformed structure)
+ Then an alert is sent to the user saying that their data could not be saved.
+```
+
+- Save
+  - No Session Log creates a new Session Log and passes it to
+  - Valid Session Log Entry updates `Session Log Array` and `lastUpdated` fields.
+  - Invalid Session Log Entry returns Error

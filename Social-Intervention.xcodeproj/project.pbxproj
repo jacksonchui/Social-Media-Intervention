@@ -13,6 +13,7 @@
 		CF2600D72600798A0028DC5B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D62600798A0028DC5B /* FirebaseAuth */; };
 		CF2600D92600798A0028DC5B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D82600798A0028DC5B /* FirebaseFirestore */; };
 		CF2600DB2600798A0028DC5B /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600DA2600798A0028DC5B /* FirebaseFirestoreSwift-Beta */; };
+		CF2600DF260139BF0028DC5B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */; };
 		CF347F0F25F9DA390032E0BA /* ConditionSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF347F0E25F9DA390032E0BA /* ConditionSessionManagerTests.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
@@ -64,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionPeriodUseCaseTests.swift; sourceTree = "<group>"; };
+		CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF347F0E25F9DA390032E0BA /* ConditionSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManagerTests.swift; sourceTree = "<group>"; };
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */,
 				CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */,
 				CF8D2B1325EC383C008FFBC6 /* Info.plist */,
+				CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */,
 				CF8D2B0D25EC383C008FFBC6 /* Preview Content */,
 			);
 			path = "Social-Intervention";
@@ -365,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */,
+				CF2600DF260139BF0028DC5B /* GoogleService-Info.plist in Resources */,
 				CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */,
 				CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */,
 			);
@@ -583,7 +587,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonchui.SocialIntervention;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ucberkeleyhci.social-intervention";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -604,7 +608,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonchui.SocialIntervention;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ucberkeleyhci.social-intervention";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

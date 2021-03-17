@@ -53,7 +53,7 @@ class ConditionSessionManagerTests: XCTestCase {
         
         XCTAssertEqual(sut.periodCount, 1)
         XCTAssertEqual(service.currentPeriodTime, 0.0)
-        XCTAssertEqual(sut.sessionLog.map { $0.periodDuration }, [timePerPeriod])
+        XCTAssertEqual(sut.sessionLog.map { $0.duration }, [timePerPeriod])
     }
     
     func test_start_succeedsOnlyWhenProgressThresholdMetAcrossMultiplePeriods() {
@@ -64,7 +64,7 @@ class ConditionSessionManagerTests: XCTestCase {
         expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count * 5) {
             
             // first period
-            let expectedLogEntry1 = SessionLogEntry(progressOverPeriod: [resetProgressThreshold - 0.01, resetProgressThreshold], periodDuration: timePerPeriod * 2)
+            let expectedLogEntry1 = PeriodLog(progressPerInterval: [resetProgressThreshold - 0.01, resetProgressThreshold], duration: timePerPeriod * 2)
             
             service.periodCompletedRatio = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
@@ -81,7 +81,7 @@ class ConditionSessionManagerTests: XCTestCase {
             XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
             
             // second period
-            let expectedLogEntry2 = SessionLogEntry(progressOverPeriod: [resetProgressThreshold - 0.01, resetProgressThreshold - 0.01, resetProgressThreshold + 0.01], periodDuration: timePerPeriod * 3)
+            let expectedLogEntry2 = PeriodLog(progressPerInterval: [resetProgressThreshold - 0.01, resetProgressThreshold - 0.01, resetProgressThreshold + 0.01], duration: timePerPeriod * 3)
             
             service.periodCompletedRatio = resetProgressThreshold - 0.01
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
