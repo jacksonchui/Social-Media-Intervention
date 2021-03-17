@@ -64,6 +64,43 @@ class ConditionSessionManagerTests: XCTestCase {
         XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
         XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
     }
+    
+    func test_start_recordsOnSuccessfulPeriodRatioAboveThresholdAfterUnsuccessfulIntervals() {
+        let (sut, service) = makeSUT()
+        let expectedUpdates = anyProgresses(updatesPerPeriod)
+        let (periodIntervals, periodDuration) = period(for: 2)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), aboveThreshold()], duration: periodDuration)
+        
+        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count * periodIntervals) {
+            expectedPeriodLog.progressPerInterval.forEach { progress in
+                service.periodCompletedRatio = progress
+                expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            }
+        }
+        
+        XCTAssertEqual(sut.periodIntervals, 1, "Period Intervals were reset")
+        XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
+        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
+    }
+    
+    func test_start_hasNoSideEffectsOnPeriodBelowThreshold() {
+        let (sut, service) = makeSUT()
+        let expectedUpdates = anyProgresses(updatesPerPeriod)
+        let (periodIntervals, periodDuration) = period(for: 2)
+        let totalUpdates = expectedUpdates.count * periodIntervals
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold()], duration: periodDuration)
+        
+        start(sut, toCompleteWith: nil, forUpdateCount: totalUpdates) {
+            expectedPeriodLog.progressPerInterval.forEach { progress in
+                service.periodCompletedRatio = progress
+                expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            }
+        }
+        
+        XCTAssertEqual(sut.periodIntervals, 3, "Period Intervals were reset")
+        XCTAssertEqual(service.currentPeriodTime, 120.0, "Current time was reset")
+        XCTAssertEqual(sut.sessionLog?.periodLogs, [])
+    }
 
 
     // MARK: - Helpers
@@ -111,5 +148,14 @@ class ConditionSessionManagerTests: XCTestCase {
     
     func atThreshold() -> Double {
         return resetProgressThreshold
+    }
+    
+    func aboveThreshold() -> Double {
+        return resetProgressThreshold + 0.01
+    }
+    
+    func period(for intervals: Int) -> (count: Int, duration: Double) {
+        let duration = Double(updatesPerPeriod * intervals) * timeInterval
+        return (intervals, duration)
     }
 }

@@ -17,7 +17,7 @@ func anyProgress() -> Double {
     return randomProgress
 }
 
-func anyProgresses(_ updateIntervals: Int = 100) -> [Double] {
+func anyProgresses(_ updateIntervals: Int = updatesPerPeriod) -> [Double] {
     var progresses = [Double]()
     for _ in 0 ..< updateIntervals {
         progresses.append(randomProgress)
