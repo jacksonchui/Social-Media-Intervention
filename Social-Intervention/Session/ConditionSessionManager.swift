@@ -16,33 +16,35 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     private(set) var service: ConditionService
-    private(set) var analytics: SIAnalyticsController
-    private(set) var sessionLog = [PeriodLog]()
-    private(set) var progressOverPeriod = [Double]()
-    private(set) var periodCount: Int
+    private(set) var sessionLog: SessionLog?
+    private(set) var progressPerInterval = [Double]()
+    private(set) var periodIntervals: Int
     
-    public init(using service: ConditionService, sendsLogTo analytics: SIAnalyticsController) {
+    private var nextPeriodIntervalCheckpoint: Double { SessionPolicy.periodDuration * Double(self.periodIntervals) }
+    
+    public init(using service: ConditionService) {
         self.service = service
-        self.analytics = analytics
-        self.periodCount = 1
+        self.periodIntervals = 1
     }
     
     public func check(completion: @escaping CheckCompletion) {
         service.check(completion: completion)
     }
     
-    public func start(completion: @escaping StartCompletion) {
+    public func start(loggingTo sessionLog: SessionLog?, completion: @escaping StartCompletion) {
+        self.sessionLog = sessionLog ?? setUpSessionLog()
+        
         service.start { [unowned self] result in
             switch result {
-                case let .success(progressUpdate: progress):
-                    let alphaLevel = ConditionSessionPolicy.toAlphaLevel(progress)
+                case let .success(progressUpdate):
+                    let alphaLevel = ConditionSessionPolicy.toAlphaLevel(progressUpdate)
                     completion(.success(alpha: alphaLevel))
                 default:
                     break
             }
             
-            if self.service.currentPeriodTime >= SessionPolicy.periodDuration * Double(self.periodCount) {
-                self.decideNextPeriod()
+            if self.service.currentPeriodTime >= nextPeriodIntervalCheckpoint {
+                self.onPeriodIntervalCheckpoint()
             }
         }
     }
@@ -56,27 +58,38 @@ public final class ConditionSessionManager: SessionManager {
                     break
             }
         }
-        analytics.save(sessionLog)
     }
     
-    private func decideNextPeriod() {
-        progressOverPeriod.append(service.periodCompletedRatio)
-        
-        if progressOverPeriod.last! >= SessionPolicy.periodCompletedRatio {
-            let entry = PeriodLog(
-                            progressPerInterval: progressOverPeriod,
+    private func setUpSessionLog() -> SessionLog {
+        return SessionLog(startTime: Date(), endTime: nil, periodLogs: [])
+    }
+    
+    private func onPeriodIntervalCheckpoint() {
+        recordPeriodCompletedRatioAtTheEndOfEachInterval()
+        completeThePeriodAndResetIfProgressIsCompleted()
+    }
+    
+    private func completeThePeriodAndResetIfProgressIsCompleted() {
+        let latestProgress = progressPerInterval.last ?? 0
+        if latestProgress >= SessionPolicy.periodCompletedRatio {
+            let newPeriodLog = PeriodLog(
+                            progressPerInterval: progressPerInterval,
                             duration: service.currentPeriodTime)
-            sessionLog.append(entry)
+            sessionLog?.periodLogs.append(newPeriodLog)
             service.reset()
             resetPeriod()
         } else {
-            periodCount += 1
+            periodIntervals += 1
             service.continuePeriod()
         }
     }
     
+    private func recordPeriodCompletedRatioAtTheEndOfEachInterval() {
+        progressPerInterval.append(service.periodCompletedRatio)
+    }
+    
     private func resetPeriod() {
-        periodCount = 1
-        progressOverPeriod = []
+        periodIntervals = 1
+        progressPerInterval = []
     }
 }

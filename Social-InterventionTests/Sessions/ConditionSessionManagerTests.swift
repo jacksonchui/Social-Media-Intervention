@@ -9,131 +9,87 @@ import XCTest
 
 class ConditionSessionManagerTests: XCTestCase {
     func test_init_setsConditionServiceAndResetsPeriodCount() {
-        let (sut, _, _ ) = makeSUT()
+        let (sut, _) = makeSUT()
         
         XCTAssertNotNil(sut.service)
-        XCTAssertEqual(sut.periodCount, 1)
+        XCTAssertEqual(sut.periodIntervals, 1)
     }
     
     func test_check_deliverErrorOnDeviceMotionUnavailable() {
-        let (sut, service, _) = makeSUT()
+        let (sut, service) = makeSUT()
         let expectedError: SessionCheckError = .deviceMotionUnavailable
         
-        expectOnCheck(sut, toCompleteWith: expectedError) {
+        expect(sut, toCompleteCheckWith: expectedError) {
             service.completeCheck(with: expectedError)
         }
     }
     
     func test_check_deliverErrorOnReferenceFrameUnavailable() {
-        let (sut, service, _) = makeSUT()
+        let (sut, service) = makeSUT()
         let expectedError: SessionCheckError = .attitudeReferenceFrameUnavailable
         
-        expectOnCheck(sut, toCompleteWith: expectedError) {
+        expect(sut, toCompleteCheckWith: expectedError) {
             service.completeCheck(with: expectedError)
         }
     }
-
-    func test_start_deliversAlphaOnEachUpdateForOnePeriodSuccessfully() {
-        let (sut, service, _) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        
-        expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count) {
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-        }
-    }
     
-    func test_start_succeedsWhenProgressThresholdMetForOnePeriod() {
-        let (sut, service, _) = makeSUT()
+    func test_start_recordsPeriodLogForSuccessfulPeriodRatio() {
+        let (sut, service) = makeSUT()
         let expectedUpdates = anyProgresses(updatesPerPeriod)
         service.periodCompletedRatio = resetProgressThreshold
         
-        expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count) {
+        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count) {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
         }
         
-        XCTAssertEqual(sut.periodCount, 1)
-        XCTAssertEqual(service.currentPeriodTime, 0.0)
-        XCTAssertEqual(sut.sessionLog.map { $0.duration }, [timePerPeriod])
+        XCTAssertEqual(sut.periodIntervals, 1)
+        XCTAssertEqual(sut.sessionLog?.periodLogs.map { $0.duration }, [timePerPeriod])
     }
     
-    func test_start_succeedsOnlyWhenProgressThresholdMetAcrossMultiplePeriods() {
-        let (sut, service, _) = makeSUT()
+    func test_start_recordsOnSuccessfulPeriodRatioAtThresholdAfterUnsuccessfulIntervals() {
+        let (sut, service) = makeSUT()
         let expectedUpdates = anyProgresses(updatesPerPeriod)
-        let timePerPeriod: Double = Double(updatesPerPeriod) * timeInterval
+        let periodIntervals = 2
+        let periodDuration = Double(updatesPerPeriod) * timeInterval * Double(periodIntervals)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), atThreshold()], duration: periodDuration)
         
-        expectOnStart(sut, toCompleteWith: nil, for: expectedUpdates.count * 5) {
-            
-            // first period
-            let expectedLogEntry1 = PeriodLog(progressPerInterval: [resetProgressThreshold - 0.01, resetProgressThreshold], duration: timePerPeriod * 2)
-            
-            service.periodCompletedRatio = resetProgressThreshold - 0.01
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-            
-            XCTAssertEqual(sut.periodCount, 2)
-            XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
-            XCTAssertEqual(sut.sessionLog, [])
-            
-            service.periodCompletedRatio = resetProgressThreshold
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-            
-            XCTAssertEqual(sut.periodCount, 1)
-            XCTAssertEqual(service.currentPeriodTime, 0.0)
-            XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
-            
-            // second period
-            let expectedLogEntry2 = PeriodLog(progressPerInterval: [resetProgressThreshold - 0.01, resetProgressThreshold - 0.01, resetProgressThreshold + 0.01], duration: timePerPeriod * 3)
-            
-            service.periodCompletedRatio = resetProgressThreshold - 0.01
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-            
-            XCTAssertEqual(sut.periodCount, 2)
-            XCTAssertEqual(service.currentPeriodTime, timePerPeriod)
-            XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
-            
-            service.periodCompletedRatio = resetProgressThreshold - 0.01
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-            
-            XCTAssertEqual(sut.periodCount, 3)
-            XCTAssertEqual(service.currentPeriodTime, timePerPeriod * 2)
-            XCTAssertEqual(sut.sessionLog, [expectedLogEntry1])
-            
-            service.periodCompletedRatio = resetProgressThreshold + 0.01
-            expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
-            
-            XCTAssertEqual(sut.periodCount, 1)
-            XCTAssertEqual(service.currentPeriodTime, 0.0)
-            XCTAssertEqual(sut.sessionLog, [expectedLogEntry1, expectedLogEntry2])
+        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count * periodIntervals) {
+            expectedPeriodLog.progressPerInterval.forEach { progress in
+                service.periodCompletedRatio = progress
+                expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            }
         }
+        
+        XCTAssertEqual(sut.periodIntervals, 1, "Period Intervals were reset")
+        XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
+        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
     }
 
 
     // MARK: - Helpers
     
-    func makeSUT() -> (sut: ConditionSessionManager, service: ConditionServiceSpy, analytics: SIAnalyticsController) {
+    func makeSUT() -> (sut: ConditionSessionManager, service: ConditionServiceSpy) {
         let service = ConditionServiceSpy()
-        let analytics = SIAnalyticsController()
-        let session = ConditionSessionManager(using: service, sendsLogTo: analytics)
+        let session = ConditionSessionManager(using: service)
         
-        return (session, service, analytics)
+        return (session, service)
     }
     
-    func expectOnCheck(_ sut: ConditionSessionManager, toCompleteWith expectedError: SessionCheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: ConditionSessionManager, toCompleteCheckWith expectedError: SessionCheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
-        
         sut.check { error in
             XCTAssertEqual(expectedError, error, file: file, line: line)
             exp.fulfill()
         }
-
         action()
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStart(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func start(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, forUpdateCount expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         
-        sut.start { result in
+        sut.start(loggingTo: nil) { result in
             switch result {
                 case let .success(alpha: alpha):
                     XCTAssertGreaterThanOrEqual(alpha, 0.0, file: file, line: line)
@@ -147,5 +103,13 @@ class ConditionSessionManagerTests: XCTestCase {
 
         action()
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    func belowThreshold() -> Double {
+        return resetProgressThreshold - 0.01
+    }
+    
+    func atThreshold() -> Double {
+        return resetProgressThreshold
     }
 }

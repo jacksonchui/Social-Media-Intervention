@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func makeSessionManager() -> SessionManager {
         let attitudeMotionClient = CMAttitudeMotionClient(updateInterval: SessionPolicy.timeInterval)
         let conditionService = AttitudeConditionService(with: attitudeMotionClient, updateEvery: SessionPolicy.timeInterval)
-        let sessionManager = ConditionSessionManager(using: conditionService, sendsLogTo: SIAnalyticsController())
+        let sessionManager = ConditionSessionManager(using: conditionService)
         
         return sessionManager
     }

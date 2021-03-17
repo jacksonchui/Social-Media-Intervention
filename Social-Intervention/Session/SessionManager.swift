@@ -12,6 +12,12 @@ public struct PeriodLog: Equatable {
     var duration: TimeInterval
 }
 
+public struct SessionLog: Equatable {
+    var startTime: Date
+    var endTime: Date?
+    var periodLogs: [PeriodLog]
+}
+
 public typealias SessionCheckError = MotionAvailabilityError
 public typealias SessionStartError = ConditionPeriodError
 public typealias SessionStopError = ConditionPeriodError?
@@ -28,6 +34,6 @@ public protocol SessionManager {
     typealias StartCompletion = (SessionStartResult) -> Void
     
     func check(completion: @escaping CheckCompletion)
-    func start(completion: @escaping StartCompletion)
+    func start(loggingTo: SessionLog?, completion: @escaping StartCompletion)
     func stop(completion: @escaping StopCompletion)
 }

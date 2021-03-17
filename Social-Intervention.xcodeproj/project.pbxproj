@@ -40,8 +40,6 @@
 		CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */; };
 		CFBF4DD425FFF82F00BE040D /* ConditionSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */; };
 		CFBF4DD725FFF86900BE040D /* ConditionSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */; };
-		CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
-		CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
 		CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4E1E260046BF00BE040D /* Double+Ext.swift */; };
@@ -90,7 +88,6 @@
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
 		CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionServiceSpy.swift; sourceTree = "<group>"; };
 		CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManager.swift; sourceTree = "<group>"; };
-		CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIAnalyticsController.swift; sourceTree = "<group>"; };
 		CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionPolicy.swift; sourceTree = "<group>"; };
 		CFBF4E1E260046BF00BE040D /* Double+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Ext.swift"; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
@@ -181,7 +178,6 @@
 			isa = PBXGroup;
 			children = (
 				CFBF4DF025FFFDB700BE040D /* Session */,
-				CFBF4DDA25FFF8CA00BE040D /* Analytics */,
 				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
 				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
@@ -231,14 +227,6 @@
 				CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		CFBF4DDA25FFF8CA00BE040D /* Analytics */ = {
-			isa = PBXGroup;
-			children = (
-				CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */,
-			);
-			path = Analytics;
 			sourceTree = "<group>";
 		};
 		CFBF4DF025FFFDB700BE040D /* Session */ = {
@@ -392,7 +380,6 @@
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
 				CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
-				CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
@@ -430,7 +417,6 @@
 				CFD437DF25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
-				CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

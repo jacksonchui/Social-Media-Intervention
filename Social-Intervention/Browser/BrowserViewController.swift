@@ -33,7 +33,7 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
         
         browserView.load(socialMedium.urlRequest)
         layoutUI()
-        sessionManager.start(completion: onEachSessionUpdate)
+        sessionManager.start(loggingTo: nil, completion: onEachSessionUpdate)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
