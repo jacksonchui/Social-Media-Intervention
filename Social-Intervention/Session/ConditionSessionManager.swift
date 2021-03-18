@@ -12,10 +12,10 @@ public final class ConditionSessionManager: SessionManager {
     
     private(set) var service: ConditionService
     private(set) var sessionLog: SessionLog?
-    private(set) var progressPerInterval = [Double]()
+    private(set) var progressPerInterval = [TimeInterval]()
     private(set) var periodIntervals: Int
     
-    private var nextPeriodDurationCheckpt: Double { SessionPolicy.periodDuration * Double(self.periodIntervals) }
+    private var nextPeriodDurationCheckpt: TimeInterval { SessionPolicy.periodDuration * Double(self.periodIntervals) }
     
     public init(using service: ConditionService) {
         self.service = service
@@ -39,7 +39,7 @@ public final class ConditionSessionManager: SessionManager {
             }
             
             if self.service.currPeriodDuration >= nextPeriodDurationCheckpt {
-                self.onPeriodIntervalCheckpoint()
+                self.onPeriodDurationCheckpoint()
             }
         }
     }
@@ -48,7 +48,7 @@ public final class ConditionSessionManager: SessionManager {
         service.stop { result in
             switch result {
                 case .stopped:
-                    self.onSuccessfulStopRecordLatestPeriodProgress()
+                    self.onStopRecordLastRatioAndReset()
                 case .alreadyStopped:
                     break
             }
@@ -60,12 +60,12 @@ public final class ConditionSessionManager: SessionManager {
         return SessionLog(startTime: Date(), endTime: nil, periodLogs: [])
     }
     
-    private func onPeriodIntervalCheckpoint() {
+    private func onPeriodDurationCheckpoint() {
         recordPeriodCompletedRatio()
-        completeThePeriodAndResetIfProgressIsCompleted()
+        recordCompletedRatioAndResetIfCompletedPeriod()
     }
     
-    private func onSuccessfulStopRecordLatestPeriodProgress() {
+    private func onStopRecordLastRatioAndReset() {
         recordPeriodCompletedRatio()
         let newPeriodLog = PeriodLog(
                         progressPerInterval: progressPerInterval,
@@ -75,7 +75,7 @@ public final class ConditionSessionManager: SessionManager {
         resetPeriod()
     }
     
-    private func completeThePeriodAndResetIfProgressIsCompleted() {
+    private func recordCompletedRatioAndResetIfCompletedPeriod() {
         let latestProgress = progressPerInterval.last ?? 0
         if latestProgress >= SessionPolicy.periodCompletedRatio {
             let newPeriodLog = PeriodLog(
