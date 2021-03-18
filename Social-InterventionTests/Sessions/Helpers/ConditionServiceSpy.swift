@@ -8,15 +8,20 @@
 import Foundation
 
 class ConditionServiceSpy: ConditionService {
-    var currentPeriodTime: TimeInterval
+    var recordsCount: Int
     var periodCompletedRatio: Double
+    
+    var currentPeriodTime: TimeInterval {
+        let currDuration = updateDuration * Double(recordsCount)
+        return currDuration.truncate(places: 2)
+    }
     
     var checkCompletions = [CheckCompletion]()
     var startCompletions = [StartCompletion]()
     var stopCompletions = [StopCompletion]()
     
     init() {
-        currentPeriodTime = 0
+        recordsCount = 0
         periodCompletedRatio = 0
     }
     
@@ -33,7 +38,7 @@ class ConditionServiceSpy: ConditionService {
     }
     
     func reset() {
-        currentPeriodTime = 0
+        recordsCount = 0
         periodCompletedRatio = 0
     }
     
@@ -46,7 +51,7 @@ class ConditionServiceSpy: ConditionService {
     }
     
     func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
-        currentPeriodTime += updateDuration
+        recordsCount += 1
         startCompletions[index](.success(progressUpdate: progress))
     }
     

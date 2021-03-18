@@ -20,7 +20,8 @@ public class AttitudeConditionService: ConditionService {
     }
     
     public var currentPeriodTime: TimeInterval {
-        return updateDuration * Double(records.count)
+        let currDuration = updateDuration * Double(records.count)
+        return currDuration.truncate(places: 2)
     }
     
     private func resetRecords() { records = [] }

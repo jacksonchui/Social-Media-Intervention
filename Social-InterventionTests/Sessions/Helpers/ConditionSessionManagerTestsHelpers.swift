@@ -47,7 +47,8 @@ func use(_ updatesPerInterval: Int = updatesPerPeriodInterval, intervals: Int)
         -> (progressUpdates: [Double], periodDuration: Double, totalPeriodUpdates: Int) {
     let progressUpdates = anyProgresses(updatesPerInterval)
     let totalPeriodUpdates = updatesPerInterval * intervals
-    let periodDuration = Double(totalPeriodUpdates) * updateDuration
+    var periodDuration = Double(totalPeriodUpdates) * updateDuration
+    periodDuration = periodDuration.truncate(places: 2)
 
     return (progressUpdates, periodDuration, totalPeriodUpdates)
 }
