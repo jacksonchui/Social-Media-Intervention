@@ -9,11 +9,6 @@ import Foundation
 import CoreGraphics
 
 public final class ConditionSessionManager: SessionManager {
-        
-    public enum StartResult {
-        case success(alpha: CGFloat)
-        case failure(error: Error)
-    }
     
     private(set) var service: ConditionService
     private(set) var sessionLog: SessionLog?
