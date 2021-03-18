@@ -50,12 +50,13 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     public func stop(completion: @escaping StopCompletion) {
-        service.stop { result in
+        service.stop { [unowned self] result in
             switch result {
                 case let .failure(error):
                     completion(error)
-                default:
-                    break
+                case .success:
+                    self.onSuccessfulStopRecordLatestPeriodProgress()
+                    completion(nil)
             }
         }
     }
@@ -65,8 +66,18 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     private func onPeriodIntervalCheckpoint() {
-        recordPeriodCompletedRatioAtTheEndOfEachInterval()
+        recordPeriodCompletedRatio()
         completeThePeriodAndResetIfProgressIsCompleted()
+    }
+    
+    private func onSuccessfulStopRecordLatestPeriodProgress() {
+        recordPeriodCompletedRatio()
+        let newPeriodLog = PeriodLog(
+                        progressPerInterval: progressPerInterval,
+                        duration: service.currentPeriodTime)
+        sessionLog?.periodLogs.append(newPeriodLog)
+        service.reset()
+        resetPeriod()
     }
     
     private func completeThePeriodAndResetIfProgressIsCompleted() {
@@ -84,7 +95,7 @@ public final class ConditionSessionManager: SessionManager {
         }
     }
     
-    private func recordPeriodCompletedRatioAtTheEndOfEachInterval() {
+    private func recordPeriodCompletedRatio() {
         progressPerInterval.append(service.periodCompletedRatio)
     }
     

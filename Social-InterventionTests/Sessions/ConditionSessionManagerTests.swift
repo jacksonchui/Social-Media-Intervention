@@ -35,98 +35,104 @@ class ConditionSessionManagerTests: XCTestCase {
     
     func test_start_recordsPeriodLogForSuccessfulPeriodRatio() {
         let (sut, service) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        service.periodCompletedRatio = resetProgressThreshold
+        let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 1)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [atThreshold()], duration: duration)
         
-        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count) {
+        service.periodCompletedRatio = resetProgressThreshold
+        start(sut, toCompleteWith: nil, for: updatesPerPeriod) {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
         }
         
         XCTAssertEqual(sut.periodIntervals, 1)
-        XCTAssertEqual(sut.sessionLog?.periodLogs.map { $0.duration }, [timePerPeriod])
+        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
     }
     
     func test_start_recordsOnSuccessfulPeriodRatioAtThresholdAfterUnsuccessfulIntervals() {
         let (sut, service) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        let periodIntervals = 2
-        let periodDuration = Double(updatesPerPeriod) * timeInterval * Double(periodIntervals)
-        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), atThreshold()], duration: periodDuration)
+        let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 2)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), atThreshold()], duration: duration)
         
-        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count * periodIntervals) {
+        start(sut, toCompleteWith: nil, for: updatesPerPeriod) {
             expectedPeriodLog.progressPerInterval.forEach { progress in
                 service.periodCompletedRatio = progress
                 expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             }
         }
         
-        XCTAssertEqual(sut.periodIntervals, 1, "Period Intervals were reset")
-        XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
-        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
+        expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
     }
     
-    func test_start_recordsOnSuccessfulPeriodRatioAboveThresholdAfterUnsuccessfulIntervals() {
+    func test_start_recordsOnSuccessfulPeriodRatioAboveThresholdAfterUnsuccessfulInterval() {
         let (sut, service) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        let (periodIntervals, periodDuration) = period(for: 2)
-        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), aboveThreshold()], duration: periodDuration)
+        let (expectedUpdates, duration, totalUpdatesPerPeriod) = use(intervals: 2)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), aboveThreshold()], duration: duration)
         
-        start(sut, toCompleteWith: nil, forUpdateCount: expectedUpdates.count * periodIntervals) {
+        start(sut, toCompleteWith: nil, for: totalUpdatesPerPeriod) {
             expectedPeriodLog.progressPerInterval.forEach { progress in
                 service.periodCompletedRatio = progress
                 expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             }
         }
         
-        XCTAssertEqual(sut.periodIntervals, 1, "Period Intervals were reset")
-        XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
-        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
+        expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
     }
     
     func test_start_hasNoSideEffectsOnPeriodBelowThreshold() {
         let (sut, service) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        let (periodIntervals, periodDuration) = period(for: 2)
-        let totalUpdates = expectedUpdates.count * periodIntervals
-        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold()], duration: periodDuration)
+        let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 2)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold()], duration: duration)
         
-        start(sut, toCompleteWith: nil, forUpdateCount: totalUpdates) {
+        start(sut, toCompleteWith: nil, for: updatesPerPeriod) {
             expectedPeriodLog.progressPerInterval.forEach { progress in
                 service.periodCompletedRatio = progress
                 expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             }
         }
         
-        XCTAssertEqual(sut.periodIntervals, 3, "Period Intervals were reset")
-        XCTAssertEqual(service.currentPeriodTime, 120.0, "Current time was reset")
-        XCTAssertEqual(sut.sessionLog?.periodLogs, [])
+        expectEqual(for: sut, with: service, intervals: 3, time: duration, logs: [], "Intervals and time shouldn't reset")
     }
     
-    func test_start_recordsOnSuccessfulPeriodRatiosForTwoPeriods() {
+    func test_start_recordsOnSuccessfulPeriodRatiosForTwoFullPeriods() {
         let (sut, service) = makeSUT()
-        let expectedUpdates = anyProgresses(updatesPerPeriod)
-        let (periodIntervals, periodDuration) = period(for: 3)
-        let expectedPeriodLog1 = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold(), aboveThreshold()], duration: periodDuration)
-        let expectedPeriodLog2 = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold(), aboveThreshold()], duration: periodDuration)
-        let totalUpdates = expectedUpdates.count * periodIntervals * 2
+        let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 3)
+        let progressLog = [belowThreshold(), belowThreshold(), aboveThreshold()]
         
-        start(sut, toCompleteWith: nil, forUpdateCount: totalUpdates) {
-            expectedPeriodLog1.progressPerInterval.forEach { progress in
+        let expectedPeriodLog = PeriodLog(progressPerInterval: progressLog, duration: duration)
+        let updatesForTwoPeriods = updatesPerPeriod * 2
+        
+        start(sut, toCompleteWith: nil, for: updatesForTwoPeriods) {
+            expectedPeriodLog.progressPerInterval.forEach { progress in
                 service.periodCompletedRatio = progress
                 expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             }
             
-            expectedPeriodLog2.progressPerInterval.forEach { progress in
+            expectedPeriodLog.progressPerInterval.forEach { progress in
                 service.periodCompletedRatio = progress
                 expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
             }
         }
         
-        XCTAssertEqual(sut.periodIntervals, 1, "Period Intervals were reset")
-        XCTAssertEqual(service.currentPeriodTime, 0.0, "Current time was reset")
-        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog1, expectedPeriodLog2])
+        expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog, expectedPeriodLog], "Intervals and time should reset")
     }
-
+    
+    func test_stop_recordsLatestProgressBeforeEndingSession() {
+        let (sut, service) = makeSUT()
+        let updatesBeforeStop = updatesPerPeriodInterval - 1
+        let (expectedUpdates, duration, totalUpdates) = use(updatesBeforeStop, intervals: 1)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold()], duration: duration)
+        
+        start(sut, toCompleteWith: nil, for: totalUpdates) {
+            expectedPeriodLog.progressPerInterval.forEach { progress in
+                service.periodCompletedRatio = progress
+                expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
+            }
+        }
+        
+        expect(sut, toCompleteStopWith: nil) {
+            service.completeStopSuccessfully()
+        }
+        expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
+    }
 
     // MARK: - Helpers
     
@@ -137,17 +143,31 @@ class ConditionSessionManagerTests: XCTestCase {
         return (session, service)
     }
     
-    func expect(_ sut: ConditionSessionManager, toCompleteCheckWith expectedError: SessionCheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: ConditionSessionManager, toCompleteStopWith expectedError: SessionStopError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
-        sut.check { error in
-            XCTAssertEqual(expectedError, error, file: file, line: line)
+        sut.stop { error in
+            if let error = error {
+                XCTAssertEqual(expectedError, error, file: file, line: line)
+            }
             exp.fulfill()
         }
         action()
         wait(for: [exp], timeout: 1.0)
     }
     
-    func start(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, forUpdateCount expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: ConditionSessionManager, toCompleteCheckWith expectedError: SessionCheckError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for completion")
+        sut.check { error in
+            if let error = error {
+                XCTAssertEqual(expectedError, error, file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        action()
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func start(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         
@@ -178,9 +198,19 @@ class ConditionSessionManagerTests: XCTestCase {
     func aboveThreshold() -> Double {
         return resetProgressThreshold + 0.01
     }
+        
+    func use(_ updatesPerInterval: Int = updatesPerPeriodInterval, intervals: Int)
+            -> (progressUpdates: [Double], periodDuration: Double, totalPeriodUpdates: Int) {
+        let progressUpdates = anyProgresses(updatesPerInterval)
+        let totalPeriodUpdates = updatesPerInterval * intervals
+        let periodDuration = Double(totalPeriodUpdates) * timeInterval
+
+        return (progressUpdates, periodDuration, totalPeriodUpdates)
+    }
     
-    func period(for intervals: Int) -> (count: Int, duration: Double) {
-        let duration = Double(updatesPerPeriod * intervals) * timeInterval
-        return (intervals, duration)
+    func expectEqual(for sut: ConditionSessionManager, with service: ConditionService, intervals expectedIntervals: Int, time expectedCurrPeriodTime: Double, logs expectedPeriodLogs: [PeriodLog], _ message: String = "", file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(sut.periodIntervals, expectedIntervals, file: file, line: line)
+        XCTAssertEqual(service.currentPeriodTime, expectedCurrPeriodTime, file: file, line: line)
+        XCTAssertEqual(sut.sessionLog?.periodLogs, expectedPeriodLogs, file: file, line: line)
     }
 }

@@ -8,7 +8,7 @@
 import CoreGraphics
 import Foundation
 
-var updatesPerPeriod: Int { return 60 }
+var updatesPerPeriodInterval: Int { return 60 }
 var timePerPeriod: TimeInterval { return 60.0 }
 var resetProgressThreshold: Double { return 0.7 }
 var timeInterval: Double { return 1.0 }
@@ -17,7 +17,7 @@ func anyProgress() -> Double {
     return randomProgress
 }
 
-func anyProgresses(_ updateIntervals: Int = updatesPerPeriod) -> [Double] {
+func anyProgresses(_ updateIntervals: Int = updatesPerPeriodInterval) -> [Double] {
     var progresses = [Double]()
     for _ in 0 ..< updateIntervals {
         progresses.append(randomProgress)
