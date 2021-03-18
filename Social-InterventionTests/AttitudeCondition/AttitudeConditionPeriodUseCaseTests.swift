@@ -37,7 +37,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, _) = makeSUT()
         sut.reset()
         
-        XCTAssertEqual(sut.currentPeriodTime, 0.0)
+        XCTAssertEqual(sut.currPeriodDuration, 0.0)
         XCTAssertNil(sut.targetAttitude)
     }
         
@@ -51,12 +51,12 @@ class AttitudeConditionServiceTests: XCTestCase {
     
     func test_start_failsOnAnySessionErrorAndDoesNotRecordTime() {
         let (sut, manager) = makeSUT()
-        let expectedError: ConditionPeriodError = .startError
+        let expectedError = anyNSError("Failed to start motion updates")
         
         expectOnStart(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: expectedError)
         }
-        XCTAssertEqual(sut.currentPeriodTime, 0.0)
+        XCTAssertEqual(sut.currPeriodDuration, 0.0)
     }
         
     func test_start_storesFirstUpdateAsInitialRecord() {
@@ -67,7 +67,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             manager.completeStartUpdatesSuccessfully(with: initialRecord)
         }
         XCTAssertEqual(sut.records.first, initialRecord)
-        XCTAssertEqual(sut.currentPeriodTime, 1.0)
+        XCTAssertEqual(sut.currPeriodDuration, 1.0)
     }
     
     func test_start_storesMultipleRecordsOnMultipleUpdates() {
@@ -78,7 +78,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             expectedRecords.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         XCTAssertEqual(sut.records, expectedRecords)
-        XCTAssertEqual(sut.currentPeriodTime, 10.0)
+        XCTAssertEqual(sut.currPeriodDuration, 10.0)
     }
     
     func test_start_generatesValidTargetAttitude() {
@@ -94,23 +94,6 @@ class AttitudeConditionServiceTests: XCTestCase {
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.pitch), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.yaw), maxRadian)
         XCTAssertLessThanOrEqual(abs(sut.targetAttitude!.roll), maxRadian)
-    }
-    
-    func test_stop_failsWithErrorWithNoSideEffects(){
-        let (sut, manager) = makeSUT()
-        let attitudeUpdates = anyAttitudes()
-        let expectedError: ConditionPeriodError? = .alreadyStopped
-        
-        expectOnStart(sut, toCompleteWith: nil, forExpectedUpdates: attitudeUpdates.count) {
-            attitudeUpdates.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
-        }
-        
-        expectOnStop(sut, toCompleteWith: expectedError) {
-            manager.completeStopUpdates(with: expectedError)
-        }
-        XCTAssertEqual(sut.currentPeriodTime, Double(attitudeUpdates.count))
-        XCTAssertNotNil(sut.records.first, "State should not be reset since Manager might still be running.")
-        XCTAssertNotNil(sut.targetAttitude, "State should not be reset since Manager might still be running.")
     }
     
     func test_start_recordsUpdatesThenResetThenRecordsMoreUpdatesSuccessfully() {
@@ -154,7 +137,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: ConditionPeriodError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func expectOnStart(_ sut: AttitudeConditionService, toCompleteWith expectedError: NSError?, forExpectedUpdates count: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = count
@@ -165,7 +148,9 @@ class AttitudeConditionServiceTests: XCTestCase {
                     XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
                     XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
                 case let .failure(error):
-                    XCTAssertEqual(error, expectedError, file: file, line: line)
+                    XCTAssertEqual(error as NSError, expectedError, file: file, line: line)
+                case .alreadyStarted:
+                    XCTFail("Should not try to start twice")
             }
             exp.fulfill()
         }
@@ -174,17 +159,14 @@ class AttitudeConditionServiceTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func expectOnStop(_ sut: AttitudeConditionService, toCompleteWith expectedError: ConditionPeriodError?, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func stop(_ sut: AttitudeConditionService, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for completion")
         
         sut.stop {result in
             switch result {
-                case let .success(periodCompletedRatio: progress):
-                    XCTAssertGreaterThanOrEqual(progress, 0.0, file: file, line: line)
-                    XCTAssertLessThanOrEqual(progress, 1.0, file: file, line: line)
-                case let .failure(error):
-                    XCTAssertEqual(error, expectedError, file: file, line: line)
+                case .stopped, .alreadyStopped:
+                    break
             }
             exp.fulfill()
         }

@@ -19,7 +19,7 @@ internal final class ConditionSessionPolicy {
     }
     
     private static func applyFactorIfProgressDoesntMeetThreshold(to progress: Double) -> Double {
-        let alphaLevel = progress < SessionPolicy.successfulProgressThreshold ? unmetThresholdFactor * progress : progress
+        let alphaLevel = progress < SessionPolicy.intervalCompleteThreshold ? unmetThresholdFactor * progress : progress
         return alphaLevel.truncate(places: 2)
     }
 }

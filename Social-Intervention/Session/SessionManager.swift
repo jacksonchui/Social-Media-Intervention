@@ -7,27 +7,30 @@
 
 import Foundation
 
-public struct SessionLogEntry: Equatable {
-    var progressOverPeriod: [Double]
-    var periodDuration: TimeInterval
+public struct PeriodLog: Equatable {
+    var progressPerInterval: [Double]
+    var duration: TimeInterval
+}
+
+public struct SessionLog: Equatable {
+    var startTime: Date
+    var endTime: Date?
+    var periodLogs: [PeriodLog]
 }
 
 public typealias SessionCheckError = MotionAvailabilityError
-public typealias SessionStartError = ConditionPeriodError
-public typealias SessionStopError = ConditionPeriodError?
 
-
-public enum SessionStartResult: Equatable {
+public enum SessionStartResult {
     case success(alpha: Double)
-    case failure(error: SessionStartError)
+    case failure(error: Error?)
 }
 
 public protocol SessionManager {
-    typealias StopCompletion = (SessionStopError?) -> Void
+    typealias StopCompletion = () -> Void
     typealias CheckCompletion = (SessionCheckError?) -> Void
     typealias StartCompletion = (SessionStartResult) -> Void
     
     func check(completion: @escaping CheckCompletion)
-    func start(completion: @escaping StartCompletion)
+    func start(loggingTo: SessionLog?, completion: @escaping StartCompletion)
     func stop(completion: @escaping StopCompletion)
 }

@@ -9,18 +9,19 @@ import Foundation
 
 public class AttitudeConditionService: ConditionService {
     private(set) var targetAttitude: Attitude?
-    private(set) var timeInterval: TimeInterval
+    private(set) var updateDuration: TimeInterval
     private(set) var records = [Attitude]()
     
     private(set) var attitudeClient: AttitudeMotionClient
         
-    public init(with attitudeClient: AttitudeMotionClient, updateEvery timeInterval: TimeInterval) {
+    public init(with attitudeClient: AttitudeMotionClient, updateEvery duration: TimeInterval) {
         self.attitudeClient = attitudeClient
-        self.timeInterval = timeInterval
+        self.updateDuration = duration
     }
     
-    public var currentPeriodTime: TimeInterval {
-        return timeInterval * Double(records.count)
+    public var currPeriodDuration: TimeInterval {
+        let currDuration = updateDuration * Double(records.count)
+        return currDuration.truncate(places: 2)
     }
     
     private func resetRecords() { records = [] }
@@ -35,7 +36,7 @@ public extension AttitudeConditionService {
 
 public extension AttitudeConditionService {
     func start(completion: @escaping StartCompletion) {
-        attitudeClient.startUpdates(updatingEvery: timeInterval) { [weak self] result in
+        attitudeClient.startUpdates(updatingEvery: updateDuration) { [weak self] result in
             guard let self = self else { return }
             self.record(result: result, completion: completion)
         }
@@ -51,6 +52,8 @@ public extension AttitudeConditionService {
                 completion(.success(progressUpdate: progress))
             case let .failure(error):
                 completion(.failure(error))
+            case .alreadyStarted:
+                completion(.alreadyStarted)
         }
     }
     
@@ -75,21 +78,15 @@ public extension AttitudeConditionService {
 
 extension AttitudeConditionService {
     public func stop(completion: @escaping StopCompletion) {
-        attitudeClient.stopUpdates {[weak self] error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            completion(.success(periodCompletedRatio: self.periodCompletedRatio))
+        attitudeClient.stopUpdates {
+            completion(.stopped)
         }
     }
     
     public var periodCompletedRatio: Double {
         guard let targetAttitude = targetAttitude else { return 0.0 }
         let progresses = records.toProgresses(target: targetAttitude)
-        print("Records above threshold (\(SessionPolicy.successfulProgressThreshold)): \(progresses.recordsAboveThreshold) of \(progresses.count)")
+        print("Records above threshold (\(SessionPolicy.intervalCompleteThreshold)): \(progresses.recordsAboveThreshold) of \(progresses.count)")
         print("Average progress: \(progresses.average)")
         let periodCompletedRatio = Double(progresses.recordsAboveThreshold) / Double(progresses.count)
         return periodCompletedRatio
@@ -135,7 +132,7 @@ internal extension Array where Element == Double {
     
     var recordsAboveThreshold: Int {
         return self.reduce(0) { sum, progress in
-            sum + (progress >= SessionPolicy.successfulProgressThreshold ? 1 : 0)
+            sum + (progress >= SessionPolicy.intervalCompleteThreshold ? 1 : 0)
         }
     }
 }

@@ -15,7 +15,8 @@ public struct Attitude: Equatable {
 
 public enum AttitudeResult {
     case success(Attitude)
-    case failure(ConditionPeriodError)
+    case failure(Error)
+    case alreadyStarted
 }
 
 public enum MotionAvailabilityError: String, Swift.Error {
@@ -26,7 +27,7 @@ public enum MotionAvailabilityError: String, Swift.Error {
 public protocol AttitudeMotionClient {
     typealias AvailabilityCompletion = (MotionAvailabilityError?) -> Void
     typealias StartCompletion = (AttitudeResult) -> Void
-    typealias StopCompletion = (ConditionPeriodError?) -> Void
+    typealias StopCompletion = () -> Void
     
     func checkAvailability(completion: @escaping AvailabilityCompletion)
     func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping StartCompletion)

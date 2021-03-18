@@ -7,23 +7,15 @@
 
 import Foundation
 
-public protocol ConditionServiceDelegate: AnyObject {
-    func condition(progress: Double)
-}
-
-public enum ConditionPeriodError: Swift.Error {
-    case startError
-    case alreadyStopped
-}
-
 public enum PeriodStartResult {
     case success(progressUpdate: Double)
-    case failure(ConditionPeriodError)
+    case failure(Error)
+    case alreadyStarted
 }
 
 public enum PeriodStopResult {
-    case success(periodCompletedRatio: Double)
-    case failure(ConditionPeriodError)
+    case stopped
+    case alreadyStopped
 }
 
 public protocol ConditionService: AnyObject {
@@ -31,7 +23,7 @@ public protocol ConditionService: AnyObject {
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void
     
-    var currentPeriodTime: TimeInterval { get }
+    var currPeriodDuration: TimeInterval { get }
     var periodCompletedRatio: Double { get }
     
     func check(completion: @escaping CheckCompletion) -> Void

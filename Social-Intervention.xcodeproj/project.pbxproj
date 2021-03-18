@@ -3,18 +3,20 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */; };
-		CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
+		CF2600D72600798A0028DC5B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D62600798A0028DC5B /* FirebaseAuth */; };
+		CF2600D92600798A0028DC5B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D82600798A0028DC5B /* FirebaseFirestore */; };
+		CF2600DB2600798A0028DC5B /* FirebaseFirestoreSwift-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600DA2600798A0028DC5B /* FirebaseFirestoreSwift-Beta */; };
+		CF2600DF260139BF0028DC5B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */; };
 		CF347F0F25F9DA390032E0BA /* ConditionSessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF347F0E25F9DA390032E0BA /* ConditionSessionManagerTests.swift */; };
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
-		CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF7407A825F98F3300FCBC5C /* SessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83289B25F98B4F00553CC4 /* SessionPolicy.swift */; };
 		CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */; };
 		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
@@ -36,8 +38,6 @@
 		CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */; };
 		CFBF4DD425FFF82F00BE040D /* ConditionSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */; };
 		CFBF4DD725FFF86900BE040D /* ConditionSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */; };
-		CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
-		CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */; };
 		CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4E1E260046BF00BE040D /* Double+Ext.swift */; };
@@ -61,11 +61,11 @@
 
 /* Begin PBXFileReference section */
 		CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionPeriodUseCaseTests.swift; sourceTree = "<group>"; };
+		CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF347F0E25F9DA390032E0BA /* ConditionSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManagerTests.swift; sourceTree = "<group>"; };
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
-		CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationConditionService.swift; sourceTree = "<group>"; };
 		CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMAttitudeMotionClient.swift; sourceTree = "<group>"; };
 		CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionClientSpy.swift; sourceTree = "<group>"; };
@@ -85,7 +85,6 @@
 		CF92AF1325F5B7C80044E588 /* ConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionService.swift; sourceTree = "<group>"; };
 		CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionServiceSpy.swift; sourceTree = "<group>"; };
 		CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManager.swift; sourceTree = "<group>"; };
-		CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIAnalyticsController.swift; sourceTree = "<group>"; };
 		CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionPolicy.swift; sourceTree = "<group>"; };
 		CFBF4E1E260046BF00BE040D /* Double+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Ext.swift"; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +98,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF2600DB2600798A0028DC5B /* FirebaseFirestoreSwift-Beta in Frameworks */,
+				CF2600D72600798A0028DC5B /* FirebaseAuth in Frameworks */,
+				CF2600D92600798A0028DC5B /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +129,6 @@
 			children = (
 				CFD371C725F74A840097B97F /* Protocols */,
 				CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */,
-				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
 				CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */,
 			);
 			path = Conditions;
@@ -173,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				CFBF4DF025FFFDB700BE040D /* Session */,
-				CFBF4DDA25FFF8CA00BE040D /* Analytics */,
 				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
 				CF8D2B4025EC5A1C008FFBC6 /* Browser */,
@@ -182,6 +182,7 @@
 				CF8D2B0B25EC383C008FFBC6 /* Assets.xcassets */,
 				CF8D2B1025EC383C008FFBC6 /* LaunchScreen.storyboard */,
 				CF8D2B1325EC383C008FFBC6 /* Info.plist */,
+				CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */,
 				CF8D2B0D25EC383C008FFBC6 /* Preview Content */,
 			);
 			path = "Social-Intervention";
@@ -222,14 +223,6 @@
 				CFBF4DCC25FFF7D900BE040D /* ConditionServiceSpy.swift */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		CFBF4DDA25FFF8CA00BE040D /* Analytics */ = {
-			isa = PBXGroup;
-			children = (
-				CFBF4DDB25FFF8DE00BE040D /* SIAnalyticsController.swift */,
-			);
-			path = Analytics;
 			sourceTree = "<group>";
 		};
 		CFBF4DF025FFFDB700BE040D /* Session */ = {
@@ -286,6 +279,11 @@
 			dependencies = (
 			);
 			name = "Social-Intervention";
+			packageProductDependencies = (
+				CF2600D62600798A0028DC5B /* FirebaseAuth */,
+				CF2600D82600798A0028DC5B /* FirebaseFirestore */,
+				CF2600DA2600798A0028DC5B /* FirebaseFirestoreSwift-Beta */,
+			);
 			productName = "Social-Intervention";
 			productReference = CF8D2B0225EC383B008FFBC6 /* Social-Intervention.app */;
 			productType = "com.apple.product-type.application";
@@ -335,6 +333,9 @@
 				Base,
 			);
 			mainGroup = CF8D2AF925EC383B008FFBC6;
+			packageReferences = (
+				CF2600D52600798A0028DC5B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = CF8D2B0325EC383B008FFBC6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -351,6 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF8D2B1225EC383C008FFBC6 /* LaunchScreen.storyboard in Resources */,
+				CF2600DF260139BF0028DC5B /* GoogleService-Info.plist in Resources */,
 				CF8D2B0F25EC383C008FFBC6 /* Preview Assets.xcassets in Resources */,
 				CF8D2B0C25EC383C008FFBC6 /* Assets.xcassets in Resources */,
 			);
@@ -374,7 +376,6 @@
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
 				CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
-				CFBF4DDC25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */,
 				CF92AF0C25F5B6AA0044E588 /* AttitudeConditionService.swift in Sources */,
@@ -385,7 +386,6 @@
 				CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CF83288C25F9787D00553CC4 /* SessionManager.swift in Sources */,
 				CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */,
-				CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */,
 				CFBF4DD425FFF82F00BE040D /* ConditionSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,7 +399,6 @@
 				CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
 				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */,
-				CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */,
 				CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */,
 				CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */,
 				CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,
@@ -412,7 +411,6 @@
 				CFD437DF25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
 				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
-				CFBF4DDD25FFF8DE00BE040D /* SIAnalyticsController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -569,7 +567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonchui.SocialIntervention;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ucberkeleyhci.social-intervention";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -590,7 +588,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonchui.SocialIntervention;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ucberkeleyhci.social-intervention";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -668,6 +666,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CF2600D52600798A0028DC5B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.8.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CF2600D62600798A0028DC5B /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF2600D52600798A0028DC5B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		CF2600D82600798A0028DC5B /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF2600D52600798A0028DC5B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		CF2600DA2600798A0028DC5B /* FirebaseFirestoreSwift-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CF2600D52600798A0028DC5B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseFirestoreSwift-Beta";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CF8D2AFA25EC383B008FFBC6 /* Project object */;
 }
