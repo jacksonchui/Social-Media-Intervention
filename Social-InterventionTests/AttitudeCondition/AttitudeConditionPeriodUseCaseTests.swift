@@ -37,7 +37,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         let (sut, _) = makeSUT()
         sut.reset()
         
-        XCTAssertEqual(sut.currentPeriodTime, 0.0)
+        XCTAssertEqual(sut.currPeriodDuration, 0.0)
         XCTAssertNil(sut.targetAttitude)
     }
         
@@ -56,7 +56,7 @@ class AttitudeConditionServiceTests: XCTestCase {
         expectOnStart(sut, toCompleteWith: expectedError, forExpectedUpdates: 1) {
             manager.completeStartUpdates(with: expectedError)
         }
-        XCTAssertEqual(sut.currentPeriodTime, 0.0)
+        XCTAssertEqual(sut.currPeriodDuration, 0.0)
     }
         
     func test_start_storesFirstUpdateAsInitialRecord() {
@@ -67,7 +67,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             manager.completeStartUpdatesSuccessfully(with: initialRecord)
         }
         XCTAssertEqual(sut.records.first, initialRecord)
-        XCTAssertEqual(sut.currentPeriodTime, 1.0)
+        XCTAssertEqual(sut.currPeriodDuration, 1.0)
     }
     
     func test_start_storesMultipleRecordsOnMultipleUpdates() {
@@ -78,7 +78,7 @@ class AttitudeConditionServiceTests: XCTestCase {
             expectedRecords.forEach { manager.completeStartUpdatesSuccessfully(with: $0) }
         }
         XCTAssertEqual(sut.records, expectedRecords)
-        XCTAssertEqual(sut.currentPeriodTime, 10.0)
+        XCTAssertEqual(sut.currPeriodDuration, 10.0)
     }
     
     func test_start_generatesValidTargetAttitude() {

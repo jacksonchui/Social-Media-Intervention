@@ -15,7 +15,7 @@ public final class ConditionSessionManager: SessionManager {
     private(set) var progressPerInterval = [Double]()
     private(set) var periodIntervals: Int
     
-    private var nextPeriodIntervalCheckpoint: Double { SessionPolicy.periodDuration * Double(self.periodIntervals) }
+    private var nextPeriodDurationCheckpt: Double { SessionPolicy.periodDuration * Double(self.periodIntervals) }
     
     public init(using service: ConditionService) {
         self.service = service
@@ -38,7 +38,7 @@ public final class ConditionSessionManager: SessionManager {
                     break
             }
             
-            if self.service.currentPeriodTime >= nextPeriodIntervalCheckpoint {
+            if self.service.currPeriodDuration >= nextPeriodDurationCheckpt {
                 self.onPeriodIntervalCheckpoint()
             }
         }
@@ -69,7 +69,7 @@ public final class ConditionSessionManager: SessionManager {
         recordPeriodCompletedRatio()
         let newPeriodLog = PeriodLog(
                         progressPerInterval: progressPerInterval,
-                        duration: service.currentPeriodTime)
+                        duration: service.currPeriodDuration)
         sessionLog?.periodLogs.append(newPeriodLog)
         service.reset()
         resetPeriod()
@@ -80,7 +80,7 @@ public final class ConditionSessionManager: SessionManager {
         if latestProgress >= SessionPolicy.periodCompletedRatio {
             let newPeriodLog = PeriodLog(
                             progressPerInterval: progressPerInterval,
-                            duration: service.currentPeriodTime)
+                            duration: service.currPeriodDuration)
             sessionLog?.periodLogs.append(newPeriodLog)
             service.reset()
             resetPeriod()

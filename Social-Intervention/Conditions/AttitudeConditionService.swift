@@ -19,7 +19,7 @@ public class AttitudeConditionService: ConditionService {
         self.updateDuration = duration
     }
     
-    public var currentPeriodTime: TimeInterval {
+    public var currPeriodDuration: TimeInterval {
         let currDuration = updateDuration * Double(records.count)
         return currDuration.truncate(places: 2)
     }

@@ -27,7 +27,7 @@ public protocol ConditionService: AnyObject {
     typealias StartCompletion = (PeriodStartResult) -> Void
     typealias StopCompletion = (PeriodStopResult) -> Void
     
-    var currentPeriodTime: TimeInterval { get }
+    var currPeriodDuration: TimeInterval { get }
     var periodCompletedRatio: Double { get }
     
     func check(completion: @escaping CheckCompletion) -> Void

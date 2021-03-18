@@ -11,7 +11,7 @@ class ConditionServiceSpy: ConditionService {
     var recordsCount: Int
     var periodCompletedRatio: Double
     
-    var currentPeriodTime: TimeInterval {
+    var currPeriodDuration: TimeInterval {
         let currDuration = updateDuration * Double(recordsCount)
         return currDuration.truncate(places: 2)
     }

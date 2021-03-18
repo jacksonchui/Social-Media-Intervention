@@ -182,7 +182,7 @@ class ConditionSessionManagerTests: XCTestCase {
     
     func expectEqual(for sut: ConditionSessionManager, with service: ConditionService, intervals expectedIntervals: Int, time expectedCurrPeriodTime: Double, logs expectedPeriodLogs: [PeriodLog], _ message: String = "", file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertEqual(sut.periodIntervals, expectedIntervals, file: file, line: line)
-        XCTAssertEqual(service.currentPeriodTime, expectedCurrPeriodTime, file: file, line: line)
+        XCTAssertEqual(service.currPeriodDuration, expectedCurrPeriodTime, file: file, line: line)
         XCTAssertEqual(sut.sessionLog?.periodLogs, expectedPeriodLogs, file: file, line: line)
     }
 }
