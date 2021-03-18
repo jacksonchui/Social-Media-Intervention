@@ -51,6 +51,8 @@ public extension AttitudeConditionService {
                 completion(.success(progressUpdate: progress))
             case let .failure(error):
                 completion(.failure(error))
+            case .alreadyStarted:
+                completion(.alreadyStarted)
         }
     }
     
@@ -75,14 +77,8 @@ public extension AttitudeConditionService {
 
 extension AttitudeConditionService {
     public func stop(completion: @escaping StopCompletion) {
-        attitudeClient.stopUpdates {[weak self] error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            completion(.success(periodCompletedRatio: self.periodCompletedRatio))
+        attitudeClient.stopUpdates {
+            completion(.stopped)
         }
     }
     

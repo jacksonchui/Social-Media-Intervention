@@ -19,17 +19,14 @@ public struct SessionLog: Equatable {
 }
 
 public typealias SessionCheckError = MotionAvailabilityError
-public typealias SessionStartError = ConditionPeriodError
-public typealias SessionStopError = ConditionPeriodError?
 
-
-public enum SessionStartResult: Equatable {
+public enum SessionStartResult {
     case success(alpha: Double)
-    case failure(error: SessionStartError)
+    case failure(error: Error?)
 }
 
 public protocol SessionManager {
-    typealias StopCompletion = (SessionStopError?) -> Void
+    typealias StopCompletion = () -> Void
     typealias CheckCompletion = (SessionCheckError?) -> Void
     typealias StartCompletion = (SessionStartResult) -> Void
     

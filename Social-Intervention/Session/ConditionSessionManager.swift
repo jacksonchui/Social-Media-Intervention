@@ -10,9 +10,9 @@ import CoreGraphics
 
 public final class ConditionSessionManager: SessionManager {
         
-    public enum StartResult: Equatable {
+    public enum StartResult {
         case success(alpha: CGFloat)
-        case failure(error: ConditionPeriodError)
+        case failure(error: Error)
     }
     
     private(set) var service: ConditionService
@@ -50,14 +50,14 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     public func stop(completion: @escaping StopCompletion) {
-        service.stop { [unowned self] result in
+        service.stop { result in
             switch result {
-                case let .failure(error):
-                    completion(error)
-                case .success:
+                case .stopped:
                     self.onSuccessfulStopRecordLatestPeriodProgress()
-                    completion(nil)
+                case .alreadyStopped:
+                    break
             }
+            completion()
         }
     }
     

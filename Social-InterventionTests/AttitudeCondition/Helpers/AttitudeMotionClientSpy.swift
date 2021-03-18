@@ -42,15 +42,11 @@ class AttitudeMotionClientSpy: AttitudeMotionClient {
         startCompletions[index](.success(attitude))
     }
     
-    func completeStartUpdates(with error: ConditionPeriodError, at index: Int = 0) {
+    func completeStartUpdates(with error: Error, at index: Int = 0) {
         startCompletions[index](.failure(error))
     }
     
-    func completeStopUpdates(with error: ConditionPeriodError?, at index: Int = 0) {
-        stopCompletions[index](error)
-    }
-    
-    func completeStopUpdatesSuccessfully(at index: Int = 0) {
-        stopCompletions[index](nil)
+    func completeStopUpdates(at index: Int = 0) {
+        stopCompletions[index]()
     }
 }

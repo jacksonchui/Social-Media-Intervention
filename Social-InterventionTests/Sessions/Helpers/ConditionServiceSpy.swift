@@ -51,6 +51,6 @@ class ConditionServiceSpy: ConditionService {
     }
     
     func completeStopSuccessfully(at index: Int = 0) {
-        stopCompletions[index](.success(periodCompletedRatio: anyProgress()))
+        stopCompletions[index](.stopped)
     }
 }

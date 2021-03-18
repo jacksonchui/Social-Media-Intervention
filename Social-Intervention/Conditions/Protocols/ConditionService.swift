@@ -11,19 +11,15 @@ public protocol ConditionServiceDelegate: AnyObject {
     func condition(progress: Double)
 }
 
-public enum ConditionPeriodError: Swift.Error {
-    case startError
-    case alreadyStopped
-}
-
 public enum PeriodStartResult {
     case success(progressUpdate: Double)
-    case failure(ConditionPeriodError)
+    case failure(Error)
+    case alreadyStarted
 }
 
 public enum PeriodStopResult {
-    case success(periodCompletedRatio: Double)
-    case failure(ConditionPeriodError)
+    case stopped
+    case alreadyStopped
 }
 
 public protocol ConditionService: AnyObject {

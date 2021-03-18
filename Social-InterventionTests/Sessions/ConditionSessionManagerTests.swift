@@ -125,9 +125,8 @@ class ConditionSessionManagerTests: XCTestCase {
             }
         }
         
-        expect(sut, toCompleteStopWith: nil) {
-            service.completeStopSuccessfully()
-        }
+        stop(sut) { service.completeStopSuccessfully() }
+        
         expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
     }
 
@@ -140,12 +139,9 @@ class ConditionSessionManagerTests: XCTestCase {
         return (session, service)
     }
     
-    func expect(_ sut: ConditionSessionManager, toCompleteStopWith expectedError: SessionStopError, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func stop(_ sut: ConditionSessionManager, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
-        sut.stop { error in
-            if let error = error {
-                XCTAssertEqual(expectedError, error, file: file, line: line)
-            }
+        sut.stop {
             exp.fulfill()
         }
         action()
@@ -164,17 +160,17 @@ class ConditionSessionManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func start(_ sut: ConditionSessionManager, toCompleteWith expectedError: ConditionPeriodError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    func start(_ sut: ConditionSessionManager, toCompleteWith expectedError: NSError?, for expectedUpdatesCount: Int, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         
         sut.start(loggingTo: nil) { result in
             switch result {
-                case let .success(alpha: alpha):
+                case let .success(alpha):
                     XCTAssertGreaterThanOrEqual(alpha, 0.0, file: file, line: line)
                     XCTAssertLessThanOrEqual(alpha, 1.0, file: file, line: line)
-                case let .failure(error: error):
-                    XCTAssertEqual(error, expectedError, file: file, line: line)
+                case let .failure(error):
+                    XCTAssertEqual(error as NSError?, expectedError, file: file, line: line)
             }
             
             exp.fulfill()

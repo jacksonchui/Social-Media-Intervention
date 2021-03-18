@@ -68,3 +68,7 @@ private extension CGFloat {
         return Double(self)
     }
 }
+
+func anyNSError(_ msg: String) -> NSError {
+    NSError(domain: msg, code: 0)
+}

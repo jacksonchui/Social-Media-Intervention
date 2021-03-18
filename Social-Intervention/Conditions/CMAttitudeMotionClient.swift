@@ -30,9 +30,13 @@ class CMAttitudeMotionClient: AttitudeMotionClient {
     }
     
     func startUpdates(updatingEvery interval: TimeInterval, completion: @escaping StartCompletion) {
+        if motionManager.isDeviceMotionActive {
+            completion(.alreadyStarted)
+        }
+        
         motionManager.startDeviceMotionUpdates(using: referenceFrame, to: queue) { deviceMotion, error in
             guard let deviceMotion = deviceMotion, error == nil else {
-                completion(.failure(.startError))
+                completion(.failure(error!))
                 return
             }
             completion(.success(deviceMotion.attitude.toModel()))
@@ -41,11 +45,11 @@ class CMAttitudeMotionClient: AttitudeMotionClient {
     
     func stopUpdates(completion: @escaping StopCompletion) {
         guard motionManager.isDeviceMotionActive else {
-            completion(.alreadyStopped)
+            completion()
             return
         }
         motionManager.stopDeviceMotionUpdates()
-        completion(nil)
+        completion()
     }
 }
 

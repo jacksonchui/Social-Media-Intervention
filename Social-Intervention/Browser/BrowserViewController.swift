@@ -39,7 +39,7 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if !presentedSafariView {
-            sessionManager.stop(completion: onSessionStop)
+            sessionManager.stop { }
         }
         presentedSafariView = false
     }
@@ -83,12 +83,6 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
                 setViewAlpha(to: alphaLevel)
             default:
                 print("Will deal with error as an alert")
-        }
-    }
-    
-    private func onSessionStop(_ error: SessionStopError?) {
-        if let error = error {
-            print("Received error when trying to stop session: \(error.debugDescription)")
         }
     }
     
