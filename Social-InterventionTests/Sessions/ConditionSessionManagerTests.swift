@@ -43,8 +43,7 @@ class ConditionSessionManagerTests: XCTestCase {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
         }
         
-        XCTAssertEqual(sut.periodIntervals, 1)
-        XCTAssertEqual(sut.sessionLog?.periodLogs, [expectedPeriodLog])
+        expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
     }
     
     func test_start_recordsOnSuccessfulPeriodRatioAtThresholdAfterUnsuccessfulIntervals() {
@@ -95,9 +94,7 @@ class ConditionSessionManagerTests: XCTestCase {
     func test_start_recordsOnSuccessfulPeriodRatiosForTwoFullPeriods() {
         let (sut, service) = makeSUT()
         let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 3)
-        let progressLog = [belowThreshold(), belowThreshold(), aboveThreshold()]
-        
-        let expectedPeriodLog = PeriodLog(progressPerInterval: progressLog, duration: duration)
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold(), belowThreshold(), aboveThreshold()], duration: duration)
         let updatesForTwoPeriods = updatesPerPeriod * 2
         
         start(sut, toCompleteWith: nil, for: updatesForTwoPeriods) {
