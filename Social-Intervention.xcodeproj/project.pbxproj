@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */; };
-		CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF2600D72600798A0028DC5B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D62600798A0028DC5B /* FirebaseAuth */; };
 		CF2600D92600798A0028DC5B /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D82600798A0028DC5B /* FirebaseFirestore */; };
@@ -18,7 +17,6 @@
 		CF442A0825EC6BDE008EB9DA /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
 		CF442A1125EC70A1008EB9DA /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */; };
-		CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */; };
 		CF7407A825F98F3300FCBC5C /* SessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83289B25F98B4F00553CC4 /* SessionPolicy.swift */; };
 		CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */; };
 		CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */; };
@@ -68,7 +66,6 @@
 		CF41683525F440FE00E21F61 /* Requirements.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Requirements.md; sourceTree = "<group>"; };
 		CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		CF442A0D25EC6DE5008EB9DA /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
-		CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationConditionService.swift; sourceTree = "<group>"; };
 		CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMAttitudeMotionClient.swift; sourceTree = "<group>"; };
 		CF83287E25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryLeakTracking.swift"; sourceTree = "<group>"; };
 		CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeMotionClientSpy.swift; sourceTree = "<group>"; };
@@ -132,7 +129,6 @@
 			children = (
 				CFD371C725F74A840097B97F /* Protocols */,
 				CF92AF0B25F5B6AA0044E588 /* AttitudeConditionService.swift */,
-				CF442A1925EC8B3C008EB9DA /* RotationConditionService.swift */,
 				CF83287325F965D600553CC4 /* CMAttitudeMotionClient.swift */,
 			);
 			path = Conditions;
@@ -390,7 +386,6 @@
 				CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CF83288C25F9787D00553CC4 /* SessionManager.swift in Sources */,
 				CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */,
-				CF442A1A25EC8B3C008EB9DA /* RotationConditionService.swift in Sources */,
 				CFBF4DD425FFF82F00BE040D /* ConditionSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,7 +399,6 @@
 				CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
 				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */,
-				CF25B47825ED7E8300571C0D /* RotationConditionService.swift in Sources */,
 				CF83288625F971E600553CC4 /* AttitudeMotionClientSpy.swift in Sources */,
 				CFBF4DCD25FFF7D900BE040D /* ConditionServiceSpy.swift in Sources */,
 				CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,

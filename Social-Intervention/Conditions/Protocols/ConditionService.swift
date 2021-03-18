@@ -7,10 +7,6 @@
 
 import Foundation
 
-public protocol ConditionServiceDelegate: AnyObject {
-    func condition(progress: Double)
-}
-
 public enum PeriodStartResult {
     case success(progressUpdate: Double)
     case failure(Error)
