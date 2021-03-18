@@ -30,6 +30,27 @@ private var randomProgress: Double {
     return Double.random(in: 0...1).truncate(places: sigFigures)
 }
 
+func belowThreshold() -> Double {
+    return resetProgressThreshold - 0.01
+}
+
+func atThreshold() -> Double {
+    return resetProgressThreshold
+}
+
+func aboveThreshold() -> Double {
+    return resetProgressThreshold + 0.01
+}
+    
+func use(_ updatesPerInterval: Int = updatesPerPeriodInterval, intervals: Int)
+        -> (progressUpdates: [Double], periodDuration: Double, totalPeriodUpdates: Int) {
+    let progressUpdates = anyProgresses(updatesPerInterval)
+    let totalPeriodUpdates = updatesPerInterval * intervals
+    let periodDuration = Double(totalPeriodUpdates) * timeInterval
+
+    return (progressUpdates, periodDuration, totalPeriodUpdates)
+}
+
 private extension Array where Array.Element == Double {
     func withAlphas() -> [CGFloat] {
         return self.map { $0.toAlpha() }

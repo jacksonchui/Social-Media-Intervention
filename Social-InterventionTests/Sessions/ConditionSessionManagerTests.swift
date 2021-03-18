@@ -187,27 +187,6 @@ class ConditionSessionManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func belowThreshold() -> Double {
-        return resetProgressThreshold - 0.01
-    }
-    
-    func atThreshold() -> Double {
-        return resetProgressThreshold
-    }
-    
-    func aboveThreshold() -> Double {
-        return resetProgressThreshold + 0.01
-    }
-        
-    func use(_ updatesPerInterval: Int = updatesPerPeriodInterval, intervals: Int)
-            -> (progressUpdates: [Double], periodDuration: Double, totalPeriodUpdates: Int) {
-        let progressUpdates = anyProgresses(updatesPerInterval)
-        let totalPeriodUpdates = updatesPerInterval * intervals
-        let periodDuration = Double(totalPeriodUpdates) * timeInterval
-
-        return (progressUpdates, periodDuration, totalPeriodUpdates)
-    }
-    
     func expectEqual(for sut: ConditionSessionManager, with service: ConditionService, intervals expectedIntervals: Int, time expectedCurrPeriodTime: Double, logs expectedPeriodLogs: [PeriodLog], _ message: String = "", file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertEqual(sut.periodIntervals, expectedIntervals, file: file, line: line)
         XCTAssertEqual(service.currentPeriodTime, expectedCurrPeriodTime, file: file, line: line)
