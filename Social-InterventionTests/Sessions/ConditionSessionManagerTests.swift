@@ -38,7 +38,7 @@ class ConditionSessionManagerTests: XCTestCase {
         let (expectedUpdates, duration, updatesPerPeriod) = use(intervals: 1)
         let expectedPeriodLog = PeriodLog(progressPerInterval: [atThreshold()], duration: duration)
         
-        service.periodCompletedRatio = resetProgressThreshold
+        service.periodCompletedRatio = periodCompletedRatio
         start(sut, toCompleteWith: nil, for: updatesPerPeriod) {
             expectedUpdates.forEach { service.completeStartSuccessfully(with: $0) }
         }

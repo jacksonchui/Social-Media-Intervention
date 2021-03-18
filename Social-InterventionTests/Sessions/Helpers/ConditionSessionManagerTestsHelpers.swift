@@ -8,10 +8,11 @@
 import CoreGraphics
 import Foundation
 
-var updatesPerPeriodInterval: Int { return 60 }
-var timePerPeriod: TimeInterval { return 60.0 }
-var resetProgressThreshold: Double { return 0.7 }
-var timeInterval: Double { return 1.0 }
+var periodCompletedRatio: Double { return 0.7 }
+var periodDuration: TimeInterval { return 60.0 }
+var updateDuration: TimeInterval { return 0.25 }
+var updatesPerPeriodInterval: Int { return Int(periodDuration/updateDuration) }
+
 
 func anyProgress() -> Double {
     return randomProgress
@@ -31,22 +32,22 @@ private var randomProgress: Double {
 }
 
 func belowThreshold() -> Double {
-    return resetProgressThreshold - 0.01
+    return periodCompletedRatio - 0.01
 }
 
 func atThreshold() -> Double {
-    return resetProgressThreshold
+    return periodCompletedRatio
 }
 
 func aboveThreshold() -> Double {
-    return resetProgressThreshold + 0.01
+    return periodCompletedRatio + 0.01
 }
     
 func use(_ updatesPerInterval: Int = updatesPerPeriodInterval, intervals: Int)
         -> (progressUpdates: [Double], periodDuration: Double, totalPeriodUpdates: Int) {
     let progressUpdates = anyProgresses(updatesPerInterval)
     let totalPeriodUpdates = updatesPerInterval * intervals
-    let periodDuration = Double(totalPeriodUpdates) * timeInterval
+    let periodDuration = Double(totalPeriodUpdates) * updateDuration
 
     return (progressUpdates, periodDuration, totalPeriodUpdates)
 }

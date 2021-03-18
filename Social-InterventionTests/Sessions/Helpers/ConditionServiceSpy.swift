@@ -46,7 +46,7 @@ class ConditionServiceSpy: ConditionService {
     }
     
     func completeStartSuccessfully(with progress: Double, at index: Int = 0) {
-        currentPeriodTime += 1
+        currentPeriodTime += updateDuration
         startCompletions[index](.success(progressUpdate: progress))
     }
     
