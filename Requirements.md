@@ -104,8 +104,8 @@ Given the current period is completed
 ### Scenarios
 ```
 Given session data that is recorded
-   And the user is in a session
-When the session ends (e.g. `viewDidDissappear` or phone sent to background (not Modal))
+  And the user is in a session
+ When the session ends (e.g. `applicationWillEnterBackground` or `applicationWillTerminate`)
  Then the session data is sent to the analytics feature
 
  Given the session data is sent to the analytics repository

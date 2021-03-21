@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF00A8982603DF1E00460255 /* FirestoreAnalyticsClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF00A8972603DF1E00460255 /* FirestoreAnalyticsClientTests.swift */; };
 		CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */; };
 		CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF442A0725EC6BDE008EB9DA /* UIView+Ext.swift */; };
 		CF2600D72600798A0028DC5B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CF2600D62600798A0028DC5B /* FirebaseAuth */; };
@@ -47,6 +48,7 @@
 		CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */; };
 		CFD437DF25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437DE25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift */; };
+		CFD8BD2A2607DA7000A59BEA /* SocialPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8BD292607DA7000A59BEA /* SocialPopoverController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +62,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CF00A8972603DF1E00460255 /* FirestoreAnalyticsClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnalyticsClientTests.swift; sourceTree = "<group>"; };
 		CF25B47225ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionPeriodUseCaseTests.swift; sourceTree = "<group>"; };
 		CF2600DE260139BF0028DC5B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CF347F0E25F9DA390032E0BA /* ConditionSessionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManagerTests.swift; sourceTree = "<group>"; };
@@ -91,6 +94,7 @@
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
 		CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionTestHelpers.swift; sourceTree = "<group>"; };
 		CFD437DE25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManagerTestsHelpers.swift; sourceTree = "<group>"; };
+		CFD8BD292607DA7000A59BEA /* SocialPopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialPopoverController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +118,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF00A8962603DEF700460255 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				CF00A8972603DF1E00460255 /* FirestoreAnalyticsClientTests.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 		CF442A0625EC6BCF008EB9DA /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				CF83287D25F9713D00553CC4 /* Helpers */,
+				CF00A8962603DEF700460255 /* Analytics */,
 				CFBF4DFC25FFFEAD00BE040D /* Sessions */,
 				CF83288425F971AB00553CC4 /* AttitudeCondition */,
 				CF8D2B2225EC38F2008FFBC6 /* Info.plist */,
@@ -212,6 +225,7 @@
 			children = (
 				CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */,
 				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
+				CFD8BD292607DA7000A59BEA /* SocialPopoverController.swift */,
 			);
 			path = Browser;
 			sourceTree = "<group>";
@@ -375,6 +389,7 @@
 				CF83289C25F98B4F00553CC4 /* SessionPolicy.swift in Sources */,
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
 				CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,
+				CFD8BD2A2607DA7000A59BEA /* SocialPopoverController.swift in Sources */,
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
 				CF8D2B0625EC383B008FFBC6 /* AppDelegate.swift in Sources */,
 				CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */,
@@ -396,6 +411,7 @@
 			files = (
 				CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				CF7407A825F98F3300FCBC5C /* SessionPolicy.swift in Sources */,
+				CF00A8982603DF1E00460255 /* FirestoreAnalyticsClientTests.swift in Sources */,
 				CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
 				CF92AF1D25F5B9FE0044E588 /* AttitudeMotionClient.swift in Sources */,
