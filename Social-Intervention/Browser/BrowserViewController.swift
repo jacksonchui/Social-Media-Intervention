@@ -8,7 +8,7 @@
 import WebKit
 import SafariServices
 
-internal class BrowserViewController: UIViewController, WKUIDelegate {
+internal class BrowserViewController: UIViewController {
     
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
@@ -19,7 +19,6 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     override func loadView() {
         super.loadView()
         browserView = WKWebView(frame: .zero)
-        browserView.uiDelegate = self
         browserView.navigationDelegate = self
     }
     
@@ -91,6 +90,7 @@ internal class BrowserViewController: UIViewController, WKUIDelegate {
     
     private func changeAlpha(to newAlphaLevel: Double, animateWithDuration: TimeInterval = 0.3) {
         UIView.animate(withDuration: animateWithDuration) {
+            self.navigationController?.view.alpha = CGFloat(newAlphaLevel)
             self.view.alpha = CGFloat(newAlphaLevel)
             //print("[DEBUG] Alpha:\(self.view.alpha).")
         }
@@ -103,20 +103,18 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        print(url.absoluteString)
         
-        guard url.absoluteString.starts(with: socialMedium.rawValue) else {
-            tryPresentSafariModalForNonSocialMediumURL(for: url)
+        guard isCurrentSocial(url) else {
+            presentSafariVCForNonSocialURL(for: url)
             decisionHandler(.cancel)
             return
         }
-        print("Swapped to social medium \(socialMedium.rawValue)")
-        switchSocialMedium = false
+        print("Swapped to \(socialMedium.title)")
         decisionHandler(.allow)
     }
     
-    private func tryPresentSafariModalForNonSocialMediumURL(for url: URL) {
-        guard isValidURL(url) && !isBadURL(url) else {
+    private func presentSafariVCForNonSocialURL(for url: URL) {
+        guard url.isValidURL() && !url.isBadURL() else {
             return
         }
         
@@ -125,58 +123,40 @@ extension BrowserViewController: WKNavigationDelegate {
         self.present(safariVC, animated: true)
     }
     
-    private func isValidURL(_ url: URL) -> Bool {
-        let startsWithHTTP = url.absoluteString.starts(with: "http://")
-        let startsWithHTTPS = url.absoluteString.starts(with: "https://")
-        return startsWithHTTP || startsWithHTTPS
-    }
-    
-    private func isBadURL(_ url: URL) -> Bool {
-        let badURLs: [String] = [ "radar.cedexis.com", "https://www.redditmedia.com/gtm/jail?id", "accounts.google.com" ]
-        for badURL in badURLs {
-            if url.absoluteString.contains(badURL) {
-                return true
-            }
-        }
-        return false
+    private func isCurrentSocial(_ url: URL) -> Bool {
+        return url.absoluteString.starts(with: socialMedium.rawValue)
     }
 }
 
 extension BrowserViewController: UIPopoverPresentationControllerDelegate, SocialPopoverControllerDelegate {
-    func socialPopover(controller: SocialPopoverController, didSelectItem socialMedium: SocialMedium) {
+    func socialPopover(controller: SocialPopoverController, didSelect socialMedium: SocialMedium) {
         self.socialMedium = socialMedium
-        self.switchSocialMedium = true
         
         DispatchQueue.main.async {
             self.browserView.load(socialMedium.urlRequest)
+            self.navigationItem.rightBarButtonItem?.title = socialMedium.title
         }
     }
     
     private func setupSocialSelector() {
-        let socialMediumSelect = UIBarButtonItem(title: "Change", style: .plain, target: self, action: #selector(showMenu))
-        navigationItem.rightBarButtonItems = [socialMediumSelect]
+        let socialMediumSelect = UIBarButtonItem(title: socialMedium.title, style: .plain, target: self, action: #selector(showMenu))
+        navigationItem.rightBarButtonItem = socialMediumSelect
     }
     
     @objc private func showMenu(sender: UIBarButtonItem) {
-        // configure the presentation view controller
-        let popoverController = SocialPopoverController()
-        popoverController.delegate = self
+
+        let popoverController = SocialPopoverController(for: self)
         popoverController.modalPresentationStyle = .popover
         let popoverConfig = popoverController.popoverPresentationController
         
         popoverConfig?.delegate = self
-        popoverConfig?.permittedArrowDirections = .up
         popoverConfig?.barButtonItem = sender
         
-        present(popoverController, animated: true, completion: nil)
+        present(popoverController, animated: true)
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
-    }
-    
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-     
     }
     
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {

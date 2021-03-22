@@ -9,37 +9,45 @@ import Foundation
 import UIKit
 
 protocol SocialPopoverControllerDelegate: class {
-    func socialPopover(controller: SocialPopoverController, didSelectItem socialMedium: SocialMedium)
+    func socialPopover(controller: SocialPopoverController, didSelect socialMedium: SocialMedium)
 }
 
 class SocialPopoverController: UIViewController {
     
     static let reuseID = "SocialSelectCell"
     
-    var tableView: UITableView?
-    var delegate:SocialPopoverControllerDelegate?
+    private(set) var tableView: UITableView?
+    private(set) var delegate: SocialPopoverControllerDelegate?
     
-    init() {
+    init(for delegate: SocialPopoverControllerDelegate) {
         super.init(nibName: nil, bundle: nil)
-        setupTableView()
+        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTableView()
+        configureController()
     }
-     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    
+    private func configureController() {
+        popoverPresentationController?.permittedArrowDirections = .up
     }
     
     private func setupTableView() {
-        tableView = UITableView(frame: view.frame)
+        tableView = PopoverTableView(frame: view.frame, isScrollable: false, rowHeight: 44)
+        
         if let tableView = tableView {
             view.addSubview(tableView)
             tableView.delegate = self
             tableView.dataSource = self
+        }
+                
+        if let rowHeight = tableView?.rowHeight {
+            let popOverHeight = SocialMedium.allCases.count * Int(rowHeight)
+            preferredContentSize = CGSize(width: 150, height: popOverHeight)
         }
     }
 }
@@ -51,14 +59,14 @@ extension SocialPopoverController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = dequeCell()
-        cell.textLabel?.text = SocialMedium.allCases[indexPath.row].rawValue
+        cell.textLabel?.text = SocialMedium.allCases[indexPath.row].title
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedSocial = SocialMedium.allCases[indexPath.row]
-        self.delegate?.socialPopover(controller: self, didSelectItem: selectedSocial)
-        self.dismiss(animated: true, completion: nil)
+        let social = SocialMedium.allCases[indexPath.row]
+        self.delegate?.socialPopover(controller: self, didSelect: social)
+        self.dismissThisView()
     }
     
     // MARK: - Helpers

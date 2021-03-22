@@ -11,4 +11,8 @@ public extension UIViewController {
     func activateNSLayoutConstraints(_ constraints: NSLayoutConstraint...) {
         NSLayoutConstraint.activate(constraints)
     }
+    
+    func dismissThisView(_ animated: Bool = true) {
+        self.dismiss(animated: animated, completion: nil)
+    }
 }
