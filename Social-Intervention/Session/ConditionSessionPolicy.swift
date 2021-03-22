@@ -13,7 +13,7 @@ internal final class ConditionSessionPolicy {
     static var unmetThresholdFactor: Double { return 0.3 }
     
     static func toAlphaLevel(_ progress: Double) -> Double {
-        print("Progress: \(progress)")
+        //print("Progress: \(progress)")
         let alphaLevel = applyFactorIfProgressDoesntMeetThreshold(to: progress)
         return alphaLevel
     }

@@ -86,8 +86,8 @@ extension AttitudeConditionService {
     public var periodCompletedRatio: Double {
         guard let targetAttitude = targetAttitude else { return 0.0 }
         let progresses = records.toProgresses(target: targetAttitude)
-        print("Records above threshold (\(SessionPolicy.intervalCompleteThreshold)): \(progresses.recordsAboveThreshold) of \(progresses.count)")
-        print("Average progress: \(progresses.average)")
+        //print("Records above threshold (\(SessionPolicy.intervalCompleteThreshold)): \(progresses.recordsAboveThreshold) of \(progresses.count)")
+        //print("Average progress: \(progresses.average)")
         let periodCompletedRatio = Double(progresses.recordsAboveThreshold) / Double(progresses.count)
         return periodCompletedRatio
     }
@@ -112,7 +112,7 @@ internal extension Attitude {
         let pitchRatio = abs(self.pitch-target.pitch)/maxDiff
         let yawRatio = abs(self.yaw-target.yaw)/maxDiff
         let rollRatio = abs(self.roll-target.roll)/maxDiff
-        print("Yaw, Pitch, Roll Ratios: \(yawRatio), \(rollRatio), \(pitchRatio)")
+        //print("Yaw, Pitch, Roll Ratios: \(yawRatio), \(rollRatio), \(pitchRatio)")
         
         let progress = 1.0 - [pitchRatio, yawRatio, rollRatio].average
         return progress.truncate(places: 2)
