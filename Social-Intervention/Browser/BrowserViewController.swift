@@ -34,6 +34,8 @@ internal class BrowserViewController: UIViewController {
         browserView.load(socialMedium.urlRequest)
         layoutUI()
         setupSocialSelector()
+        setupRightBarButtonItems()
+        setupBrowserNavigationButtons()
         sessionManager.start(loggingTo: nil, completion: onEachSessionUpdate)
     }
     
@@ -58,14 +60,12 @@ internal class BrowserViewController: UIViewController {
     func layoutUI() {
         activateNSLayoutConstraints(
             browserView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            browserView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+            browserView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -(BrowserToolbar.toolbarHeight + 34)),
             browserView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             browserView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         )
-        view.backgroundColor = .white
                 
         browserView.translatesAutoresizingMaskIntoConstraints = false
-        
     }
     
     func setViewAlpha(to level: Double, animateWithDuration: TimeInterval = 0.3) {
@@ -73,6 +73,10 @@ internal class BrowserViewController: UIViewController {
             guard let self = self else { return }
             self.changeAlpha(to: level)
         }
+    }
+    
+    @objc private func endSession() {
+        sessionManager.stop {}
     }
     
     private func onPossibleSessionCheckError(error: SessionCheckError?) {
@@ -134,13 +138,36 @@ extension BrowserViewController: UIPopoverPresentationControllerDelegate, Social
         
         DispatchQueue.main.async {
             self.browserView.load(socialMedium.urlRequest)
-            self.navigationItem.rightBarButtonItem?.title = socialMedium.title
+            self.navigationItem.leftBarButtonItem?.title = socialMedium.title
         }
     }
     
     private func setupSocialSelector() {
-        let socialMediumSelect = UIBarButtonItem(title: socialMedium.title, style: .plain, target: self, action: #selector(showMenu))
-        navigationItem.rightBarButtonItem = socialMediumSelect
+        let socialSelectButton = UIBarButtonItem(title: socialMedium.title, style: .plain, target: self, action: #selector(showMenu))
+        navigationItem.leftBarButtonItem = socialSelectButton
+    }
+    
+    private func setupRightBarButtonItems() {
+        let endSessionButton = UIBarButtonItem(title: "End Session", style: .plain, target: self, action: #selector(endSession))
+        navigationItem.rightBarButtonItems = [endSessionButton]
+    }
+    
+    private func setupBrowserNavigationButtons() {
+        let backImage = UIImage(systemName: "chevron.backward")
+        let forwardImage = UIImage(systemName: "chevron.forward")
+        let back = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(goBack))
+        let forward = UIBarButtonItem(image: forwardImage, style: .plain, target: self, action: #selector(goForward))
+        
+        toolbarItems = [back, forward]
+        navigationController?.setToolbarHidden(false, animated: false)
+    }
+    
+    @objc private func goBack(_ sender: Any) {
+        browserView.goBack()
+    }
+    
+    @objc private func goForward(_ sender: Any) {
+        browserView.goForward()
     }
     
     @objc private func showMenu(sender: UIBarButtonItem) {

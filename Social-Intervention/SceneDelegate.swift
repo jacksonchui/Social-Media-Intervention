@@ -29,9 +29,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func createMainNavigationController() -> UINavigationController {
         let sessionManager = makeSessionManager()
-        let viewController = BrowserViewController(for: .twitter, managedBy: sessionManager)
+        let rootViewController = BrowserViewController(for: .twitter, managedBy: sessionManager)
+        let navController = UINavigationController(navigationBarClass: UINavigationBar.self, toolbarClass: BrowserToolbar.self)
+        navController.setViewControllers([rootViewController], animated: false)
         
-        return UINavigationController(rootViewController: viewController)
+        return navController
     }
     
     private func makeSessionManager() -> SessionManager {

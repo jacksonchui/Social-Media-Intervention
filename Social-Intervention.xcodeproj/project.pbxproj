@@ -52,6 +52,7 @@
 		CFD8BD3026080F6300A59BEA /* PopoverTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8BD2F26080F6300A59BEA /* PopoverTableView.swift */; };
 		CFD8BD36260814A300A59BEA /* UITableView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8BD35260814A300A59BEA /* UITableView+Ext.swift */; };
 		CFD8BD3A2608172300A59BEA /* URL+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8BD392608172300A59BEA /* URL+Ext.swift */; };
+		CFD8BD462608465300A59BEA /* BrowserToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8BD452608465300A59BEA /* BrowserToolbar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		CFD8BD2F26080F6300A59BEA /* PopoverTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverTableView.swift; sourceTree = "<group>"; };
 		CFD8BD35260814A300A59BEA /* UITableView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Ext.swift"; sourceTree = "<group>"; };
 		CFD8BD392608172300A59BEA /* URL+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Ext.swift"; sourceTree = "<group>"; };
+		CFD8BD452608465300A59BEA /* BrowserToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserToolbar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +233,7 @@
 		CF8D2B4025EC5A1C008FFBC6 /* Browser */ = {
 			isa = PBXGroup;
 			children = (
+				CFD8BD452608465300A59BEA /* BrowserToolbar.swift */,
 				CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */,
 				CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */,
 				CFD8BD292607DA7000A59BEA /* SocialPopoverController.swift */,
@@ -413,6 +416,7 @@
 				CF442A0E25EC6DE5008EB9DA /* UIViewController+Ext.swift in Sources */,
 				CF83288C25F9787D00553CC4 /* SessionManager.swift in Sources */,
 				CF83287425F965D600553CC4 /* CMAttitudeMotionClient.swift in Sources */,
+				CFD8BD462608465300A59BEA /* BrowserToolbar.swift in Sources */,
 				CFBF4DD425FFF82F00BE040D /* ConditionSessionManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
