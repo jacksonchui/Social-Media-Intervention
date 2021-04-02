@@ -50,7 +50,9 @@ class FirestoreAnalyticsClientTests: XCTestCase {
     // MARK: Helpers
     
     func makeSUT() -> FirestoreAnalyticsClient {
-        FirestoreAnalyticsClient()
+        let sut = FirestoreAnalyticsClient()
+        sut.enableEmulationForTests()
+        return sut
     }
     
     func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> SessionLog {
