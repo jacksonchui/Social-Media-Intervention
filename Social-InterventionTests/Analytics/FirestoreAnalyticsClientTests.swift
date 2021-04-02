@@ -10,31 +10,35 @@ import XCTest
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-class FirestoreAnalyticsClient {
-    let store: Firestore
-    
-    init() {
-        store = Firestore.firestore()
-    }
-    
-    func record(toServer sessionLog: SessionLog) {
-        
-    }
-}
-
 class FirestoreAnalyticsClientTests: XCTestCase {
-    func test_sut_createsStore() {
-        let sut = FirestoreAnalyticsClient()
-        XCTAssertNotNil(sut.store, "Should create a Firestore instance")
+    func test_save_analyticsDoesNotFailIfNoError() {
+        let sessionAnalytics = uniqueSessionLog(endTime: Date.init).model
+        let sut = makeSUT()
+        
+        let exp = expectation(description: "save completion")
+        
+        sut.save(sessionAnalytics) { error in
+            if let error = error {
+                XCTFail("Expected no error on save session but got \(error.localizedDescription)")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
-    func test_saveSession_createsNewSessionLogsOnFirstSave() {
-        let sessionLog = SessionLog(startTime: Date() - 100, endTime: Date(), periodLogs: [])
+    // MARK: Helpers
+    
+    func makeSUT() -> FirestoreAnalyticsClient {
         let sut = FirestoreAnalyticsClient()
-        
-        sut.record(toServer: sessionLog)
-        
-        // want to make sure that I can get data from the server as expected.
+        sut.enableEmulationForTests()
+        return sut
+    }
+    
+    func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> (log: SessionLog, model: SessionModel) {
+        let startTime = endTime() - duration
+        let sessionLog = SessionLog(startTime: startTime, endTime: endTime(), periodLogs: periodLogs)
+        return (sessionLog, sessionLog.analytics)
     }
 }
 
@@ -44,6 +48,6 @@ private extension FirestoreAnalyticsClient {
         settings.host = "localhost:8080"
         settings.isPersistenceEnabled = false
         settings.isSSLEnabled = false
-        Firestore.firestore().settings = settings
+        store.settings = settings
     }
 }

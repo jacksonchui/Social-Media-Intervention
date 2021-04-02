@@ -7,12 +7,12 @@
 
 import Foundation
 
-public struct PeriodLog: Equatable {
+public struct PeriodLog: Equatable, Codable {
     var progressPerInterval: [Double]
     var duration: TimeInterval
 }
 
-public struct SessionLog: Equatable {
+public struct SessionLog: Equatable, Codable {
     var startTime: Date
     var endTime: Date?
     var periodLogs: [PeriodLog]

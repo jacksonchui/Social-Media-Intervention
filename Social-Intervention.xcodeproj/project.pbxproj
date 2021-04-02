@@ -42,9 +42,10 @@
 		CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4DF725FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */; };
 		CFBF4E1F260046BF00BE040D /* Double+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFBF4E1E260046BF00BE040D /* Double+Ext.swift */; };
+		CFC8E7B72616B09700F3F750 /* FirestoreAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC8E7B62616B09700F3F750 /* FirestoreAnalyticsClient.swift */; };
+		CFC8E7BC2616B15100F3F750 /* FirestoreAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC8E7B62616B09700F3F750 /* FirestoreAnalyticsClient.swift */; };
 		CFCCCAF225EC5A84002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCAF625EC5AAF002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
-		CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */; };
 		CFCCCB0025EC5C75002F7289 /* SocialMedium.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */; };
 		CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */; };
 		CFD437DF25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD437DE25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift */; };
@@ -94,6 +95,7 @@
 		CFBF4DD325FFF82F00BE040D /* ConditionSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionManager.swift; sourceTree = "<group>"; };
 		CFBF4DF525FFFE2700BE040D /* ConditionSessionPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionSessionPolicy.swift; sourceTree = "<group>"; };
 		CFBF4E1E260046BF00BE040D /* Double+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Ext.swift"; sourceTree = "<group>"; };
+		CFC8E7B62616B09700F3F750 /* FirestoreAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreAnalyticsClient.swift; sourceTree = "<group>"; };
 		CFCCCAF125EC5A84002F7289 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		CFCCCAF525EC5AAF002F7289 /* SocialMedium.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialMedium.swift; sourceTree = "<group>"; };
 		CFD437D025F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttitudeConditionTestHelpers.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 		CF8D2B0425EC383B008FFBC6 /* Social-Intervention */ = {
 			isa = PBXGroup;
 			children = (
+				CFC8E7B52616B08B00F3F750 /* Analytics */,
 				CFBF4DF025FFFDB700BE040D /* Session */,
 				CF442A1825EC8B26008EB9DA /* Conditions */,
 				CF442A0625EC6BCF008EB9DA /* Extensions */,
@@ -278,6 +281,14 @@
 				CF83288525F971E600553CC4 /* AttitudeMotionClientSpy.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		CFC8E7B52616B08B00F3F750 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				CFC8E7B62616B09700F3F750 /* FirestoreAnalyticsClient.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 		CFD371C725F74A840097B97F /* Protocols */ = {
@@ -402,6 +413,7 @@
 				CF92AF1425F5B7C80044E588 /* ConditionService.swift in Sources */,
 				CFBF4DF625FFFE2700BE040D /* ConditionSessionPolicy.swift in Sources */,
 				CFD8BD3A2608172300A59BEA /* URL+Ext.swift in Sources */,
+				CFC8E7B72616B09700F3F750 /* FirestoreAnalyticsClient.swift in Sources */,
 				CFD8BD36260814A300A59BEA /* UITableView+Ext.swift in Sources */,
 				CFD8BD2A2607DA7000A59BEA /* SocialPopoverController.swift in Sources */,
 				CF92AF1025F5B73B0044E588 /* AttitudeMotionClient.swift in Sources */,
@@ -427,6 +439,7 @@
 			files = (
 				CF83287F25F9714F00553CC4 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				CF7407A825F98F3300FCBC5C /* SessionPolicy.swift in Sources */,
+				CFC8E7BC2616B15100F3F750 /* FirestoreAnalyticsClient.swift in Sources */,
 				CF00A8982603DF1E00460255 /* FirestoreAnalyticsClientTests.swift in Sources */,
 				CFD437D125F98D6A00EBD905 /* AttitudeConditionTestHelpers.swift in Sources */,
 				CF92AF1E25F5B9FE0044E588 /* ConditionService.swift in Sources */,
@@ -442,7 +455,6 @@
 				CF83289525F97B0000553CC4 /* SessionManager.swift in Sources */,
 				CFD437DF25F98E0A00EBD905 /* ConditionSessionManagerTestsHelpers.swift in Sources */,
 				CF25B47B25ED7EE300571C0D /* UIView+Ext.swift in Sources */,
-				CFCCCAFD25EC5C45002F7289 /* BrowserViewController.swift in Sources */,
 				CF25B47325ED6F4600571C0D /* AttitudeConditionPeriodUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

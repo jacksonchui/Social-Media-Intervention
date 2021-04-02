@@ -126,3 +126,12 @@ Given the session data is sent to the analytics repository
   - No Session Log creates a new Session Log and passes it to
   - Valid Session Log Entry updates `Session Log Array` and `lastUpdated` fields.
   - Invalid Session Log Entry returns Error
+  
+### Save Session Log Use Case
+
+#### Data
+- Session Log
+
+#### Primary Course
+1. Session Log is "reported" to system (analytics controller)
+2. Analytics

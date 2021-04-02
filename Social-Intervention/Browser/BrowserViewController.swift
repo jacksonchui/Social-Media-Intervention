@@ -13,6 +13,7 @@ internal class BrowserViewController: UIViewController {
     private(set) var socialMedium: SocialMedium!
     private(set) var browserView: WKWebView!
     private(set) var sessionManager: SessionManager!
+    private(set) var analyticsClient: FirestoreAnalyticsClient!
     private var presentedSafariView: Bool = false
     private var switchSocialMedium: Bool = false
     
@@ -47,8 +48,9 @@ internal class BrowserViewController: UIViewController {
         presentedSafariView = false
     }
     
-    init(for socialMedium: SocialMedium = .twitter, managedBy sessionManager: SessionManager) {
+    init(for socialMedium: SocialMedium = .twitter, managedBy sessionManager: SessionManager, save analyticsClient: FirestoreAnalyticsClient) {
         super.init(nibName: nil, bundle: nil)
+        self.analyticsClient = analyticsClient
         self.socialMedium = socialMedium
         self.sessionManager = sessionManager
     }
