@@ -13,12 +13,14 @@ public final class ConditionSessionManager: SessionManager {
     private(set) var sessionLog: SessionLog?
     private(set) var progressPerInterval = [TimeInterval]()
     private(set) var periodIntervals: Int
+    private(set) var currentAlphaLevel: Double
     
     private var nextPeriodDurationCheckpt: TimeInterval { SessionPolicy.periodDuration * Double(self.periodIntervals) }
     
     public init(using service: ConditionService) {
         self.service = service
         self.periodIntervals = 1
+        self.currentAlphaLevel = 1.0
     }
     
     public func check(completion: @escaping CheckCompletion) {
@@ -31,8 +33,8 @@ public final class ConditionSessionManager: SessionManager {
         service.start { [unowned self] result in
             switch result {
                 case let .success(progressUpdate):
-                    let alphaLevel = ConditionSessionPolicy.toAlphaLevel(progressUpdate)
-                    completion(.success(alpha: alphaLevel))
+                    currentAlphaLevel = ConditionSessionPolicy.toAlphaLevel(progressUpdate, from: currentAlphaLevel)
+                    completion(.success(alpha: currentAlphaLevel))
                 default:
                     break
             }
