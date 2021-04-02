@@ -10,19 +10,37 @@ import XCTest
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+internal extension SessionLog {
+    var analytics: SessionModel {
+        let duration = endTime?.timeIntervalSince(startTime) ?? 0
+        return SessionModel(date: endTime, duration: duration, periods: periodLogs)
+    }
+}
+
+
+public struct SessionModel: Codable {
+    var date: Date?
+    var duration: TimeInterval
+    var periods: [PeriodLog]
+}
+
 typealias AnalyticsSaveError = Error?
 
 class FirestoreAnalyticsClient {
     private let store: Firestore
-    private let path: String = "sessions"
+    
+    private var path: String {
+        let deviceID = UIDevice.current.identifierForVendor?.uuidString ?? ""
+        return "sessions_\(deviceID)"
+    }
     
     init() {
         store = Firestore.firestore()
     }
     
-    func save(_ sessionLog: SessionLog, completion: (AnalyticsSaveError) -> Void) {
+    func save(_ session: SessionModel, completion: (AnalyticsSaveError) -> Void) {
         do {
-            _ = try store.collection(path).addDocument(from: sessionLog)
+            _ = try store.collection(path).addDocument(from: session)
             completion(nil)
         } catch {
             completion(error)
@@ -31,13 +49,13 @@ class FirestoreAnalyticsClient {
 }
 
 class FirestoreAnalyticsClientTests: XCTestCase {
-    func test_save_sessionLog_doesNotFailIfNoError() {
-        let sessionLog = uniqueSessionLog(endTime: Date.init)
+    func test_save_analyticsDoesNotFailIfNoError() {
+        let sessionAnalytics = uniqueSessionLog(endTime: Date.init).model
         let sut = makeSUT()
         
         let exp = expectation(description: "save completion")
         
-        sut.save(sessionLog) { error in
+        sut.save(sessionAnalytics) { error in
             if let error = error {
                 XCTFail("Expected no error on save session but got \(error.localizedDescription)")
             }
@@ -55,10 +73,10 @@ class FirestoreAnalyticsClientTests: XCTestCase {
         return sut
     }
     
-    func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> SessionLog {
+    func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> (log: SessionLog, model: SessionModel) {
         let startTime = endTime() - duration
         let sessionLog = SessionLog(startTime: startTime, endTime: endTime(), periodLogs: periodLogs)
-        return sessionLog
+        return (sessionLog, sessionLog.analytics)
     }
 }
 
@@ -68,6 +86,6 @@ private extension FirestoreAnalyticsClient {
         settings.host = "localhost:8080"
         settings.isPersistenceEnabled = false
         settings.isSSLEnabled = false
-        Firestore.firestore().settings = settings
+        store.settings = settings
     }
 }
