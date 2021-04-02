@@ -10,31 +10,53 @@ import XCTest
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
+typealias AnalyticsSaveError = Error?
+
 class FirestoreAnalyticsClient {
-    let store: Firestore
+    private let store: Firestore
+    private let path: String = "sessions"
     
     init() {
         store = Firestore.firestore()
     }
     
-    func record(toServer sessionLog: SessionLog) {
-        
+    func save(_ sessionLog: SessionLog, completion: (AnalyticsSaveError) -> Void) {
+        do {
+            _ = try store.collection(path).addDocument(from: sessionLog)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 }
 
 class FirestoreAnalyticsClientTests: XCTestCase {
-    func test_sut_createsStore() {
-        let sut = FirestoreAnalyticsClient()
-        XCTAssertNotNil(sut.store, "Should create a Firestore instance")
+    func test_save_sessionLog_doesNotFailIfNoError() {
+        let sessionLog = uniqueSessionLog(endTime: Date.init)
+        let sut = makeSUT()
+        
+        let exp = expectation(description: "save completion")
+        
+        sut.save(sessionLog) { error in
+            if let error = error {
+                XCTFail("Expected no error on save session but got \(error.localizedDescription)")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
-    func test_saveSession_createsNewSessionLogsOnFirstSave() {
-        let sessionLog = SessionLog(startTime: Date() - 100, endTime: Date(), periodLogs: [])
-        let sut = FirestoreAnalyticsClient()
-        
-        sut.record(toServer: sessionLog)
-        
-        // want to make sure that I can get data from the server as expected.
+    // MARK: Helpers
+    
+    func makeSUT() -> FirestoreAnalyticsClient {
+        FirestoreAnalyticsClient()
+    }
+    
+    func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> SessionLog {
+        let startTime = endTime() - duration
+        let sessionLog = SessionLog(startTime: startTime, endTime: endTime(), periodLogs: periodLogs)
+        return sessionLog
     }
 }
 
