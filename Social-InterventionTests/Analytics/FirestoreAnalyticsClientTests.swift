@@ -10,44 +10,6 @@ import XCTest
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-internal extension SessionLog {
-    var analytics: SessionModel {
-        let duration = endTime?.timeIntervalSince(startTime) ?? 0
-        return SessionModel(date: endTime, duration: duration, periods: periodLogs)
-    }
-}
-
-
-public struct SessionModel: Codable {
-    var date: Date?
-    var duration: TimeInterval
-    var periods: [PeriodLog]
-}
-
-typealias AnalyticsSaveError = Error?
-
-class FirestoreAnalyticsClient {
-    private let store: Firestore
-    
-    private var path: String {
-        let deviceID = UIDevice.current.identifierForVendor?.uuidString ?? ""
-        return "sessions_\(deviceID)"
-    }
-    
-    init() {
-        store = Firestore.firestore()
-    }
-    
-    func save(_ session: SessionModel, completion: (AnalyticsSaveError) -> Void) {
-        do {
-            _ = try store.collection(path).addDocument(from: session)
-            completion(nil)
-        } catch {
-            completion(error)
-        }
-    }
-}
-
 class FirestoreAnalyticsClientTests: XCTestCase {
     func test_save_analyticsDoesNotFailIfNoError() {
         let sessionAnalytics = uniqueSessionLog(endTime: Date.init).model

@@ -29,7 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     private func createMainNavigationController() -> UINavigationController {
         let sessionManager = makeSessionManager()
-        let rootViewController = BrowserViewController(for: .twitter, managedBy: sessionManager)
+        let analyticsClient = FirestoreAnalyticsClient()
+        let rootViewController = BrowserViewController(for: .twitter, managedBy: sessionManager, save: analyticsClient)
         let navController = UINavigationController(navigationBarClass: UINavigationBar.self, toolbarClass: BrowserToolbar.self)
         navController.setViewControllers([rootViewController], animated: false)
         
