@@ -10,29 +10,34 @@ import Foundation
 public final class ConditionSessionManager: SessionManager {
     
     private(set) var service: ConditionService
-    private(set) var sessionLog: SessionLog?
+    private(set) var sessionLog: SessionLog
     private(set) var progressPerInterval = [TimeInterval]()
     private(set) var periodIntervals: Int
+    private(set) var currProgressLevel: Double
     
     private var nextPeriodDurationCheckpt: TimeInterval { SessionPolicy.periodDuration * Double(self.periodIntervals) }
     
     public init(using service: ConditionService) {
         self.service = service
         self.periodIntervals = 1
+        self.currProgressLevel = 0
+        self.sessionLog = SessionLog(startTime: Date(), endTime: Date(), periodLogs: [], socialMediums: [])
     }
     
     public func check(completion: @escaping CheckCompletion) {
         service.check(completion: completion)
     }
     
-    public func start(loggingTo sessionLog: SessionLog?, completion: @escaping StartCompletion) {
-        self.sessionLog = sessionLog ?? setUpSessionLog()
+    public func start(completion: @escaping StartCompletion) {
+        sessionLog = setUpSessionLog()
         
         service.start { [unowned self] result in
             switch result {
                 case let .success(progressUpdate):
-                    let alphaLevel = ConditionSessionPolicy.toAlphaLevel(progressUpdate)
-                    completion(.success(alpha: alphaLevel))
+                    let newAlphaLevel = ConditionSessionPolicy.toAlphaLevel(progressUpdate, from: currProgressLevel)
+                    currProgressLevel = progressUpdate
+                    completion(.success(alpha: newAlphaLevel))
+                    print("[LOG] Current Period Progress in Session: \(progressUpdate * 100)%")
                 default:
                     break
             }
@@ -44,19 +49,22 @@ public final class ConditionSessionManager: SessionManager {
     }
     
     public func stop(completion: @escaping StopCompletion) {
-        service.stop { result in
+        service.stop { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
-                case .stopped:
-                    self.onStopRecordLastRatioAndReset()
+                case let .stopped(lastRatio):
+                    self.onStop(record: lastRatio)
+                    self.resetServiceAndManager()
+                    completion(.success(log: self.sessionLog))
                 case .alreadyStopped:
-                    break
+                    completion(.alreadyStopped)
             }
-            completion()
         }
     }
     
     private func setUpSessionLog() -> SessionLog {
-        return SessionLog(startTime: Date(), endTime: nil, periodLogs: [])
+        return SessionLog(startTime: Date(), endTime: Date(), periodLogs: [], socialMediums: [])
     }
     
     private func onPeriodDurationCheckpoint() {
@@ -64,12 +72,16 @@ public final class ConditionSessionManager: SessionManager {
         recordCompletedRatioAndResetIfCompletedPeriod()
     }
     
-    private func onStopRecordLastRatioAndReset() {
-        recordPeriodCompletedRatio()
+    private func onStop(record ratio: Double) {
+        sessionLog.endTime = Date()
+        progressPerInterval.append(ratio)
         let newPeriodLog = PeriodLog(
                         progressPerInterval: progressPerInterval,
                         duration: service.currPeriodDuration)
-        sessionLog?.periodLogs.append(newPeriodLog)
+        sessionLog.periodLogs.append(newPeriodLog)
+    }
+    
+    private func resetServiceAndManager() {
         service.reset()
         resetPeriod()
     }
@@ -80,9 +92,8 @@ public final class ConditionSessionManager: SessionManager {
             let newPeriodLog = PeriodLog(
                             progressPerInterval: progressPerInterval,
                             duration: service.currPeriodDuration)
-            sessionLog?.periodLogs.append(newPeriodLog)
-            service.reset()
-            resetPeriod()
+            sessionLog.periodLogs.append(newPeriodLog)
+            resetServiceAndManager()
         } else {
             periodIntervals += 1
             service.continuePeriod()

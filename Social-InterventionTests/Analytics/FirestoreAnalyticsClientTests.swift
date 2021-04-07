@@ -37,8 +37,8 @@ class FirestoreAnalyticsClientTests: XCTestCase {
     
     func uniqueSessionLog(duration: TimeInterval = 0, periodLogs: [PeriodLog] = [], endTime: () -> Date) -> (log: SessionLog, model: SessionModel) {
         let startTime = endTime() - duration
-        let sessionLog = SessionLog(startTime: startTime, endTime: endTime(), periodLogs: periodLogs)
-        return (sessionLog, sessionLog.analytics)
+        let sessionLog = SessionLog(startTime: startTime, endTime: endTime(), periodLogs: periodLogs, socialMediums: [])
+        return (sessionLog, sessionLog.model)
     }
 }
 

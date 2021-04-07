@@ -12,3 +12,9 @@ internal extension Double {
         return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
     }
 }
+
+public extension TimeInterval {
+    var toSeconds: Int {
+        return Int(self.truncate(places: 0))
+    }
+}

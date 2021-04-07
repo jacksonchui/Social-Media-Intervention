@@ -11,17 +11,27 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import UIKit
 
-internal extension SessionLog {
-    var analytics: SessionModel {
-        let duration = endTime?.timeIntervalSince(startTime) ?? 0
-        return SessionModel(date: endTime, duration: duration, periods: periodLogs)
+public typealias Seconds = Int
+
+public struct SessionModel: Codable {
+    var date: Date
+    var durationInSeconds: Seconds
+    var periods: [PeriodLog]
+    var socialMediaVisited: [String]
+    
+    var isValid: Bool {
+        return self.durationInSeconds > 0 &&
+                !self.socialMediaVisited.isEmpty &&
+                !self.periods.isEmpty
     }
 }
 
-public struct SessionModel: Codable {
-    var date: Date?
-    var duration: TimeInterval
-    var periods: [PeriodLog]
+internal extension SessionLog {
+    var model: SessionModel {
+        let duration = endTime.timeIntervalSince(startTime).toSeconds
+        return SessionModel(date: endTime, durationInSeconds: duration, periods: periodLogs, socialMediaVisited: [])
+    }
+    
 }
 
 public typealias AnalyticsSaveError = Error?
@@ -39,13 +49,24 @@ public class FirestoreAnalyticsClient {
     }
     
     public func save(_ session: SessionModel, completion: (AnalyticsSaveError) -> Void) {
+        guard session.isValid else {
+                print("[LOG] This is an invalid/empty Session analytics model. It will not be saved")
+                completion(nil)
+                return
+        }
+        
         do {
-            print("Logging session model to \(store.settings.host) at document: \(path)")
+            print("[LOG] Saved session via Firestore to \(store.settings.host) in document: \(path)")
+            print("[LOG] - Date: \(session.date.description)")
+            print("[LOG] - Social Media Visited: \(session.socialMediaVisited)")
+            print("[LOG] - Duration (sec): \(session.durationInSeconds)")
+            print("[LOG] - Periods Completed: \(session.periods.count)")
             _ = try store.collection(path).addDocument(from: session)
             completion(nil)
         } catch {
-            print("Unable to save session: \(error.localizedDescription)")
+            print("[ERROR] Unable to save session: \(error.localizedDescription)")
             completion(error)
         }
     }
+    
 }

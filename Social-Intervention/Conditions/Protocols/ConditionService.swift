@@ -14,7 +14,7 @@ public enum PeriodStartResult {
 }
 
 public enum PeriodStopResult {
-    case stopped
+    case stopped(lastRatio: Double)
     case alreadyStopped
 }
 

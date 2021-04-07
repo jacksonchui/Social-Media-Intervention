@@ -116,7 +116,9 @@ class ConditionSessionManagerTests: XCTestCase {
         let (sut, service) = makeSUT()
         let updatesBeforeStop = updatesPerPeriodInterval - 1
         let (expectedUpdates, duration, totalUpdates) = use(updatesBeforeStop, intervals: 1)
-        let expectedPeriodLog = PeriodLog(progressPerInterval: [belowThreshold()], duration: duration)
+        let lastRatio = belowThreshold()
+        let expectedPeriodLog = PeriodLog(progressPerInterval: [lastRatio], duration: duration)
+        
         
         start(sut, toCompleteWith: nil, for: totalUpdates) {
             expectedPeriodLog.progressPerInterval.forEach { progress in
@@ -125,7 +127,7 @@ class ConditionSessionManagerTests: XCTestCase {
             }
         }
         
-        stop(sut) { service.completeStopSuccessfully() }
+        stop(sut) { service.completeStopSuccessfully(with: lastRatio) }
         
         expectEqual(for: sut, with: service, intervals: 1, time: 0.0, logs: [expectedPeriodLog], "Intervals and time should reset")
     }
@@ -141,7 +143,7 @@ class ConditionSessionManagerTests: XCTestCase {
     
     func stop(_ sut: ConditionSessionManager, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for completion")
-        sut.stop {
+        sut.stop {_ in
             exp.fulfill()
         }
         action()
@@ -164,7 +166,7 @@ class ConditionSessionManagerTests: XCTestCase {
         let exp = expectation(description: "Wait for completion")
         exp.expectedFulfillmentCount = expectedUpdatesCount
         
-        sut.start(loggingTo: nil) { result in
+        sut.start { result in
             switch result {
                 case let .success(alpha):
                     XCTAssertGreaterThanOrEqual(alpha, 0.0, file: file, line: line)
@@ -183,6 +185,6 @@ class ConditionSessionManagerTests: XCTestCase {
     func expectEqual(for sut: ConditionSessionManager, with service: ConditionService, intervals expectedIntervals: Int, time expectedCurrPeriodTime: Double, logs expectedPeriodLogs: [PeriodLog], _ message: String = "", file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertEqual(sut.periodIntervals, expectedIntervals, file: file, line: line)
         XCTAssertEqual(service.currPeriodDuration, expectedCurrPeriodTime, file: file, line: line)
-        XCTAssertEqual(sut.sessionLog?.periodLogs, expectedPeriodLogs, file: file, line: line)
+        XCTAssertEqual(sut.sessionLog.periodLogs, expectedPeriodLogs, file: file, line: line)
     }
 }

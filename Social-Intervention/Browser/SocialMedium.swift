@@ -23,6 +23,10 @@ public enum SocialMedium: String, CaseIterable {
     }
 }
 
+public extension Array where Element == SocialMedium {
+    var toModel: [String] { self.map { "\($0)" } }
+}
+
 extension String {
     func capitalizingFirstLetter() -> String {
         return prefix(1).uppercased() + self.dropFirst()

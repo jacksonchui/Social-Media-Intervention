@@ -10,16 +10,29 @@ import Foundation
 internal final class ConditionSessionPolicy {
     private init() {}
     
-    static var unmetThresholdFactor: Double { return 0.3 }
+    static var incompleteFactor: Double { return 0.3 }
     
-    static func toAlphaLevel(_ progress: Double) -> Double {
-        //print("Progress: \(progress)")
-        let alphaLevel = applyFactorIfProgressDoesntMeetThreshold(to: progress)
+    // tolerance factors
+    static var intervalCompleteTolerance: Double { return 0.1 }
+    static var reducedIncompleteFactor: Double { return incompleteFactor * 1.5 }
+    static var intervalCompleteThresholdWithTolerance: Double { return SessionPolicy.intervalCompleteThreshold - intervalCompleteTolerance }
+    
+    static func toAlphaLevel(_ progress: Double, from prevProgress: Double) -> Double {
+        let alphaLevel = applyIncompleteFactor(to: progress, from: prevProgress)
         return alphaLevel
     }
     
-    private static func applyFactorIfProgressDoesntMeetThreshold(to progress: Double) -> Double {
-        let alphaLevel = progress < SessionPolicy.intervalCompleteThreshold ? unmetThresholdFactor * progress : progress
-        return alphaLevel.truncate(places: 2)
+    private static func applyIncompleteFactor(to progress: Double, from prevLevel: Double) -> Double {
+        var nextAlphaLevel = progress
+        let betweenToleranceAndThreshold = prevLevel >= intervalCompleteThresholdWithTolerance && prevLevel < SessionPolicy.intervalCompleteThreshold
+        let belowThreshold = prevLevel < intervalCompleteThresholdWithTolerance
+        
+        if betweenToleranceAndThreshold {
+            nextAlphaLevel *= reducedIncompleteFactor
+        } else if belowThreshold {
+            nextAlphaLevel *= incompleteFactor
+        }
+        
+        return nextAlphaLevel.truncate(places: 2)
     }
 }
