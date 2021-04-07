@@ -14,8 +14,10 @@ internal class BrowserViewController: UIViewController {
     private(set) var browserView: WKWebView!
     private(set) var sessionManager: SessionManager!
     private(set) var analyticsClient: FirestoreAnalyticsClient!
+    
     private var presentedSafariView: Bool = false
     private var switchSocialMedium: Bool = false
+    private var socialMediaVisitedInSession: [SocialMedium] = []
     
     override func loadView() {
         super.loadView()
@@ -26,6 +28,11 @@ internal class BrowserViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         sessionManager.check(completion: onPossibleSessionCheckError)
+        
+        if socialMediaVisitedInSession.isEmpty {
+            recordNewSocialMedium()
+            sessionManager.start(completion: onEachSessionUpdate)
+        }
     }
     
     override func viewDidLoad() {
@@ -33,18 +40,21 @@ internal class BrowserViewController: UIViewController {
         view.addSubviews(browserView)
         
         browserView.load(socialMedium.urlRequest)
+        
         layoutUI()
         setupSocialSelector()
-        setupRightBarButtonItems()
+        // setupRightBarButtonItems()
         setupBrowserNavigationButtons()
-        sessionManager.start(loggingTo: nil, completion: onEachSessionUpdate)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
         if !presentedSafariView {
-            sessionManager.stop { }
+            stopSessionAndSaveToAnalytics()
+            socialMediaVisitedInSession = []
         }
+        
         presentedSafariView = false
     }
     
@@ -78,7 +88,7 @@ internal class BrowserViewController: UIViewController {
     }
     
     @objc private func endSession() {
-        sessionManager.stop {}
+       stopSessionAndSaveToAnalytics()
     }
     
     private func onPossibleSessionCheckError(error: SessionCheckError?) {
@@ -90,15 +100,35 @@ internal class BrowserViewController: UIViewController {
             case let .success(alphaLevel):
                 setViewAlpha(to: alphaLevel)
             default:
-                print("Will deal with error as an alert")
+                print("[Unexpected] Do nothing")
         }
     }
     
-    private func changeAlpha(to newAlphaLevel: Double, animateWithDuration: TimeInterval = 0.3) {
+    private func stopSessionAndSaveToAnalytics() {
+        let socialMediaModel = socialMediaVisitedInSession.toModel
+
+        sessionManager.stop { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+                case .success(let log):
+                    var model = log.model
+                    model.socialMediaVisited = socialMediaModel
+                    self.analyticsClient.save(model) { error in
+                        if let error = error {
+                            fatalError("\(error.localizedDescription)")
+                        }
+                    }
+                case .alreadyStopped:
+                    break
+            }
+        }
+    }
+    
+    private func changeAlpha(to newAlphaLevel: Double, animateWithDuration: TimeInterval = 0.2) {
         UIView.animate(withDuration: animateWithDuration) {
             self.navigationController?.view.alpha = CGFloat(newAlphaLevel)
             self.view.alpha = CGFloat(newAlphaLevel)
-            //print("[DEBUG] Alpha:\(self.view.alpha).")
         }
     }
 }
@@ -115,7 +145,7 @@ extension BrowserViewController: WKNavigationDelegate {
             decisionHandler(.cancel)
             return
         }
-        print("Swapped to \(socialMedium.title)")
+        recordNewSocialMedium()
         decisionHandler(.allow)
     }
     
@@ -131,6 +161,13 @@ extension BrowserViewController: WKNavigationDelegate {
     
     private func isCurrentSocial(_ url: URL) -> Bool {
         return url.absoluteString.starts(with: socialMedium.rawValue)
+    }
+    
+    private func recordNewSocialMedium() {
+        print("[LOG] Using Social Medium: \(socialMedium.title)")
+        if !socialMediaVisitedInSession.contains(socialMedium) {
+            socialMediaVisitedInSession.append(socialMedium)
+        }
     }
 }
 

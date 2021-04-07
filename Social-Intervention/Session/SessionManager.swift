@@ -14,8 +14,14 @@ public struct PeriodLog: Equatable, Codable {
 
 public struct SessionLog: Equatable, Codable {
     var startTime: Date
-    var endTime: Date?
+    var endTime: Date
     var periodLogs: [PeriodLog]
+    var socialMediums: [String]
+}
+
+public enum SessionStopResult {
+    case success(log: SessionLog)
+    case alreadyStopped
 }
 
 public typealias SessionCheckError = MotionAvailabilityError
@@ -26,11 +32,11 @@ public enum SessionStartResult {
 }
 
 public protocol SessionManager {
-    typealias StopCompletion = () -> Void
+    typealias StopCompletion = (SessionStopResult) -> Void
     typealias CheckCompletion = (SessionCheckError?) -> Void
     typealias StartCompletion = (SessionStartResult) -> Void
     
     func check(completion: @escaping CheckCompletion)
-    func start(loggingTo: SessionLog?, completion: @escaping StartCompletion)
+    func start(completion: @escaping StartCompletion)
     func stop(completion: @escaping StopCompletion)
 }
