@@ -11,6 +11,7 @@ public class AttitudeConditionService: ConditionService {
     private(set) var targetAttitude: Attitude?
     private(set) var updateDuration: TimeInterval
     private(set) var records = [Attitude]()
+    private(set) var intervals: Double = 0
     
     private(set) var attitudeClient: AttitudeMotionClient
         
@@ -20,12 +21,16 @@ public class AttitudeConditionService: ConditionService {
     }
     
     public var currPeriodDuration: TimeInterval {
-        let currDuration = updateDuration * Double(records.count)
+        let currDuration = intervals * SessionPolicy.periodDuration + updateDuration * Double(records.count)
         return currDuration.truncate(places: 2)
     }
     
+    private func recordInterval() { intervals += 1 }
     private func resetRecords() { records = [] }
-    private func removeTargetAttitudeToAcquireNewOneOnNextUpdate() { targetAttitude = nil }
+    private func removeTargetAttitudeToAcquireNewOneOnNextUpdate() {
+        targetAttitude = nil
+        intervals = 0
+    }
 }
 
 public extension AttitudeConditionService {
@@ -103,6 +108,7 @@ public extension AttitudeConditionService {
 
 public extension AttitudeConditionService {
     func continuePeriod() {
+        recordInterval()
         resetRecords()
     }
 }
